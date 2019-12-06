@@ -1,0 +1,7 @@
+<Trinity ConfigVersion="2.0">
+  <Cluster>
+    <Proxy Endpoint="node52:8133" />  
+    <Server Endpoint="node59:8133" />  
+    <Server Endpoint="node60:8133" />  
+  </Cluster>
+</Trinity>
