@@ -1,4 +1,15 @@
-// A Dummy cell
+
+struct Edge {
+  long StartId;
+  int StartLayer;
+  long DestinationId;
+  int DestinationLayer;
+  float Weight;
+}
+
+
+// We create a cell for each layer a node is on
 cell struct Node {
-  int Value;
+  int Layer;
+  List<Edge> Edges;
 }
