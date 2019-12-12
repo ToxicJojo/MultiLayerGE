@@ -16,10 +16,20 @@ namespace MultiLayerServer
 
             TrinityServer server = new TrinityServer();
             server.Start();
-            
+
+            DataLoader loader = new DataLoader();
+            loader.LoadFile("/home/thiel/MultiLayerGE/data/multiplex6.edges", GraphType.DirectedWeighted);
 
             Console.ReadLine();
             server.Stop();
+        }
+
+        private static void LogNodeInfo(long cellId) {
+          Node node = Graph.LoadNode(cellId);
+          Console.WriteLine("---NodeInfo---");
+          Console.WriteLine("NodeId: {0}", cellId);
+          Console.WriteLine("Layer: {0}", node.Layer);
+          Console.WriteLine("EdgeCount: {0}", node.Edges.Count);
         }
     }
 }
