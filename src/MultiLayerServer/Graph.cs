@@ -46,5 +46,13 @@ namespace MultiLayerServer
             return Graph.HasNode(cellId);
         }
 
+        public static void SaveToGEStorage() {
+            Global.CloudStorage.SaveStorage();
+        }
+
+        public static void LoadFromGEStorage() {
+            Global.CloudStorage.LoadStorage();
+        }
+
     }
 }
