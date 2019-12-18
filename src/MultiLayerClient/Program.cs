@@ -12,10 +12,9 @@ namespace MultiLayerClient
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
 
-            Global.CloudStorage.SaveNode(0, 42);
+            MultiGraphProxy.MessagePassingExtension.LoadGraph(Global.CloudStorage.ProxyList[0]);
 
-            Node node = Global.CloudStorage.LoadNode(0);
-            Console.WriteLine("Node Value: {0}", node.Value);
+
         }
     }
 }
