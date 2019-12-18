@@ -14,11 +14,9 @@ namespace MultiLayerServer
             TrinityConfig.StorageRoot = StorageRootBasePath + args[0];
 
 
-            TrinityServer server = new TrinityServer();
+            TrinityServer server = new MultiLayerServerImpl();
             server.Start();
 
-            DataLoader loader = new DataLoader();
-            loader.LoadFile("/home/thiel/MultiLayerGE/data/multiplex6.edges", GraphType.DirectedWeighted);
 
             Console.ReadLine();
             server.Stop();

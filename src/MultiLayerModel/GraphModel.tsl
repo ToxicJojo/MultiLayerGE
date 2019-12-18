@@ -1,3 +1,35 @@
+protocol LoadGraph {
+  Type: Syn;
+  Request: void;
+  Response: void;
+}
+
+protocol LoadGraphServer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+struct PhaseFinishedMessage {
+  double Result;
+  string Phase;
+}
+
+protocol PhaseFinished {
+  Type: Asyn;
+  Request: PhaseFinishedMessage;
+  Response: void;
+}
+
+proxy MultiGraphProxy {
+  protocol LoadGraph;
+  protocol PhaseFinished;
+}
+
+server MultiGraphServer {
+  protocol LoadGraphServer;
+}
+
 
 struct Edge {
   long StartId;

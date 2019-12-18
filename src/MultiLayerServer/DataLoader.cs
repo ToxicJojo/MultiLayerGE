@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using Trinity;
 using Trinity.Network;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MultiLayerServer
 {
@@ -27,64 +29,68 @@ namespace MultiLayerServer
             using (var reader = new StreamReader(file)) {
                 // Skip the first line as we might jumped into the middle of a line.
                 reader.ReadLine();
-
                 string line;
 
                 long edgeCounter = 0;
-
                 bool firstNode = true;
 
                 long currentNode = -1;
                 int currentLayer = -1;
-                List<Edge> edges = new List<Edge>();
-                while((line = reader.ReadLine()) != null) {
-                    Edge newEdge;
-                    // Figure out how many bites have been read an stop the loop when we reach the end of the part this
-                    // server is responsibvle for.
 
-                    switch (graphType) {
-                        case GraphType.DirectedWeighted:
-                            newEdge = LoadDirectedWeightedEdge(line);
-                            break;
-                        default:
-                            newEdge = new Edge(0, 0, 0, 0, 0);
-                            break;
-                    }
+                List<Task> tasks = new List<Task>();
+                List<string> lines = new List<string>();
 
-                    // If we start to load the edges of a new node save the previous one. 
-                    if (currentNode != newEdge.StartId && currentNode != -1) {
+                while((line = reader.ReadLine()) != null) { 
+                    string[] fields = line.Split();
+                    long startId = long.Parse(fields[0]);
+                    int startLayer = int.Parse(fields[1]);
+
+                    if (startId != currentNode || startLayer != currentLayer) {
                         // Don't save the first node we read as we might have jumped in the middle of the edge data.
-                        if (!firstNode) {
-                            // If the edges already exists we only need to add the new edges.
-                            if (Graph.HasNode(currentNode, currentLayer)) {
-                                Graph.AddEdges(currentNode, currentLayer, edges);
-                            } else {
-                                Node newNode = new Node(Util.GetCellId(currentNode, currentLayer), currentLayer, edges);
-                                Graph.SaveNode(newNode);
-                            }
-
-                        } else {
+                        if (firstNode) {
                             firstNode = false;
+                        } else {
+                            Task.Run(() => LoadLines(currentNode, currentLayer, lines));
+                            // We can't call lines.Clear() as that would also clear the reference we passed to LoadLines.
+                            lines = new List<string>();
                         }
 
-                        edges.Clear();
-                        
                         // If we read beyond our end position stop after saving the node
                         if (reader.BaseStream.Position > endByte) {
-                            Console.WriteLine("Last Read Line: {0}", line);
                             break;
                         }
                     }
-
-                    edges.Add(newEdge);
-                    currentNode = newEdge.StartId;
-                    currentLayer = newEdge.StartLayer;
+                    lines.Add(line);
+                    currentNode = startId;
+                    currentLayer = startLayer;
                     edgeCounter++;
                 }
+
+                Task.WaitAll(tasks.ToArray());
+
+                PhaseFinishedMessageWriter msg = new PhaseFinishedMessageWriter(0, "phaseDataLoad");
+                MultiGraphProxy.MessagePassingExtension.PhaseFinished(Global.CloudStorage.ProxyList[0], msg);
                 Console.WriteLine("Loaded {0} Edges", edgeCounter);
             }
         }
 
+
+        /// <summary>
+        /// Loads a collection of lines that represent edges for a specified node.
+        /// </summary>
+        /// <param name="id">The id of the node the edges belong to.</param>
+        /// <param name="layer"The layer of the node.</param>
+        /// <param name="lines">A List of lines that represent the edges of the node.</param>
+        private void LoadLines(long id, int layer, List<string> lines) {
+            List<Edge> edges = new List<Edge>();
+            foreach (string line in lines) {
+                Edge newEdge = LoadDirectedWeightedEdge(line);
+                edges.Add(newEdge);
+            }
+            Node newNode = new Node(Util.GetCellId(id, layer), layer, edges);
+            Graph.SaveNode(newNode);
+        }
+        
 
         private Edge LoadDirectedWeightedEdge(string line) {
             string[] fields = line.Split();
