@@ -32,6 +32,7 @@ namespace MultiLayerServer
                 string line;
 
                 long edgeCounter = 0;
+                long nodeCounter = 0;
                 bool firstNode = true;
 
                 long currentNode = -1;
@@ -40,7 +41,7 @@ namespace MultiLayerServer
                 List<Task> tasks = new List<Task>();
                 List<string> lines = new List<string>();
 
-                while((line = reader.ReadLine()) != null) { 
+                while((line = reader.ReadLine()) != null) {
                     string[] fields = line.Split();
                     long startId = long.Parse(fields[0]);
                     int startLayer = int.Parse(fields[1]);
@@ -50,9 +51,15 @@ namespace MultiLayerServer
                         if (firstNode) {
                             firstNode = false;
                         } else {
-                            Task.Run(() => LoadLines(currentNode, currentLayer, lines));
-                            // We can't call lines.Clear() as that would also clear the reference we passed to LoadLines.
-                            lines = new List<string>();
+                            // We need to copy the values so they don't get changed before LoadLines is called.
+                            List<string> linesCopy = new List<string>(lines);
+                            long nodeCopy = currentNode;
+                            int layerCopy = currentLayer;
+
+                            Task task = Task.Run(() => LoadLines(nodeCopy, layerCopy, linesCopy));
+                            tasks.Add(task);
+                            lines.Clear();
+                            nodeCounter++;
                         }
 
                         // If we read beyond our end position stop after saving the node
@@ -68,12 +75,13 @@ namespace MultiLayerServer
 
                 Task.WaitAll(tasks.ToArray());
 
-                PhaseFinishedMessageWriter msg = new PhaseFinishedMessageWriter(0, "phaseDataLoad");
-                MultiGraphProxy.MessagePassingExtension.PhaseFinished(Global.CloudStorage.ProxyList[0], msg);
                 Console.WriteLine("Loaded {0} Edges", edgeCounter);
+                Console.WriteLine("Loaded {0} Nodes", nodeCounter);
             }
         }
 
+
+        private readonly object graphLock = new object();
 
         /// <summary>
         /// Loads a collection of lines that represent edges for a specified node.
@@ -82,6 +90,7 @@ namespace MultiLayerServer
         /// <param name="layer"The layer of the node.</param>
         /// <param name="lines">A List of lines that represent the edges of the node.</param>
         private void LoadLines(long id, int layer, List<string> lines) {
+            Console.WriteLine("Saving Node {0} in Layer {1}", id, layer);
             List<Edge> edges = new List<Edge>();
             foreach (string line in lines) {
                 Edge newEdge = LoadDirectedWeightedEdge(line);
@@ -92,6 +101,11 @@ namespace MultiLayerServer
         }
         
 
+        /// <summary>
+        /// Loads a Directed and Weighted Edge based of a line of text.
+        /// </summary>
+        /// <param name="line">The line that represents the edge. The edge data is seperated by spaces.</param>
+        /// <returns>The created Edge.</returns>
         private Edge LoadDirectedWeightedEdge(string line) {
             string[] fields = line.Split();
 

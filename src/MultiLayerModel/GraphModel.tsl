@@ -11,7 +11,7 @@ protocol LoadGraphServer {
 }
 
 struct PhaseFinishedMessage {
-  double Result;
+  List<double> Result;
   string Phase;
 }
 
@@ -26,8 +26,16 @@ proxy MultiGraphProxy {
   protocol PhaseFinished;
 }
 
+
+protocol GetNodeCount {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
 server MultiGraphServer {
   protocol LoadGraphServer;
+  protocol GetNodeCount;
 }
 
 

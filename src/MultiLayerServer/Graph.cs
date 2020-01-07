@@ -11,7 +11,13 @@ namespace MultiLayerServer
     /// </summary>
     class Graph {
 
-         
+
+
+        public static int LayerCount {
+            get;
+            set;
+        }
+
         public static void SaveNode(Node node) {
             Global.CloudStorage.SaveNode(node);
         }

@@ -13,6 +13,9 @@ namespace MultiLayerServer
             // Make sure servers use different folders to store their data.
             TrinityConfig.StorageRoot = StorageRootBasePath + args[0];
 
+            // TODO dont have this hardcoded but rather loaded from a config file;
+            Graph.LayerCount = 6;
+
 
             TrinityServer server = new MultiLayerServerImpl();
             server.Start();
