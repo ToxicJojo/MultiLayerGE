@@ -8,14 +8,19 @@ namespace MultiLayerProxy {
     class MultiLayerProxyImpl: MultiGraphProxyBase {
 
       private string PHASE_DATA_LOAD = "phaseDataLoad";
+      private string PHASE_NODE_COUNT = "phaseNodeCount";
+
 
       // Used to count how many servers have finished a certain phase.
       private Dictionary<string, int> phaseFinishedCount = new Dictionary<string, int>();
       // We need to lock the phaseFinishedCount Dictionary because multiple PhaseFinished messages can be recieved at the same time.
       private readonly object phaseFinishedCountLock = new object();
+      // Collect all the results from different servers in this
+      private List<List<double>> phaseResults = new List<List<double>>();
 
       public MultiLayerProxyImpl () {
         phaseFinishedCount[PHASE_DATA_LOAD] = 0;
+        phaseFinishedCount[PHASE_NODE_COUNT] = 0;
       }
 
       public override void LoadGraphHandler() {
@@ -40,9 +45,30 @@ namespace MultiLayerProxy {
         Console.WriteLine("Loaded Graph in " + elapsedTime);
       }
 
+      public int[] GetNodeCount() {
+        phaseResults.Clear();
+
+        foreach(var server in Global.CloudStorage) {
+          MultiGraphServer.MessagePassingExtension.GetNodeCount(server);
+        }
+
+        WaitForPhase(PHASE_NODE_COUNT);
+
+        int[] nodeCount = new int[phaseResults[0].Count];
+        
+        foreach(List<double> result in phaseResults) {
+          for (int i = 0; i < result.Count; i++) {
+              nodeCount[i] +=(int) result[i];
+          }
+        }
+
+        return nodeCount;
+      }
+
       public override void PhaseFinishedHandler(PhaseFinishedMessageReader request) {
         lock (phaseFinishedCountLock) {
           phaseFinishedCount[request.Phase]++;
+          phaseResults.Add(request.Result);
         }
       }
 
