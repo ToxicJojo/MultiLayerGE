@@ -33,9 +33,16 @@ protocol GetNodeCount {
   Response: void;
 }
 
+protocol GetEdgeCount {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
 server MultiGraphServer {
   protocol LoadGraphServer;
   protocol GetNodeCount;
+  protocol GetEdgeCount;
 }
 
 
