@@ -14,10 +14,14 @@ namespace MultiLayerProxy
 
 
             proxy.LoadGraphHandler();
-            System.Threading.Thread.Sleep(5000);
             int[] nodeCount = proxy.GetNodeCount();
             for (int i = 0; i < nodeCount.Length; i++) {
                 Console.WriteLine("[Layer {0}] {1} Nodes", i + 1, nodeCount[i]);
+            }
+            
+            int[] edgeCount = proxy.GetEdgeCount();
+            for (int i = 0; i < edgeCount.Length; i++) {
+                Console.WriteLine("[Layer {0}] {1} Edges", i + 1, edgeCount[i]);
             }
 
             Console.ReadLine();

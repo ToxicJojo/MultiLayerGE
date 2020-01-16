@@ -9,6 +9,7 @@ namespace MultiLayerProxy {
 
       private string PHASE_DATA_LOAD = "phaseDataLoad";
       private string PHASE_NODE_COUNT = "phaseNodeCount";
+      private string PHASE_EDGE_COUNT = "phaseEdgeCount";
 
 
       // Used to count how many servers have finished a certain phase.
@@ -21,6 +22,7 @@ namespace MultiLayerProxy {
       public MultiLayerProxyImpl () {
         phaseFinishedCount[PHASE_DATA_LOAD] = 0;
         phaseFinishedCount[PHASE_NODE_COUNT] = 0;
+        phaseFinishedCount[PHASE_EDGE_COUNT] = 0;
       }
 
       public override void LoadGraphHandler() {
@@ -63,6 +65,26 @@ namespace MultiLayerProxy {
         }
 
         return nodeCount;
+      }
+
+      public int[] GetEdgeCount() {
+        phaseResults.Clear();
+
+        foreach(var server in Global.CloudStorage) {
+          MultiGraphServer.MessagePassingExtension.GetEdgeCount(server);
+        }
+
+        WaitForPhase(PHASE_EDGE_COUNT);
+
+        int[] edgeCount = new int[phaseResults[0].Count];
+
+        foreach(List<double> result in phaseResults) {
+          for(int i = 0; i < result.Count; i++) {
+            edgeCount[i] += (int) result[i];
+          }
+        }
+
+        return edgeCount;
       }
 
       public override void PhaseFinishedHandler(PhaseFinishedMessageReader request) {

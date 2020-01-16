@@ -90,14 +90,19 @@ namespace MultiLayerServer
         /// <param name="layer"The layer of the node.</param>
         /// <param name="lines">A List of lines that represent the edges of the node.</param>
         private void LoadLines(long id, int layer, List<string> lines) {
-            Console.WriteLine("Saving Node {0} in Layer {1}", id, layer);
             List<Edge> edges = new List<Edge>();
             foreach (string line in lines) {
                 Edge newEdge = LoadDirectedWeightedEdge(line);
                 edges.Add(newEdge);
             }
-            Node newNode = new Node(Util.GetCellId(id, layer), layer, edges);
-            Graph.SaveNode(newNode);
+            if (!Graph.HasNode(id, layer)) {
+                // If the node is new just add it to the Graph
+                Node newNode = new Node(Util.GetCellId(id, layer), layer, edges);
+                Graph.SaveNode(newNode);
+            } else {
+                // Otherwise add the edges to the existing node.
+                Graph.AddEdges(id, layer, edges);
+            }
         }
         
 
