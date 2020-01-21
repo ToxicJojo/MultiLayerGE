@@ -1,0 +1,31 @@
+struct PageRankData {
+  double Value;
+  double OldValue;
+}
+
+struct SetInitialValueMessage {
+  double initialValue;
+}
+
+protocol SetInitialValue {
+  Type: Asyn;
+  Request: SetInitialValueMessage;
+  Response: void;
+}
+
+protocol PageRankUpdate {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+
+struct PageRankNormalizationMessage {
+  double Sum;
+}
+
+protocol PageRankNormalization {
+  Type: Asyn;
+  Request: PageRankNormalizationMessage;
+  Response: void;
+}

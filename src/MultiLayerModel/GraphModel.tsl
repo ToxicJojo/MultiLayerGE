@@ -43,6 +43,12 @@ server MultiGraphServer {
   protocol LoadGraphServer;
   protocol GetNodeCount;
   protocol GetEdgeCount;
+
+
+  // Page Rank
+  protocol SetInitialValue;
+  protocol PageRankUpdate;
+  protocol PageRankNormalization;
 }
 
 
@@ -58,5 +64,6 @@ struct Edge {
 // We create a cell for each layer a node is on
 cell struct Node {
   int Layer;
+  PageRankData PageRankData;
   List<Edge> Edges;
 }

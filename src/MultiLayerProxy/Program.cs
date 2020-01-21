@@ -24,6 +24,8 @@ namespace MultiLayerProxy
                 Console.WriteLine("[Layer {0}] {1} Edges", i + 1, edgeCount[i]);
             }
 
+            proxy.RunPageRank();
+
             Console.ReadLine();
             proxy.Stop();
         }

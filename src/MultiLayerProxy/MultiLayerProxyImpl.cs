@@ -5,7 +5,7 @@ using System.Diagnostics;
 using Trinity;
 
 namespace MultiLayerProxy {
-    class MultiLayerProxyImpl: MultiGraphProxyBase {
+    partial class MultiLayerProxyImpl: MultiGraphProxyBase {
 
       private string PHASE_DATA_LOAD = "phaseDataLoad";
       private string PHASE_NODE_COUNT = "phaseNodeCount";
@@ -23,6 +23,9 @@ namespace MultiLayerProxy {
         phaseFinishedCount[PHASE_DATA_LOAD] = 0;
         phaseFinishedCount[PHASE_NODE_COUNT] = 0;
         phaseFinishedCount[PHASE_EDGE_COUNT] = 0;
+        phaseFinishedCount[PHASE_PAGE_RANK_INITIAL_VALUES] = 0;
+        phaseFinishedCount[PHASE_PAGE_RANK_UPDATE] = 0;
+        phaseFinishedCount[PHASE_PAGE_RANK_NORMALIZATION] = 0;
       }
 
       public override void LoadGraphHandler() {
