@@ -20,6 +20,26 @@ protocol PageRankUpdate {
 }
 
 
+
+struct PageRankRemoteUpdateMessage {
+  double Value;
+  long Target;
+  int From;
+}
+
+protocol PageRankRemoteUpdate {
+  Type: Asyn;
+  Request: PageRankRemoteUpdateMessage;
+  Response: void;
+}
+
+protocol PageRankRemoteUpdateAnswer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+
 struct PageRankNormalizationMessage {
   double Sum;
 }

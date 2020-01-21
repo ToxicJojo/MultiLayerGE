@@ -48,6 +48,8 @@ server MultiGraphServer {
   // Page Rank
   protocol SetInitialValue;
   protocol PageRankUpdate;
+  protocol PageRankRemoteUpdate;
+  protocol PageRankRemoteUpdateAnswer;
   protocol PageRankNormalization;
 }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Trinity;
 using Trinity.Network;
 
@@ -18,7 +19,14 @@ namespace MultiLayerServer {
       PhaseFinished("phasePageRankInitialValues");
     }
 
+
+    Dictionary<long, double> pendingUpdates = new Dictionary<long, double>();
+    int updatesSend;
+    int updatesConfirmed;
     public override void PageRankUpdateHandler() {
+      updatesSend = 0;
+      updatesConfirmed = 0;
+
       // Set the page rank values to zero
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.PageRankData.OldValue = node.PageRankData.Value;
@@ -42,11 +50,27 @@ namespace MultiLayerServer {
             }
           } else {
             // TODO Bundle updates for other servers and send them.
-            
+            if (pendingUpdates.ContainsKey(referenceCellId)) {
+              pendingUpdates[referenceCellId] += node.PageRankData.OldValue;
+            } else {
+              pendingUpdates[referenceCellId] = node.PageRankData.OldValue;
+            }
           }
         }
       }
 
+      foreach(KeyValuePair<long, double> pendingUpdate in pendingUpdates) {
+        using (var msg = new PageRankRemoteUpdateMessageWriter(pendingUpdate.Value, pendingUpdate.Key, Global.MyPartitionId)) {
+          this.updatesSend++;
+          int targetServer = Global.CloudStorage.GetPartitionIdByCellId(pendingUpdate.Key);
+          MultiGraphServer.MessagePassingExtension.PageRankRemoteUpdate(Global.CloudStorage[targetServer], msg);
+        }
+      }
+
+      SpinWait wait = new SpinWait();
+      while(updatesSend != updatesConfirmed) {
+        wait.SpinOnce();
+      }
 
       Global.CloudStorage.BarrierSync(PAGE_RANK_AFTER_UPDATE);
 
@@ -59,6 +83,20 @@ namespace MultiLayerServer {
       result.Add(valueSum);
 
       PhaseFinished("phasePageRankUpdate", result);
+    }
+
+
+
+    public override void PageRankRemoteUpdateHandler(PageRankRemoteUpdateMessageReader request) {
+      using (Node_Accessor node = Global.LocalStorage.UseNode(request.Target)) {
+        node.PageRankData.Value += request.Value;
+      }
+
+      Global.CloudStorage.PageRankRemoteUpdateAnswerToMultiGraphServer(request.From);
+    }
+
+    public override void PageRankRemoteUpdateAnswerHandler() {
+      Interlocked.Increment(ref updatesConfirmed);
     }
 
 
