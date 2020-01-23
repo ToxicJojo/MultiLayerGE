@@ -12,7 +12,7 @@ namespace MultiLayerProxy {
       private string PHASE_PAGE_RANK_NORMALIZATION = "phasePageRankNormalization";
 
 
-      private double epsilon = 0.05;
+      private double epsilon = 0.1;
 
       public void RunPageRank () {
 
