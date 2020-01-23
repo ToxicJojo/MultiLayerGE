@@ -4,7 +4,7 @@ using Trinity;
 
 namespace MultiLayerServer {
 
-  public class MultiLayerServerImpl: MultiGraphServerBase {
+  public partial class MultiLayerServerImpl: MultiGraphServerBase {
 
     private void PhaseFinished(string phase) {
       PhaseFinished(phase, new List<double>());
