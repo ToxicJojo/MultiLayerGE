@@ -1,0 +1,33 @@
+struct AlgorithmOptions {
+  bool Timed;
+}
+
+enum OutputType {
+  Console = 0,
+}
+
+struct OutputOptions {
+  OutputType OutputType;
+}
+
+struct StandardAlgorithmMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+}
+
+struct PhaseFinishedMessage {
+  List<double> Result;
+  Phases Phase;
+}
+
+protocol PhaseFinished {
+  Type: Asyn;
+  Request: PhaseFinishedMessage;
+  Response: void;
+}
+
+proxy MultiLayerProxy {
+  protocol PhaseFinished;
+  protocol LoadGraphProxy;
+  protocol GetNodeCountProxy; 
+}

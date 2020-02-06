@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Trinity;
-
+/*
 namespace MultiLayerServer {
 
-  public partial class MultiLayerServerImpl: MultiGraphServerBase {
+  public partial class MultiLayerServerImplOld: MultiGraphServerBase {
 
     private void PhaseFinished(string phase) {
       PhaseFinished(phase, new List<double>());
@@ -57,3 +57,4 @@ namespace MultiLayerServer {
 
   }
 }
+*/

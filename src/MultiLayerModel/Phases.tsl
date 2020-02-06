@@ -1,0 +1,8 @@
+// This is a list of all the phases for the different algorithms
+// These will be used in the proxies PhaseFinished protocol to identify
+// which phase has been finished.
+enum Phases {
+  DataLoad = 0,
+  NodeCount = 1,
+  EdgeCount = 2,
+}

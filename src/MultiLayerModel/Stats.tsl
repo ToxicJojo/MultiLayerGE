@@ -1,0 +1,24 @@
+// Proxy Protocols
+struct GetNodeCountMessage {
+  AlgorithmOptions Options;
+}
+
+protocol GetNodeCountProxy {
+  Type: Syn;
+  Request: GetNodeCountMessage;
+  Response: void;
+}
+
+
+// Server Protocols
+protocol GetNodeCountServer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+protocol GetEdgeCountServer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}

@@ -1,0 +1,5 @@
+server MultiLayerServer {
+  protocol LoadGraphServer;
+  protocol GetNodeCountServer;
+  protocol GetEdgeCountServer;
+}

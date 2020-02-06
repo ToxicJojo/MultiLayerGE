@@ -1,0 +1,23 @@
+// Proxy Protocols
+struct LoadGraphProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  string ConfigFilePath;
+}
+
+protocol LoadGraphProxy {
+  Type: Syn;
+  Request: LoadGraphProxyMessage;
+  Response: void;
+}
+
+// Server Protocols
+struct LoadGraphServerMessage {
+  string ConfigFilePath;
+}
+
+protocol LoadGraphServer {
+  Type: Asyn;
+  Request: LoadGraphServerMessage;
+  Response: void;
+}

@@ -1,3 +1,4 @@
+/*
 protocol LoadGraph {
   Type: Syn;
   Request: void;
@@ -26,19 +27,6 @@ proxy MultiGraphProxy {
   protocol PhaseFinished;
 }
 
-
-protocol GetNodeCount {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
-protocol GetEdgeCount {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
 server MultiGraphServer {
   protocol LoadGraphServer;
   protocol GetNodeCount;
@@ -52,7 +40,7 @@ server MultiGraphServer {
   protocol PageRankRemoteUpdateAnswer;
   protocol PageRankNormalization;
 }
-
+*/
 
 struct Edge {
   long StartId;
