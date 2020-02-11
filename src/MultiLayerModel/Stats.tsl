@@ -1,11 +1,13 @@
 // Proxy Protocols
-struct GetNodeCountMessage {
-  AlgorithmOptions Options;
-}
-
 protocol GetNodeCountProxy {
   Type: Syn;
-  Request: GetNodeCountMessage;
+  Request: StandardAlgorithmMessage;
+  Response: void;
+}
+
+protocol GetEdgeCountProxy {
+  Type: Syn;
+  Request: StandardAlgorithmMessage;
   Response: void;
 }
 

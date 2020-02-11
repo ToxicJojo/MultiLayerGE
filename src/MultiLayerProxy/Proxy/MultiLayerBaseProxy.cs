@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Trinity;
 using MultiLayerProxy.Algorithms;
+using MultiLayerProxy.Output;
 
 namespace MultiLayerProxy.Proxy {
   partial class MultiLayerProxyImpl: MultiLayerProxyBase {
@@ -18,6 +19,8 @@ namespace MultiLayerProxy.Proxy {
 
 
     private void RunAlgorithm (IAlgorithm algorithm, AlgorithmOptions options) {
+      phaseResults.Clear();
+
       if (options.Timed) {
         algorithm.TimedRun();
       } else {
@@ -25,15 +28,20 @@ namespace MultiLayerProxy.Proxy {
       }
     }
 
+    private void OutputAlgorithmResult (IAlgorithm algorithm, OutputOptions options) {
+      IOutputWriter outputWriter;
+
+      if (options.OutputType == OutputType.Console) {
+        outputWriter = new ConsoleOutputWriter(algorithm.Result);
+      } else {
+        outputWriter = new ConsoleOutputWriter(algorithm.Result);
+      }
+
+      outputWriter.WriteOutput();
+    }
+
     public override void PhaseFinishedHandler(PhaseFinishedMessageReader request) {
       lock (phaseFinishedCountLock) {
-
-        Console.WriteLine("Phase finished {0}", request.Phase.ToString());
-
-        foreach(double count in request.Result) {
-          Console.WriteLine(count);
-        }
-
         phaseResults.Add(request.Result);
         phaseFinishedCount[request.Phase]++;
       }

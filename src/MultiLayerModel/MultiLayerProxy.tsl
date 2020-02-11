@@ -30,4 +30,5 @@ proxy MultiLayerProxy {
   protocol PhaseFinished;
   protocol LoadGraphProxy;
   protocol GetNodeCountProxy; 
+  protocol GetEdgeCountProxy;
 }

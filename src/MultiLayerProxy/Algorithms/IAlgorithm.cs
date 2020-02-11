@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MultiLayerProxy.Output;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -11,7 +12,7 @@ namespace MultiLayerProxy.Algorithms {
 
     TimeSpan TimedRun();
 
-    List<double> Result { get; }
+    AlgorithmResult Result { get; }
 
   }
 }

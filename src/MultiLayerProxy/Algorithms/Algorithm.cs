@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using MultiLayerProxy.Proxy;
+using MultiLayerProxy.Output;
 
 namespace MultiLayerProxy.Algorithms {
   abstract class Algorithm: IAlgorithm {
@@ -10,7 +11,7 @@ namespace MultiLayerProxy.Algorithms {
 
     public AlgorithmType AlgorithmType { get; protected set; }
 
-    public List<double> Result { get; protected set; }
+    public AlgorithmResult Result { get; protected set; }
 
     public Algorithm (MultiLayerProxyImpl proxy) {
       this.Proxy = proxy;
