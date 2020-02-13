@@ -31,4 +31,5 @@ proxy MultiLayerProxy {
   protocol LoadGraphProxy;
   protocol GetNodeCountProxy; 
   protocol GetEdgeCountProxy;
+  protocol PageRankProxy;
 }

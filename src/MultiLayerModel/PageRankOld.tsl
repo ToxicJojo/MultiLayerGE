@@ -1,40 +1,25 @@
+/*
 struct PageRankData {
   double Value;
   double OldValue;
 }
 
-
-// Proxy Protocols
-struct PageRankProxyMessage {
-  AlgorithmOptions AlgorithmOptions;
-  OutputOptions OutputOptions;
-  double InitialValue;
-  double Epsilon;
+struct SetInitialValueMessage {
+  double initialValue;
 }
 
-protocol PageRankProxy {
-  Type: Syn;
-  Request: PageRankProxyMessage;
-  Response: void;
-}
-
-
-// Server Protocols
-struct PageRankSetInitialValuesMessage {
-  double InitialValue;
-}
-
-protocol PageRankSetInitialValues {
+protocol SetInitialValue {
   Type: Asyn;
-  Request: PageRankSetInitialValuesMessage;
+  Request: SetInitialValueMessage;
   Response: void;
 }
 
-protocol PageRankUpdateRound {
+protocol PageRankUpdate {
   Type: Asyn;
   Request: void;
   Response: void;
 }
+
 
 
 struct PageRankRemoteUpdateMessage {
@@ -55,6 +40,7 @@ protocol PageRankRemoteUpdateAnswer {
   Response: void;
 }
 
+
 struct PageRankNormalizationMessage {
   double Sum;
 }
@@ -64,3 +50,4 @@ protocol PageRankNormalization {
   Request: PageRankNormalizationMessage;
   Response: void;
 }
+*/

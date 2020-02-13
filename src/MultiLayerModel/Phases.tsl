@@ -5,4 +5,8 @@ enum Phases {
   DataLoad = 0,
   NodeCount = 1,
   EdgeCount = 2,
+  // PageRank Phases
+  PageRankInitialValues = 3,
+  PageRankUpdateRound = 4,
+  PageRankNormalization = 5,
 }

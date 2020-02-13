@@ -12,6 +12,7 @@ namespace MultiLayerClient {
             LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
             GetNodeCount();
             GetEdgeCount();
+            PageRank(1, 0.05);
         }
 
         private static void LoadGraph (string configFilePath) {
@@ -38,6 +39,15 @@ namespace MultiLayerClient {
             using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
                 MultiLayerProxy.MessagePassingExtension.GetEdgeCountProxy(Global.CloudStorage.ProxyList[0], msg);
             }
+        }
+
+        private static void PageRank (double initalValue, double epsilon) {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+
+            using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, initalValue, epsilon)) {
+                MultiLayerProxy.MessagePassingExtension.PageRankProxy(Global.CloudStorage.ProxyList[0], msg);
+            }  
         }
     }
 }

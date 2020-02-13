@@ -54,7 +54,8 @@ namespace MultiLayerProxy.Proxy {
       }
     }
 
-    public void WaitForPhase(Phases phase) {
+
+    private void WaitForPhaseAnswers(Phases phase) {
       SpinWait wait = new SpinWait();
 
       while (phaseFinishedCount[phase] != Global.ServerCount) {
@@ -66,8 +67,13 @@ namespace MultiLayerProxy.Proxy {
       }
     }
 
+    public void WaitForPhase(Phases phase) {
+      WaitForPhaseAnswers(phase);
+      phaseResults.Clear();
+    }
+
     public List<List<double>> WaitForPhaseResults(Phases phase) {
-      WaitForPhase(phase);
+      WaitForPhaseAnswers(phase);
 
       List<List<double>> resultsCopy = new List<List<double>>(phaseResults);
       phaseResults.Clear();
