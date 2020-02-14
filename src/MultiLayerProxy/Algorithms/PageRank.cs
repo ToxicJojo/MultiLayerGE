@@ -43,7 +43,8 @@ namespace MultiLayerProxy.Algorithms {
         MultiLayerServer.MessagePassingExtension.PageRankUpdateRound(server);
       }
 
-      List<List<double>> phaseResults = Proxy.WaitForPhaseResults(Phases.PageRankUpdateRound);
+      List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.PageRankUpdateRound);
+
       double pageRankValueSum = 0;
 
       foreach(List<double> result in phaseResults) {
@@ -60,7 +61,7 @@ namespace MultiLayerProxy.Algorithms {
         }
       }
 
-      List<List<double>> phaseResults = Proxy.WaitForPhaseResults(Phases.PageRankNormalization);
+      List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.PageRankNormalization);
       double pageRankDelta = 0;
       foreach(List<double> result in phaseResults) {
         pageRankDelta += result[0];

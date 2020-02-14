@@ -9,5 +9,12 @@ namespace MultiLayerProxy.Proxy {
 
       RunAlgorithm(pageRank, request.AlgorithmOptions);
     }
+
+    public override void PageRankTopNodesProxyHandler(PageRankTopNodesProxyMessageReader request) {
+      PageRankTopNodes pageRankTopNodes = new PageRankTopNodes(this, request.NumberOfTopNodes);
+
+      RunAlgorithm(pageRankTopNodes, request.AlgorithmOptions);
+      OutputAlgorithmResult(pageRankTopNodes, request.OutputOptions);
+    }
   }
 }

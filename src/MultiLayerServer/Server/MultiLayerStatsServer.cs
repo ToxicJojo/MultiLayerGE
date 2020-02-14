@@ -6,15 +6,15 @@ namespace MultiLayerServer.Server {
   public partial class MultiLayerServerImpl: MultiLayerServerBase {
 
     public override void GetNodeCountServerHandler() {
-      List<double> result = Stats.GetNodeCount();
+      List<long> result = Stats.GetNodeCount();
 
-      PhaseFinished(Phases.NodeCount, result);
+      PhaseFinished(Phases.NodeCount, Util.ToStringList(result));
     }
 
     public override void GetEdgeCountServerHandler() {
-      List<double> result = Stats.GetEdgeCount();
+      List<long> result = Stats.GetEdgeCount();
 
-      PhaseFinished(Phases.EdgeCount, result);
+      PhaseFinished(Phases.EdgeCount, Util.ToStringList(result));
     }
   }
 }

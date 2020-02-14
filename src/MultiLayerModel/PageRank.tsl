@@ -18,6 +18,17 @@ protocol PageRankProxy {
   Response: void;
 }
 
+struct PageRankTopNodesProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  int NumberOfTopNodes;
+}
+
+protocol PageRankTopNodesProxy {
+  Type: Syn;
+  Request: PageRankTopNodesProxyMessage;
+  Response: void;
+}
 
 // Server Protocols
 struct PageRankSetInitialValuesMessage {
@@ -62,5 +73,15 @@ struct PageRankNormalizationMessage {
 protocol PageRankNormalization {
   Type: Asyn;
   Request: PageRankNormalizationMessage;
+  Response: void;
+}
+
+struct PageRankTopNodesServerMessage {
+  int NumberOfTopNodes;
+}
+
+protocol PageRankTopNodesServer {
+  Type: Asyn;
+  Request: PageRankTopNodesServerMessage;
   Response: void;
 }

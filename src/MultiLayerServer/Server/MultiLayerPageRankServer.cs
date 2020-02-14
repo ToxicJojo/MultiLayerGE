@@ -14,13 +14,13 @@ namespace MultiLayerServer.Server {
     public override void PageRankUpdateRoundHandler() {
       List<double> updateResult = PageRank.UpdateRound();
 
-      PhaseFinished(Phases.PageRankUpdateRound, updateResult);
+      PhaseFinished(Phases.PageRankUpdateRound, Util.ToStringList(updateResult));
     }
 
     public override void PageRankNormalizationHandler(PageRankNormalizationMessageReader request) {
       List<double> normalizationResult = PageRank.Normalization(request.Sum);
 
-      PhaseFinished(Phases.PageRankNormalization, normalizationResult);
+      PhaseFinished(Phases.PageRankNormalization, Util.ToStringList(normalizationResult));
     }
 
     public override void PageRankRemoteUpdateHandler(PageRankRemoteUpdateMessageReader request) {
@@ -31,6 +31,12 @@ namespace MultiLayerServer.Server {
 
     public override void PageRankRemoteUpdateAnswerHandler() {
       PageRank.RemoteUpdateAnswer();
+    }
+
+    public override void PageRankTopNodesServerHandler(PageRankTopNodesServerMessageReader request) {
+      List<long> topNodes = PageRank.TopNodes(request.NumberOfTopNodes);
+
+      PhaseFinished(Phases.PageRankTopNodes, Util.ToStringList(topNodes));
     }
 
   }

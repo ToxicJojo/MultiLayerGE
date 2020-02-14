@@ -13,6 +13,7 @@ namespace MultiLayerClient {
             GetNodeCount();
             GetEdgeCount();
             PageRank(1, 0.05);
+            PageRankTopNodes(5);
         }
 
         private static void LoadGraph (string configFilePath) {
@@ -48,6 +49,15 @@ namespace MultiLayerClient {
             using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, initalValue, epsilon)) {
                 MultiLayerProxy.MessagePassingExtension.PageRankProxy(Global.CloudStorage.ProxyList[0], msg);
             }  
+        }
+
+        private static void PageRankTopNodes (int numberOfTopNodes) {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+
+            using (var msg = new PageRankTopNodesProxyMessageWriter(algorithmOptions, outputOptions, numberOfTopNodes)) {
+                MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Global.CloudStorage.ProxyList[0], msg);
+            }
         }
     }
 }

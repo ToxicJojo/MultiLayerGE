@@ -11,7 +11,7 @@ namespace MultiLayerServer.Server {
     /// </summary>
     /// <param name="phase">The phase that has been finished.</param>
     private void PhaseFinished(Phases phase) {
-      PhaseFinished(phase, new List<double>());
+      PhaseFinished(phase, new List<string>());
     }
 
     /// <summary>
@@ -20,7 +20,7 @@ namespace MultiLayerServer.Server {
     /// </summary>
     /// <param name="phase">The phase that has been finished.</param>
     /// <param name="result">A list of results for the phase. </param>
-    private void PhaseFinished(Phases phase, List<double> result) {
+    private void PhaseFinished(Phases phase, List<string> result) {
       using (var msg = new PhaseFinishedMessageWriter(result, phase)) {
         MultiLayerProxy.MessagePassingExtension.PhaseFinished(Global.CloudStorage.ProxyList[0], msg);
       }

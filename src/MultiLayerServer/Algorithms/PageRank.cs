@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 using Trinity;
 using Trinity.Network;
+using Trinity.Core.Lib;
 
 namespace MultiLayerServer.Algorithms {
   class PageRank {
@@ -110,6 +112,14 @@ namespace MultiLayerServer.Algorithms {
       result.Add(delta);
 
       return result;  
+    }
+
+
+    public static List<long> TopNodes (int numberOfTopNodes) {
+      List<long> topNodes = new List<long>();
+      topNodes = Global.LocalStorage.Node_Selector().OrderByDescending(node => node.PageRankData.Value).Take(numberOfTopNodes).Select(node => node.CellId).ToList();
+
+      return topNodes;
     }
 
   }

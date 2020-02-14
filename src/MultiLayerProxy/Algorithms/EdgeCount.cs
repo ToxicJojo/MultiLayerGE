@@ -17,11 +17,11 @@ namespace MultiLayerProxy.Algorithms {
         MultiLayerServer.MessagePassingExtension.GetEdgeCountServer(server);
       }
 
-      List<List<double>> phaseResults =  Proxy.WaitForPhaseResults(Phases.EdgeCount);
+      List<List<long>> phaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.EdgeCount);
 
-      int[] edgeCount = new int[phaseResults[0].Count];
+      long[] edgeCount = new long[phaseResults[0].Count];
 
-      foreach(List<double> result in phaseResults) {
+      foreach(List<long> result in phaseResults) {
         for (int i = 0; i < result.Count; i++) {
             edgeCount[i] += (int) result[i];
         }

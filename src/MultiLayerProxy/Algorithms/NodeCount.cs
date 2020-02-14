@@ -18,11 +18,11 @@ namespace MultiLayerProxy.Algorithms {
       }
 
 
-      List<List<double>> phaseResults =  Proxy.WaitForPhaseResults(Phases.NodeCount);
+      List<List<long>> phaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.NodeCount);
 
-      int[] nodeCount = new int[phaseResults[0].Count];
+      long[] nodeCount = new long[phaseResults[0].Count];
 
-      foreach(List<double> result in phaseResults) {
+      foreach(List<long> result in phaseResults) {
         for (int i = 0; i < result.Count; i++) {
             nodeCount[i] += (int) result[i];
         }

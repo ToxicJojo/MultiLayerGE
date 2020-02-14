@@ -8,14 +8,14 @@ namespace MultiLayerServer.Algorithms {
     /// Calculates the local node count for every layer of the graph.
     /// </summary>
     /// <returns>A list that contains the local node count for every layer of the graph.</returns>
-    public static List<double> GetNodeCount() {
-      double[] nodeCount = new double[Graph.LayerCount];
+    public static List<long> GetNodeCount() {
+      long[] nodeCount = new long[Graph.LayerCount];
 
       foreach(Node node in Global.LocalStorage.Node_Selector()) {
         nodeCount[node.Layer - 1]++;
       }
 
-      List<double> result = new List<double>(nodeCount);
+      List<long> result = new List<long>(nodeCount);
       return result;
     }
 
@@ -23,8 +23,8 @@ namespace MultiLayerServer.Algorithms {
     /// Calculates the local edge count for every layer of the graph.
     /// </summary>
     /// <returns>A list that contains the local edge count for every layer of the graph.</returns>
-    public static List<double> GetEdgeCount() {
-      double[] edgeCount = new double[Graph.LayerCount];
+    public static List<long> GetEdgeCount() {
+      long[] edgeCount = new long[Graph.LayerCount];
 
       foreach(Node node in Global.LocalStorage.Node_Selector()) {
         foreach(Edge edge in node.Edges) {
@@ -36,7 +36,7 @@ namespace MultiLayerServer.Algorithms {
         }
       }
 
-      List<double> result = new List<double>(edgeCount);
+      List<long> result = new List<long>(edgeCount);
       return result;
     }
   }

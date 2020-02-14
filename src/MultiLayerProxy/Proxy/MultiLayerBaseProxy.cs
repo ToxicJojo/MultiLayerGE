@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 using Trinity;
 using MultiLayerProxy.Algorithms;
 using MultiLayerProxy.Output;
@@ -11,7 +12,7 @@ namespace MultiLayerProxy.Proxy {
 
     private readonly object phaseFinishedCountLock = new object();
 
-    private List<List<double>> phaseResults = new List<List<double>>();
+    private List<List<string>> phaseResults = new List<List<string>>();
 
     public MultiLayerProxyImpl () {
       RegisterPhases();
@@ -72,13 +73,25 @@ namespace MultiLayerProxy.Proxy {
       phaseResults.Clear();
     }
 
-    public List<List<double>> WaitForPhaseResults(Phases phase) {
+    public List<List<string>> WaitForPhaseResults(Phases phase) {
       WaitForPhaseAnswers(phase);
 
-      List<List<double>> resultsCopy = new List<List<double>>(phaseResults);
+      List<List<string>> resultsCopy = new List<List<string>>(phaseResults);
       phaseResults.Clear();
 
       return resultsCopy;
     }
+
+    public List<List<long>> WaitForPhaseResultsAsLong(Phases phase) {
+      List<List<string>> results = WaitForPhaseResults(phase);
+
+      return Util.ToLongList(results);
+    }
+    public List<List<double>> WaitForPhaseResultsAsDouble(Phases phase) {
+      List<List<string>> results = WaitForPhaseResults(phase);
+
+      return Util.ToDoubleList(results);
+    }
+
   }
 }
