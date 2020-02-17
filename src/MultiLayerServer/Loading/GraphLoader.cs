@@ -132,7 +132,7 @@ namespace MultiLayerServer.Loading {
         if (!Graph.HasNode(id, layer)) {
             // If the node is new just add it to the Graph
             PageRankData pageRankData = new PageRankData(0, 0);
-            Node newNode = new Node(Util.GetCellId(id, layer), layer, pageRankData, edges);
+            Node newNode = new Node(Util.GetCellId(id, layer), id, layer, pageRankData, edges);
             Graph.SaveNode(newNode);
         } else {
             // Otherwise add the edges to the existing node.

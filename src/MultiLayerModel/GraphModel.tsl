@@ -53,6 +53,7 @@ struct Edge {
 
 // We create a cell for each layer a node is on
 cell struct Node {
+  long Id;
   int Layer;
   PageRankData PageRankData;
   List<Edge> Edges;

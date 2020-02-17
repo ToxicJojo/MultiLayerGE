@@ -42,7 +42,8 @@ namespace MultiLayerProxy.Algorithms {
 
       foreach(Node node in topNodes) {
         List<string> resultRow = new List<string>();
-        resultRow.Add(node.CellId.ToString());
+        resultRow.Add(node.Id.ToString());
+        resultRow.Add(node.Layer.ToString());
         resultRow.Add(node.PageRankData.Value.ToString());
 
         resultTable.Add(resultRow);
