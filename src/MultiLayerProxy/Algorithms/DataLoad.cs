@@ -7,7 +7,6 @@ namespace MultiLayerProxy.Algorithms {
     private string ConfigFilePath { get; set; }
 
     public DataLoad (MultiLayerProxyImpl proxy, string configFilePath): base(proxy) {
-      this.AlgorithmType = AlgorithmType.DataLoad;
       this.ConfigFilePath = configFilePath;
     }
 

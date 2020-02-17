@@ -9,7 +9,6 @@ namespace MultiLayerProxy.Algorithms {
   class EdgeCount: Algorithm {
 
     public EdgeCount (MultiLayerProxyImpl proxy): base(proxy) {
-      this.AlgorithmType = AlgorithmType.NodeCount;
     }
 
     public override void Run() {

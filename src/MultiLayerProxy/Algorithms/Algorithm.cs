@@ -9,8 +9,6 @@ namespace MultiLayerProxy.Algorithms {
 
     protected MultiLayerProxyImpl Proxy;
 
-    public AlgorithmType AlgorithmType { get; protected set; }
-
     public AlgorithmResult Result { get; protected set; }
 
     public Algorithm (MultiLayerProxyImpl proxy) {

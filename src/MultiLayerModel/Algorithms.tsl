@@ -1,4 +1,0 @@
-enum AlgorithmType {
-  DataLoad = 0,
-  NodeCount = 1
-}
