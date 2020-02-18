@@ -12,9 +12,12 @@ namespace MultiLayerProxy.Algorithms {
 
     private double Epsilon { get; set; }
 
-    public PageRank (MultiLayerProxyImpl proxy, double initialValue, double epsilon): base(proxy) {
+    private bool SeperateLayers { get; set; }
+
+    public PageRank (MultiLayerProxyImpl proxy, double initialValue, double epsilon, bool seperateLayers): base(proxy) {
       this.InitialValue = initialValue;
       this.Epsilon = epsilon; 
+      this.SeperateLayers = seperateLayers;
     }
 
     public override void Run() {
@@ -40,7 +43,9 @@ namespace MultiLayerProxy.Algorithms {
 
     private double UpdateRound () {
       foreach(var server in Global.CloudStorage) {
-        MultiLayerServer.MessagePassingExtension.PageRankUpdateRound(server);
+        using (var msg = new PageRankUpdateMessageWriter(this.SeperateLayers)) {
+          MultiLayerServer.MessagePassingExtension.PageRankUpdateRound(server, msg);
+        }
       }
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.PageRankUpdateRound);

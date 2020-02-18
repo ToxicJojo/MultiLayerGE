@@ -11,8 +11,8 @@ namespace MultiLayerServer.Server {
       PhaseFinished(Phases.PageRankInitialValues);
     }
 
-    public override void PageRankUpdateRoundHandler() {
-      List<double> updateResult = PageRank.UpdateRound();
+    public override void PageRankUpdateRoundHandler(PageRankUpdateMessageReader request) {
+      List<double> updateResult = PageRank.UpdateRound(request.SeperateLayers);
 
       PhaseFinished(Phases.PageRankUpdateRound, Util.ToStringList(updateResult));
     }

@@ -10,6 +10,7 @@ struct PageRankProxyMessage {
   OutputOptions OutputOptions;
   double InitialValue;
   double Epsilon;
+  bool SeperateLayers;
 }
 
 protocol PageRankProxy {
@@ -41,12 +42,15 @@ protocol PageRankSetInitialValues {
   Response: void;
 }
 
-protocol PageRankUpdateRound {
-  Type: Asyn;
-  Request: void;
-  Response: void;
+struct PageRankUpdateMessage {
+  bool SeperateLayers;
 }
 
+protocol PageRankUpdateRound {
+  Type: Asyn;
+  Request: PageRankUpdateMessage;
+  Response: void;
+}
 
 struct PageRankRemoteUpdateMessage {
   double Value;

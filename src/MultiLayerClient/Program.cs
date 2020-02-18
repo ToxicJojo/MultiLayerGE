@@ -12,7 +12,7 @@ namespace MultiLayerClient {
             LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
             GetNodeCount();
             GetEdgeCount();
-            PageRank(1, 0.05);
+            PageRank(1, 0.35, true);
             PageRankTopNodes(5);
         }
 
@@ -42,11 +42,11 @@ namespace MultiLayerClient {
             }
         }
 
-        private static void PageRank (double initalValue, double epsilon) {
+        private static void PageRank (double initalValue, double epsilon, bool seperateLayers) {
             AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
             OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
 
-            using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, initalValue, epsilon)) {
+            using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, initalValue, epsilon, seperateLayers)) {
                 MultiLayerProxy.MessagePassingExtension.PageRankProxy(Global.CloudStorage.ProxyList[0], msg);
             }  
         }

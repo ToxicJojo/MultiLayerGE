@@ -23,7 +23,7 @@ namespace MultiLayerServer.Algorithms {
       }
     }
 
-    public static List<double> UpdateRound() {
+    public static List<double> UpdateRound(bool seperateLayers) {
       UpdatesSent = 0;
       UpdatesConfirmed = 0;
       PendingUpdates = new Dictionary<long, double>();
@@ -37,6 +37,10 @@ namespace MultiLayerServer.Algorithms {
 
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
+          // If we want to seperate the layers skip edges that go from one layer to another.
+          if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
+            continue;
+          }
           long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
           if (Global.CloudStorage.IsLocalCell(targetCellId)) {
