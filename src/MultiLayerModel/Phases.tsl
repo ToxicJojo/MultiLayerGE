@@ -1,0 +1,15 @@
+// This is a list of all the phases for the different algorithms
+// These will be used in the proxies PhaseFinished protocol to identify
+// which phase has been finished.
+enum Phases {
+  // DataLoad Phases
+  DataLoad = 0,
+  // Stats Phases
+  NodeCount = 1,
+  EdgeCount = 2,
+  // PageRank Phases
+  PageRankInitialValues = 3,
+  PageRankUpdateRound = 4,
+  PageRankNormalization = 5,
+  PageRankTopNodes = 6
+}

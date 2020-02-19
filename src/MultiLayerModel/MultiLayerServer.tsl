@@ -1,0 +1,14 @@
+server MultiLayerServer {
+  // Data Load Protocols
+  protocol LoadGraphServer;
+  // Stats Protocols
+  protocol GetNodeCountServer;
+  protocol GetEdgeCountServer;
+  // PageRank Protocols
+  protocol PageRankSetInitialValues;
+  protocol PageRankUpdateRound;
+  protocol PageRankRemoteUpdate;
+  protocol PageRankRemoteUpdateAnswer;
+  protocol PageRankNormalization;
+  protocol PageRankTopNodesServer;
+}

@@ -1,25 +1,57 @@
+// The data that each node needs to save to be able to run page rank.
 struct PageRankData {
   double Value;
   double OldValue;
 }
 
-struct SetInitialValueMessage {
-  double initialValue;
+// Proxy Protocols
+struct PageRankProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  double InitialValue;
+  double Epsilon;
+  bool SeperateLayers;
 }
 
-protocol SetInitialValue {
-  Type: Asyn;
-  Request: SetInitialValueMessage;
+protocol PageRankProxy {
+  Type: Syn;
+  Request: PageRankProxyMessage;
   Response: void;
 }
 
-protocol PageRankUpdate {
-  Type: Asyn;
-  Request: void;
+struct PageRankTopNodesProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  int NumberOfTopNodes;
+  bool SeperateLayers;
+}
+
+protocol PageRankTopNodesProxy {
+  Type: Syn;
+  Request: PageRankTopNodesProxyMessage;
   Response: void;
 }
 
+// Server Protocols
+struct PageRankSetInitialValuesMessage {
+  double InitialValue;
+}
 
+protocol PageRankSetInitialValues {
+  Type: Asyn;
+  Request: PageRankSetInitialValuesMessage;
+  Response: void;
+}
+
+struct PageRankUpdateMessage {
+  bool SeperateLayers;
+}
+
+protocol PageRankUpdateRound {
+  Type: Asyn;
+  Request: PageRankUpdateMessage;
+  Response: void;
+}
 
 struct PageRankRemoteUpdateMessage {
   double Value;
@@ -39,7 +71,6 @@ protocol PageRankRemoteUpdateAnswer {
   Response: void;
 }
 
-
 struct PageRankNormalizationMessage {
   double Sum;
 }
@@ -47,5 +78,16 @@ struct PageRankNormalizationMessage {
 protocol PageRankNormalization {
   Type: Asyn;
   Request: PageRankNormalizationMessage;
+  Response: void;
+}
+
+struct PageRankTopNodesServerMessage {
+  int NumberOfTopNodes;
+  bool SeperateLayers;
+}
+
+protocol PageRankTopNodesServer {
+  Type: Asyn;
+  Request: PageRankTopNodesServerMessage;
   Response: void;
 }

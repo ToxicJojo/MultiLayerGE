@@ -1,59 +1,3 @@
-protocol LoadGraph {
-  Type: Syn;
-  Request: void;
-  Response: void;
-}
-
-protocol LoadGraphServer {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
-struct PhaseFinishedMessage {
-  List<double> Result;
-  string Phase;
-}
-
-protocol PhaseFinished {
-  Type: Asyn;
-  Request: PhaseFinishedMessage;
-  Response: void;
-}
-
-proxy MultiGraphProxy {
-  protocol LoadGraph;
-  protocol PhaseFinished;
-}
-
-
-protocol GetNodeCount {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
-protocol GetEdgeCount {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
-server MultiGraphServer {
-  protocol LoadGraphServer;
-  protocol GetNodeCount;
-  protocol GetEdgeCount;
-
-
-  // Page Rank
-  protocol SetInitialValue;
-  protocol PageRankUpdate;
-  protocol PageRankRemoteUpdate;
-  protocol PageRankRemoteUpdateAnswer;
-  protocol PageRankNormalization;
-}
-
-
 struct Edge {
   long StartId;
   int StartLayer;
@@ -62,9 +6,9 @@ struct Edge {
   float Weight;
 }
 
-
 // We create a cell for each layer a node is on
 cell struct Node {
+  long Id;
   int Layer;
   PageRankData PageRankData;
   List<Edge> Edges;

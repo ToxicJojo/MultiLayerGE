@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using Trinity;
 using Trinity.Network;
-
+/*
 namespace MultiLayerServer {
 
-  public partial class MultiLayerServerImpl: MultiGraphServerBase {
+  public partial class MultiLayerServerImplOld: MultiGraphServerBase {
     // Barrier Constants 
     private int PAGE_RANK_VALUE_RESET = 0;
     private int PAGE_RANK_AFTER_UPDATE = 1;
@@ -155,3 +155,4 @@ namespace MultiLayerServer {
     }
   }
 }
+*/

@@ -14,8 +14,18 @@ namespace MultiLayerServer
 
 
         public static int LayerCount {
+            get {
+                return Layers.Count;
+            }
+        }
+
+        public static List<Layer> Layers {
             get;
             set;
+        }
+
+        public static void Init() {
+            Layers = new List<Layer>();
         }
 
         public static void SaveNode(Node node) {
