@@ -11,7 +11,7 @@ namespace MultiLayerProxy.Proxy {
     }
 
     public override void PageRankTopNodesProxyHandler(PageRankTopNodesProxyMessageReader request) {
-      PageRankTopNodes pageRankTopNodes = new PageRankTopNodes(this, request.NumberOfTopNodes);
+      PageRankTopNodes pageRankTopNodes = new PageRankTopNodes(this, request.NumberOfTopNodes, request.SeperateLayers);
 
       RunAlgorithm(pageRankTopNodes, request.AlgorithmOptions);
       OutputAlgorithmResult(pageRankTopNodes, request.OutputOptions);

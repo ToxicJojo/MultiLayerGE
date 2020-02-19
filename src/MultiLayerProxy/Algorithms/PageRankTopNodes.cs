@@ -12,14 +12,17 @@ namespace MultiLayerProxy.Algorithms {
 
     public int NumerOfTopNodes { get; set; }
 
-    public PageRankTopNodes (MultiLayerProxyImpl proxy, int numberOfTopNodes): base(proxy) {
+    private bool SeperateLayers { get; set; }
+
+    public PageRankTopNodes (MultiLayerProxyImpl proxy, int numberOfTopNodes, bool seperateLayers): base(proxy) {
       NumerOfTopNodes = numberOfTopNodes;
+      SeperateLayers = seperateLayers;
     }
 
 
     public override void Run() {
       foreach(var server in Global.CloudStorage) {
-        using (var msg = new PageRankTopNodesServerMessageWriter(NumerOfTopNodes)) {
+        using (var msg = new PageRankTopNodesServerMessageWriter(NumerOfTopNodes, SeperateLayers)) {
           MultiLayerServer.MessagePassingExtension.PageRankTopNodesServer(server, msg);
         }
       }
@@ -36,17 +39,35 @@ namespace MultiLayerProxy.Algorithms {
       topNodes = topNodeIds.Select(nodeId => {
         Node node = Global.CloudStorage.LoadNode(nodeId);
         return node;
-      }).OrderByDescending(node => node.PageRankData.Value).Take(this.NumerOfTopNodes).ToList();
+      }).ToList();//.OrderByDescending(node => node.PageRankData.Value).Take(this.NumerOfTopNodes).ToList();
 
       List<List<string>> resultTable = new List<List<string>>();
 
-      foreach(Node node in topNodes) {
-        List<string> resultRow = new List<string>();
-        resultRow.Add(node.Id.ToString());
-        resultRow.Add(node.Layer.ToString());
-        resultRow.Add(node.PageRankData.Value.ToString());
+      if (SeperateLayers) {
+        var topN = topNodeIds.Select(nodeId => {
+          Node node = Global.CloudStorage.LoadNode(nodeId);
+          return node;
+        }).GroupBy(node => node.Layer).Select(group => new { Layer = group.Key, Nodes = group.OrderByDescending(node => node.PageRankData.Value).Take(NumerOfTopNodes) }).OrderBy(group => group.Layer);
 
-        resultTable.Add(resultRow);
+        foreach (var group in topN) {
+          foreach(Node node in group.Nodes) {
+            List<string> resultRow = new List<string>();
+            resultRow.Add(node.Id.ToString());
+            resultRow.Add(node.Layer.ToString());
+            resultRow.Add(node.PageRankData.Value.ToString());
+
+            resultTable.Add(resultRow);       
+          }
+        }
+      } else {
+        foreach(Node node in topNodes) {
+          List<string> resultRow = new List<string>();
+          resultRow.Add(node.Id.ToString());
+          resultRow.Add(node.Layer.ToString());
+          resultRow.Add(node.PageRankData.Value.ToString());
+
+          resultTable.Add(resultRow);
+        }
       }
 
       AlgorithmResult result = new AlgorithmResult("PageRankTopNodes", resultTable);

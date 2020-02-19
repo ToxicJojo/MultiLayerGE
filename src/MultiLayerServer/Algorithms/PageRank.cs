@@ -119,9 +119,16 @@ namespace MultiLayerServer.Algorithms {
     }
 
 
-    public static List<long> TopNodes (int numberOfTopNodes) {
+    public static List<long> TopNodes (int numberOfTopNodes, bool seperateLayers) {
       List<long> topNodes = new List<long>();
-      topNodes = Global.LocalStorage.Node_Selector().OrderByDescending(node => node.PageRankData.Value).Take(numberOfTopNodes).Select(node => node.CellId).ToList();
+      if (!seperateLayers) {
+        topNodes = Global.LocalStorage.Node_Selector().OrderByDescending(node => node.PageRankData.Value).Take(numberOfTopNodes).Select(node => node.CellId).ToList();
+      } else {
+        var result = Global.LocalStorage.Node_Selector().GroupBy(node => node.Layer).Select(group => new { Layer = group.Key, Nodes = group.OrderByDescending(node => node.PageRankData.Value).Take(numberOfTopNodes) });
+        foreach (var group in result) {
+          topNodes.AddRange(group.Nodes.Select(node => node.CellId).ToList());
+        }
+      }
 
       return topNodes;
     }

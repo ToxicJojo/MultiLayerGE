@@ -34,7 +34,7 @@ namespace MultiLayerServer.Server {
     }
 
     public override void PageRankTopNodesServerHandler(PageRankTopNodesServerMessageReader request) {
-      List<long> topNodes = PageRank.TopNodes(request.NumberOfTopNodes);
+      List<long> topNodes = PageRank.TopNodes(request.NumberOfTopNodes, request.SeperateLayers);
 
       PhaseFinished(Phases.PageRankTopNodes, Util.ToStringList(topNodes));
     }
