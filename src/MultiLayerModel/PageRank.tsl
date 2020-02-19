@@ -1,8 +1,8 @@
+// The data that each node needs to save to be able to run page rank.
 struct PageRankData {
   double Value;
   double OldValue;
 }
-
 
 // Proxy Protocols
 struct PageRankProxyMessage {

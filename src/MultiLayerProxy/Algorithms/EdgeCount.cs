@@ -5,7 +5,9 @@ using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Output;
 
 namespace MultiLayerProxy.Algorithms {
-
+  /// <summary>
+  /// Counts all the edges in the graph. The edges are counted for each layer seperatly.
+  /// </summary>
   class EdgeCount: Algorithm {
 
     public EdgeCount (MultiLayerProxyImpl proxy): base(proxy) {
@@ -17,12 +19,12 @@ namespace MultiLayerProxy.Algorithms {
       }
 
       List<List<long>> phaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.EdgeCount);
-
       long[] edgeCount = new long[phaseResults[0].Count];
 
+      // Sum up the results from all servers.
       foreach(List<long> result in phaseResults) {
         for (int i = 0; i < result.Count; i++) {
-            edgeCount[i] += (int) result[i];
+            edgeCount[i] += result[i];
         }
       }
 

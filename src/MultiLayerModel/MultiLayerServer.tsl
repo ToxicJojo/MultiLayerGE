@@ -1,5 +1,7 @@
 server MultiLayerServer {
+  // Data Load Protocols
   protocol LoadGraphServer;
+  // Stats Protocols
   protocol GetNodeCountServer;
   protocol GetEdgeCountServer;
   // PageRank Protocols

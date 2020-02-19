@@ -27,10 +27,14 @@ protocol PhaseFinished {
 }
 
 proxy MultiLayerProxy {
+  // Base Protocols
   protocol PhaseFinished;
+  // Data Load Protocols
   protocol LoadGraphProxy;
+  // Stats Protocols
   protocol GetNodeCountProxy; 
   protocol GetEdgeCountProxy;
+  // PageRank Protocols
   protocol PageRankProxy;
   protocol PageRankTopNodesProxy;
 }
