@@ -12,13 +12,13 @@ namespace MultiLayerClient {
             LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
             GetNodeCount();
             GetEdgeCount();
-            PageRank(1, 0.35, true);
-            PageRankTopNodes(5, true);
+            //PageRank(1, 0.35, true);
+            //PageRankTopNodes(5, true);
         }
 
         private static void LoadGraph (string configFilePath) {
             AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed:true);
-            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
             using (var msg = new LoadGraphProxyMessageWriter(algorithmOptions, outputOptions, configFilePath)) {
                 MultiLayerProxy.MessagePassingExtension.LoadGraphProxy(Global.CloudStorage.ProxyList[0], msg);
             }
@@ -26,7 +26,7 @@ namespace MultiLayerClient {
 
         private static void GetNodeCount () {
             AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
             using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
                 MultiLayerProxy.MessagePassingExtension.GetNodeCountProxy(Global.CloudStorage.ProxyList[0], msg);
@@ -35,7 +35,7 @@ namespace MultiLayerClient {
 
         private static void GetEdgeCount () {
             AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
             using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
                 MultiLayerProxy.MessagePassingExtension.GetEdgeCountProxy(Global.CloudStorage.ProxyList[0], msg);
