@@ -65,7 +65,10 @@ namespace MultiLayerProxy.Proxy {
       // Create a new IOutputWriter that matches the type given in the options.
       if (options.OutputType == OutputType.Console) {
         outputWriter = new ConsoleOutputWriter(algorithm.Result);
+      } else if (options.OutputType == OutputType.CSV) {
+        outputWriter = new CSVOutputWriter(algorithm.Result);
       } else {
+        // Default to console output. Maybe implement a outputwriter that just does nothing instead?
         outputWriter = new ConsoleOutputWriter(algorithm.Result);
       }
 

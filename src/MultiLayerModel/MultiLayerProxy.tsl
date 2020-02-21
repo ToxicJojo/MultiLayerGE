@@ -3,7 +3,9 @@ struct AlgorithmOptions {
 }
 
 enum OutputType {
-  Console = 0,
+  None = 0,
+  Console = 1,
+  CSV = 2,
 }
 
 struct OutputOptions {
