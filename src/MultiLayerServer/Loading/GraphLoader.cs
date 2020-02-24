@@ -51,6 +51,9 @@ namespace MultiLayerServer.Loading {
     }
 
 
+    private bool fileDone = false;
+    private long nodesCompleted = 0;
+
     private void LoadEdges(string edgeFilePath) {
       Console.WriteLine("[GraphLoader] Loading edges.");
       FileStream file = new FileStream(edgeFilePath, FileMode.Open, FileAccess.Read);
@@ -75,6 +78,8 @@ namespace MultiLayerServer.Loading {
         int currentLayer = -1;
         bool firstNode = true;
 
+        long nodeCount = 0;
+
         // We loop over the lines of the edge file and collect bundels of lines that represent one node.
         // Those bundles will be send over to a 
         while(!reader.EndOfStream) {
@@ -93,10 +98,15 @@ namespace MultiLayerServer.Loading {
               long nodeCopy = currentNode;
               int layerCopy = currentLayer;
 
-              Task task = Task.Run(() => LoadLines(nodeCopy, layerCopy, linesCopy));
-              loadingTasks.Add(task);
+              //Task task = Task.Run(() => LoadLines(nodeCopy, layerCopy, linesCopy));
+              //loadingTasks.Add(task);
+              LoadLines(nodeCopy, layerCopy, linesCopy);
 
               lines.Clear();
+              nodeCount++;
+              if (nodeCount % 100000 == 0) {
+                Console.WriteLine("[GraphLoader] Loaded {0} Nodes", nodeCount);
+              }
             }
 
             // If we read beyond our end position stop after saving the node.
@@ -110,8 +120,13 @@ namespace MultiLayerServer.Loading {
           lines.Add(line);
         }
 
+        Console.WriteLine("[GraphLoader] Waiting for tasks to finish");
+        fileDone = true;
         // Wait until all threads are done loading nodes.
-        Task.WaitAll(loadingTasks.ToArray());
+        Task[] taskArray = loadingTasks.ToArray();
+        Console.WriteLine("[GraphLoader] Array Convervion done");
+        //Task.WaitAll(loadingTasks.ToArray());
+        Task.WaitAll(taskArray);
         Console.WriteLine("[GraphLoader] Loaded edges.");
       }
     }
@@ -138,6 +153,13 @@ namespace MultiLayerServer.Loading {
         } else {
             // Otherwise add the edges to the existing node.
             Graph.AddEdges(id, layer, edges);
+        }
+
+        if (fileDone) {
+          nodesCompleted++;
+          if (nodesCompleted % 100000 == 0) {
+            Console.WriteLine("[GraphLoader] Completed {0} Nodes", nodesCompleted);
+          }
         }
     }
 

@@ -3,4 +3,4 @@
 **/tsl
 .vscode/
 src/MultiLayerProxy/results
-/data
+data/

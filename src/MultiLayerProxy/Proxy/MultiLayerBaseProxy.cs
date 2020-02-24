@@ -49,6 +49,14 @@ namespace MultiLayerProxy.Proxy {
       // If the algorithm is to be timed do a timed run.
       if (options.Timed) {
         algorithm.TimedRun();
+        TimeSpan ts = algorithm.Result.Runtime;
+
+        // Format and display the TimeSpan value.
+        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+
+        Console.WriteLine("Finished {0} in {1}", algorithm.Result.Name, elapsedTime);
       } else {
         algorithm.Run();
       }
