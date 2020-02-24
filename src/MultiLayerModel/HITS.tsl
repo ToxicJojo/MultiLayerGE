@@ -1,0 +1,7 @@
+// The data that each node needs to save to be able to run hits
+struct HITSData {
+  double HubScure;
+  double OldHubScore;
+  double AuthorityScore;
+  double OldAuthorityScore;
+}

@@ -11,5 +11,7 @@ enum Phases {
   PageRankInitialValues = 3,
   PageRankUpdateRound = 4,
   PageRankNormalization = 5,
-  PageRankTopNodes = 6
+  PageRankTopNodes = 6,
+  // HITS
+  
 }
