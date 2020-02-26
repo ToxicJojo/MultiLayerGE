@@ -39,4 +39,6 @@ proxy MultiLayerProxy {
   // PageRank Protocols
   protocol PageRankProxy;
   protocol PageRankTopNodesProxy;
+  // HITS Protocols
+  protocol HITSProxy;
 }

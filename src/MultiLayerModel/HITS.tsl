@@ -1,7 +1,75 @@
 // The data that each node needs to save to be able to run hits
 struct HITSData {
-  double HubScure;
+  double HubScore;
   double OldHubScore;
   double AuthorityScore;
   double OldAuthorityScore;
+}
+
+
+// Proxy Protocols
+
+struct HITSProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  double InitialValue;
+  double Epsilon;
+  bool SeperateLayers;
+}
+
+protocol HITSProxy {
+  Type: Syn;
+  Request: HITSProxyMessage;
+  Response: void;
+}
+
+// Server Protocols
+
+struct HITSSEtInitialValueMessage {
+  double InitialValue;
+}
+
+protocol HITSSetInitialValue {
+  Type: Asyn;
+  Request: HITSSEtInitialValueMessage;
+  Response: void;
+}
+
+struct HITSUpdateMessage {
+  bool SeperateLayers;
+}
+
+protocol HITSHubUpdateRound {
+  Type: Asyn;
+  Request: HITSUpdateMessage;
+  Response: void;
+}
+
+
+struct HITSRemoteUpdateMessage {
+  double Value;
+  long Target;
+  int From;
+}
+
+protocol HITSHubRemoteUpdate {
+  Type: Asyn;
+  Request: HITSRemoteUpdateMessage;
+  Response: void;
+}
+
+protocol HITSHubRemoteUpdateAnswer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+struct HITSNormalizationMessage {
+  double Sum;
+}
+
+protocol HITSHubNormalization {
+  Type: Asyn;
+  Request: HITSNormalizationMessage;
+  Response: void;
 }
