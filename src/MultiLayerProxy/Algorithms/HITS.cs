@@ -23,10 +23,20 @@ namespace MultiLayerProxy.Algorithms {
       Console.WriteLine("Runnig HITS");
 
       SetInitialValues();
-      double hubSum = HubUpdateRound();
-      double hubDelta = HubNormalization(hubSum);
 
-      Console.WriteLine("HubUpdate done with sum {0} and delta {1}", hubSum, hubDelta);
+      double hubDelta = Double.MaxValue;
+      double authDelta = Double.MaxValue;
+
+      while (hubDelta > Epsilon || authDelta > Epsilon) {
+        double authSum = AuthUpdateRound();
+        authDelta = AuthNormalization(authSum);
+        
+        double hubSum = HubUpdateRound();
+        hubDelta = HubNormalization(hubSum);
+
+        Console.WriteLine("[HITS] AuthDelta: {0}  HubDelta: {1}", authDelta, hubDelta);
+      }
+
     }
 
 
@@ -74,6 +84,43 @@ namespace MultiLayerProxy.Algorithms {
       }
 
       return hubDelta;
+    }
+
+
+    private double AuthUpdateRound () {
+      foreach(var server in Global.CloudStorage) {
+        using (var msg = new HITSUpdateMessageWriter(this.SeperateLayers)) {
+          MultiLayerServer.MessagePassingExtension.HITSAuthUpdateRound(server, msg);
+        }
+      }
+
+      List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.HITSAuthUpdateRound);
+
+      double authSum = 0;
+
+      foreach(List<double> result in phaseResults) {
+        authSum += result[0];
+      }
+
+      return authSum;      
+    }
+
+    private double AuthNormalization (double hubSum) {
+      foreach(var server in Global.CloudStorage) {
+        using (var msg = new HITSNormalizationMessageWriter(hubSum)) {
+          MultiLayerServer.MessagePassingExtension.HITSAuthNormalization(server, msg);
+        }
+      }
+
+      List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.HITSAuthNormalization);
+
+      double authDelta = 0;
+
+      foreach(List<double> result in phaseResults) {
+        authDelta += result[0];
+      }
+
+      return authDelta;
     }
   }
 }

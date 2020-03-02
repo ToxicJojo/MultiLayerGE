@@ -73,3 +73,28 @@ protocol HITSHubNormalization {
   Request: HITSNormalizationMessage;
   Response: void;
 }
+
+// Auth
+protocol HITSAuthUpdateRound {
+  Type: Asyn;
+  Request: HITSUpdateMessage;
+  Response: void;
+}
+
+protocol HITSAuthRemoteUpdate {
+  Type: Asyn;
+  Request: HITSRemoteUpdateMessage;
+  Response: void;
+}
+
+protocol HITSAuthRemoteUpdateAnswer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+protocol HITSAuthNormalization {
+  Type: Asyn;
+  Request: HITSNormalizationMessage;
+  Response: void;
+}

@@ -30,7 +30,30 @@ namespace MultiLayerServer.Server {
    }
 
    public override void HITSHubRemoteUpdateAnswerHandler() {
-     HITS.RemoteHubUpdateAnswer();
+      HITS.RemoteHubUpdateAnswer();
    }
+
+    public override void HITSAuthUpdateRoundHandler(HITSUpdateMessageReader request) {
+      List<double> authUpdateResult = HITS.AuthUpdateRound(request.SeperateLayers);
+
+      PhaseFinished(Phases.HITSAuthUpdateRound, Util.ToStringList(authUpdateResult));
+    }
+
+    public override void HITSAuthRemoteUpdateHandler(HITSRemoteUpdateMessageReader request) {
+     HITS.RemoteAuthUpdate(request.Value, request.Target);
+
+     MultiLayerServer.MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
+    }
+
+    public override void HITSAuthRemoteUpdateAnswerHandler() {
+      HITS.RemoteAuthUpdateAnswer();
+    }
+
+    public override void HITSAuthNormalizationHandler(HITSNormalizationMessageReader request) {
+      List<double> authDelta = HITS.AuthNormalization(request.Sum);
+
+      PhaseFinished(Phases.HITSAuthNormalization, Util.ToStringList(authDelta));
+    }
+
   }
 }
