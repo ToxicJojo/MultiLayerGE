@@ -9,11 +9,6 @@ using Trinity.Core.Lib;
 namespace MultiLayerServer.Algorithms {
   class HITS {
 
-    private static int HubUpdatesSent { get; set; }
-    private static int HubUpdatesConfirmed;
-    private static Dictionary<long, double> PendingHubUpdates { get; set; }
-
-
     private static int AuthUpdatesSent { get; set; }
     private static int AuthUpdatesConfirmed;
     private static Dictionary<long, double> PendingAuthUpdates { get; set; }
@@ -31,9 +26,6 @@ namespace MultiLayerServer.Algorithms {
 
 
     public static List<double> HubUpdateRound(bool seperateLayers) {
-      HubUpdatesSent = 0;
-      HubUpdatesConfirmed = 0;
-      PendingHubUpdates = new Dictionary<long, double>();
 
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.HITSData.OldHubScore = node.HITSData.HubScore;
@@ -95,17 +87,6 @@ namespace MultiLayerServer.Algorithms {
       result.Add(hubSum);
 
       return result;      
-    }
-
-
-    public static void RemoteHubUpdate (double value, long target) {
-      using (Node_Accessor node = Global.LocalStorage.UseNode(target)) {
-        node.HITSData.HubScore += value;
-      }
-    }
-
-    public static void RemoteHubUpdateAnswer () {
-      Interlocked.Increment(ref HubUpdatesConfirmed);
     }
 
 

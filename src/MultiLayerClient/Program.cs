@@ -15,8 +15,8 @@ namespace MultiLayerClient {
             HITS(1, 0.5, false);
             HITSTopAuthorities(1,true);
             HITSTopHubs(5,true);
-            //PageRank(1, 0.35, true);
-            //PageRankTopNodes(5, true);
+            PageRank(1, 0.35, true);
+            PageRankTopNodes(5, true);
         }
 
         private static void LoadGraph (string configFilePath) {

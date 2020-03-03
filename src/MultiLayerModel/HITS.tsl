@@ -71,18 +71,6 @@ struct HITSRemoteUpdateMessage {
   int From;
 }
 
-protocol HITSHubRemoteUpdate {
-  Type: Asyn;
-  Request: HITSRemoteUpdateMessage;
-  Response: void;
-}
-
-protocol HITSHubRemoteUpdateAnswer {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
 struct HITSNormalizationMessage {
   double Sum;
 }

@@ -23,16 +23,6 @@ namespace MultiLayerServer.Server {
      PhaseFinished(Phases.HITSHubNormalization, Util.ToStringList(hubDelta));
    }
 
-   public override void HITSHubRemoteUpdateHandler(HITSRemoteUpdateMessageReader request) {
-     HITS.RemoteHubUpdate(request.Value, request.Target);
-
-     MultiLayerServer.MessagePassingExtension.HITSHubRemoteUpdateAnswer(Global.CloudStorage[request.From]);
-   }
-
-   public override void HITSHubRemoteUpdateAnswerHandler() {
-      HITS.RemoteHubUpdateAnswer();
-   }
-
     public override void HITSAuthUpdateRoundHandler(HITSUpdateMessageReader request) {
       List<double> authUpdateResult = HITS.AuthUpdateRound(request.SeperateLayers);
 

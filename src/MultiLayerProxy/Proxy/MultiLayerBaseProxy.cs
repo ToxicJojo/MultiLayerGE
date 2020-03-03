@@ -4,6 +4,7 @@ using System.Threading;
 using Trinity;
 using MultiLayerProxy.Algorithms;
 using MultiLayerProxy.Output;
+using MultiLayerProxy.Util;
 
 namespace MultiLayerProxy.Proxy {
   partial class MultiLayerProxyImpl: MultiLayerProxyBase {
@@ -126,7 +127,7 @@ namespace MultiLayerProxy.Proxy {
     public List<List<long>> WaitForPhaseResultsAsLong(Phases phase) {
       List<List<string>> results = WaitForPhaseResults(phase);
 
-      return Util.ToLongList(results);
+      return ListHelper.ToLongList(results);
     }
 
     /// <summary>
@@ -137,7 +138,7 @@ namespace MultiLayerProxy.Proxy {
     public List<List<double>> WaitForPhaseResultsAsDouble(Phases phase) {
       List<List<string>> results = WaitForPhaseResults(phase);
 
-      return Util.ToDoubleList(results);
+      return ListHelper.ToDoubleList(results);
     }
 
   }

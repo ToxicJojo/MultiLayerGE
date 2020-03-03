@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
+using MultiLayerProxy.Util;
 
 
 namespace MultiLayerProxy.Algorithms {
@@ -20,13 +21,12 @@ namespace MultiLayerProxy.Algorithms {
     }
 
     public override void Run() {
-      Console.WriteLine("Runnig HITS");
-
       SetInitialValues();
 
       double hubDelta = Double.MaxValue;
       double authDelta = Double.MaxValue;
 
+      // Keep doing updates until the change in hub and auth values is below epsilon.
       while (hubDelta > Epsilon || authDelta > Epsilon) {
         double authSum = AuthUpdateRound();
         authDelta = AuthNormalization(authSum);
@@ -36,7 +36,6 @@ namespace MultiLayerProxy.Algorithms {
 
         Console.WriteLine("[HITS] AuthDelta: {0}  HubDelta: {1}", authDelta, hubDelta);
       }
-
     }
 
 
@@ -59,11 +58,7 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.HITSHubUpdateRound);
 
-      double hubSum = 0;
-
-      foreach(List<double> result in phaseResults) {
-        hubSum += result[0];
-      }
+      double hubSum = ResultHelper.SumUpLayerResults(phaseResults, 0);
 
       return hubSum;
     }
@@ -77,11 +72,7 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.HITSHubNormalization);
 
-      double hubDelta = 0;
-
-      foreach(List<double> result in phaseResults) {
-        hubDelta += result[0];
-      }
+      double hubDelta = ResultHelper.SumUpLayerResults(phaseResults, 0);
 
       return hubDelta;
     }
@@ -96,11 +87,7 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.HITSAuthUpdateRound);
 
-      double authSum = 0;
-
-      foreach(List<double> result in phaseResults) {
-        authSum += result[0];
-      }
+      double authSum = ResultHelper.SumUpLayerResults(phaseResults, 0);
 
       return authSum;      
     }
@@ -114,11 +101,7 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.HITSAuthNormalization);
 
-      double authDelta = 0;
-
-      foreach(List<double> result in phaseResults) {
-        authDelta += result[0];
-      }
+      double authDelta = ResultHelper.SumUpLayerResults(phaseResults, 0);
 
       return authDelta;
     }
