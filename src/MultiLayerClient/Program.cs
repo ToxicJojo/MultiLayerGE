@@ -13,6 +13,8 @@ namespace MultiLayerClient {
             //GetNodeCount();
             //GetEdgeCount();
             HITS(1, 0.5, false);
+            HITSTopAuthorities(1,true);
+            HITSTopHubs(5,true);
             //PageRank(1, 0.35, true);
             //PageRankTopNodes(5, true);
         }
@@ -67,6 +69,26 @@ namespace MultiLayerClient {
 
             using (var msg = new HITSProxyMessageWriter(algorithmOptions, outputOptions, initalValue, epsilon, seperateLayers)) {
                 MultiLayerProxy.MessagePassingExtension.HITSProxy(Global.CloudStorage.ProxyList[0], msg);
+            }  
+        }
+
+
+        private static void HITSTopAuthorities (int numberOfTopNodes, bool seperateLayers) {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+
+            using (var msg = new HITSTopNodesProxyMessageWriter(algorithmOptions, outputOptions, numberOfTopNodes, seperateLayers)) {
+                MultiLayerProxy.MessagePassingExtension.HITSTopAuthoritiesProxy(Global.CloudStorage.ProxyList[0], msg);
+            }  
+        }
+
+
+        private static void HITSTopHubs (int numberOfTopNodes, bool seperateLayers) {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+
+            using (var msg = new HITSTopNodesProxyMessageWriter(algorithmOptions, outputOptions, numberOfTopNodes, seperateLayers)) {
+                MultiLayerProxy.MessagePassingExtension.HITSTopHubsProxy(Global.CloudStorage.ProxyList[0], msg);
             }  
         }
     }

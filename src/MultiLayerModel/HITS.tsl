@@ -23,6 +23,25 @@ protocol HITSProxy {
   Response: void;
 }
 
+struct HITSTopNodesProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  int NumberOfTopNodes;
+  bool SeperateLayers;
+}
+
+protocol HITSTopAuthoritiesProxy {
+  Type: Syn;
+  Request: HITSTopNodesProxyMessage;
+  Response: void;
+}
+
+protocol HITSTopHubsProxy {
+  Type: Syn;
+  Request: HITSTopNodesProxyMessage;
+  Response: void;
+}
+
 // Server Protocols
 
 struct HITSSEtInitialValueMessage {
@@ -98,3 +117,22 @@ protocol HITSAuthNormalization {
   Request: HITSNormalizationMessage;
   Response: void;
 }
+
+struct HITSTopNodesServerMessage {
+  int NumberOfTopNodes;
+  bool SeperateLayers;
+}
+
+protocol HITSTopAuthoritiesServer {
+  Type: Asyn;
+  Request: HITSTopNodesServerMessage;
+  Response: void;
+}
+
+
+protocol HITSTopHubsServer {
+  Type: Asyn;
+  Request: HITSTopNodesServerMessage;
+  Response: void;
+}
+

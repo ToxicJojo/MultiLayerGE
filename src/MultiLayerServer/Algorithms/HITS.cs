@@ -218,5 +218,35 @@ namespace MultiLayerServer.Algorithms {
 
       return result;
     }
+
+    public static List<long> TopAuthorities (int numberOfTopNodes, bool seperateLayers) {
+      List<long> topNodes = new List<long>();
+      if (!seperateLayers) {
+        topNodes = Global.LocalStorage.Node_Selector().OrderByDescending(node => node.HITSData.AuthorityScore).Take(numberOfTopNodes).Select(node => node.CellId).ToList();
+      } else {
+        var result = Global.LocalStorage.Node_Selector().GroupBy(node => node.Layer).Select(group => new { Layer = group.Key, Nodes = group.OrderByDescending(node => node.HITSData.AuthorityScore).Take(numberOfTopNodes) });
+        foreach (var group in result) {
+          topNodes.AddRange(group.Nodes.Select(node => node.CellId).ToList());
+        }
+      }
+
+      return topNodes;
+    }
+
+
+    public static List<long> TopHubs (int numberOfTopNodes, bool seperateLayers) {
+      List<long> topNodes = new List<long>();
+      if (!seperateLayers) {
+        topNodes = Global.LocalStorage.Node_Selector().OrderByDescending(node => node.HITSData.HubScore).Take(numberOfTopNodes).Select(node => node.CellId).ToList();
+      } else {
+        var result = Global.LocalStorage.Node_Selector().GroupBy(node => node.Layer).Select(group => new { Layer = group.Key, Nodes = group.OrderByDescending(node => node.HITSData.HubScore).Take(numberOfTopNodes) });
+        foreach (var group in result) {
+          topNodes.AddRange(group.Nodes.Select(node => node.CellId).ToList());
+        }
+      }
+
+      return topNodes;
+    }
+
   }
 }

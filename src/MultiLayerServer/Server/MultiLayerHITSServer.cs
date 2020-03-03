@@ -55,5 +55,17 @@ namespace MultiLayerServer.Server {
       PhaseFinished(Phases.HITSAuthNormalization, Util.ToStringList(authDelta));
     }
 
+    public override void HITSTopAuthoritiesServerHandler(HITSTopNodesServerMessageReader request) {
+      List<long> topAuthorities = HITS.TopAuthorities(request.NumberOfTopNodes, request.SeperateLayers);
+
+      PhaseFinished(Phases.HITSTopAuthorities, Util.ToStringList(topAuthorities));
+    }
+
+    public override void HITSTopHubsServerHandler(HITSTopNodesServerMessageReader request) {
+      List<long> topHubs = HITS.TopHubs(request.NumberOfTopNodes, request.SeperateLayers);
+
+      PhaseFinished(Phases.HITSTopHubs, Util.ToStringList(topHubs));
+    }
+
   }
 }

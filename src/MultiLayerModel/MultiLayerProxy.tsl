@@ -41,4 +41,6 @@ proxy MultiLayerProxy {
   protocol PageRankTopNodesProxy;
   // HITS Protocols
   protocol HITSProxy;
+  protocol HITSTopAuthoritiesProxy;
+  protocol HITSTopHubsProxy;
 }

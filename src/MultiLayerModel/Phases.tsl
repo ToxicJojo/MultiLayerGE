@@ -17,6 +17,7 @@ enum Phases {
   HITSHubUpdateRound = 8,
   HITSHubNormalization = 9,
   HITSAuthUpdateRound = 10,
-  HITSAuthNormalization = 11
-
+  HITSAuthNormalization = 11,
+  HITSTopAuthorities = 12,
+  HITSTopHubs = 13
 }
