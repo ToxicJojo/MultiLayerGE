@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace MultiLayerProxy {
+namespace MultiLayerProxy.Util {
 
-  class Util {
+  class ListHelper {
 
     public static List<List<long>> ToLongList (List<List<string>> stringLists) {
       List<List<long>> longLists = new List<List<long>>();

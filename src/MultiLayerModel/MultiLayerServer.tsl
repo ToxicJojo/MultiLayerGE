@@ -11,4 +11,14 @@ server MultiLayerServer {
   protocol PageRankRemoteUpdateAnswer;
   protocol PageRankNormalization;
   protocol PageRankTopNodesServer;
+  // HITS Protocols
+  protocol HITSSetInitialValue;
+  protocol HITSHubUpdateRound;
+  protocol HITSHubNormalization;
+  protocol HITSAuthUpdateRound;
+  protocol HITSAuthNormalization;
+  protocol HITSAuthRemoteUpdate;
+  protocol HITSAuthRemoteUpdateAnswer; 
+  protocol HITSTopAuthoritiesServer;
+  protocol HITSTopHubsServer;
 }

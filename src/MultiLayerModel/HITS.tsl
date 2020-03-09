@@ -1,0 +1,126 @@
+// The data that each node needs to save to be able to run hits
+struct HITSData {
+  double HubScore;
+  double OldHubScore;
+  double AuthorityScore;
+  double OldAuthorityScore;
+}
+
+
+// Proxy Protocols
+
+struct HITSProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  double InitialValue;
+  double Epsilon;
+  bool SeperateLayers;
+}
+
+protocol HITSProxy {
+  Type: Syn;
+  Request: HITSProxyMessage;
+  Response: void;
+}
+
+struct HITSTopNodesProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  int NumberOfTopNodes;
+  bool SeperateLayers;
+}
+
+protocol HITSTopAuthoritiesProxy {
+  Type: Syn;
+  Request: HITSTopNodesProxyMessage;
+  Response: void;
+}
+
+protocol HITSTopHubsProxy {
+  Type: Syn;
+  Request: HITSTopNodesProxyMessage;
+  Response: void;
+}
+
+// Server Protocols
+
+struct HITSSEtInitialValueMessage {
+  double InitialValue;
+}
+
+protocol HITSSetInitialValue {
+  Type: Asyn;
+  Request: HITSSEtInitialValueMessage;
+  Response: void;
+}
+
+struct HITSUpdateMessage {
+  bool SeperateLayers;
+}
+
+protocol HITSHubUpdateRound {
+  Type: Asyn;
+  Request: HITSUpdateMessage;
+  Response: void;
+}
+
+
+struct HITSRemoteUpdateMessage {
+  double Value;
+  long Target;
+  int From;
+}
+
+struct HITSNormalizationMessage {
+  double Sum;
+}
+
+protocol HITSHubNormalization {
+  Type: Asyn;
+  Request: HITSNormalizationMessage;
+  Response: void;
+}
+
+// Auth
+protocol HITSAuthUpdateRound {
+  Type: Asyn;
+  Request: HITSUpdateMessage;
+  Response: void;
+}
+
+protocol HITSAuthRemoteUpdate {
+  Type: Asyn;
+  Request: HITSRemoteUpdateMessage;
+  Response: void;
+}
+
+protocol HITSAuthRemoteUpdateAnswer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+protocol HITSAuthNormalization {
+  Type: Asyn;
+  Request: HITSNormalizationMessage;
+  Response: void;
+}
+
+struct HITSTopNodesServerMessage {
+  int NumberOfTopNodes;
+  bool SeperateLayers;
+}
+
+protocol HITSTopAuthoritiesServer {
+  Type: Asyn;
+  Request: HITSTopNodesServerMessage;
+  Response: void;
+}
+
+
+protocol HITSTopHubsServer {
+  Type: Asyn;
+  Request: HITSTopNodesServerMessage;
+  Response: void;
+}
+

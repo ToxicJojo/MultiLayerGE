@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
+using MultiLayerProxy.Util;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -57,11 +58,7 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.PageRankUpdateRound);
 
-      double pageRankValueSum = 0;
-
-      foreach(List<double> result in phaseResults) {
-        pageRankValueSum += result[0];
-      }
+      double pageRankValueSum = ResultHelper.SumUpLayerResults(phaseResults, 0);
 
       return pageRankValueSum;
     }
@@ -79,10 +76,8 @@ namespace MultiLayerProxy.Algorithms {
       }
 
       List<List<double>> phaseResults = Proxy.WaitForPhaseResultsAsDouble(Phases.PageRankNormalization);
-      double pageRankDelta = 0;
-      foreach(List<double> result in phaseResults) {
-        pageRankDelta += result[0];
-      }
+      
+      double pageRankDelta = ResultHelper.SumUpLayerResults(phaseResults, 0);
 
       return pageRankDelta;
     }
