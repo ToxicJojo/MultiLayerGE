@@ -13,6 +13,8 @@ namespace MultiLayerServer.Algorithms {
     private static int UpdatesConfirmed;
     private static Dictionary<long, double> PendingUpdates { get; set; }
 
+    private static Dictionary<int ,Dictionary<long, double>> RemoteUpdates { get; set; }
+
     private static int VALUE_RESET_BARRIER = 0;
     private static int AFTER_UPDATE_BARRIER = 1;
 
@@ -21,12 +23,19 @@ namespace MultiLayerServer.Algorithms {
         node.PageRankData.Value = initialValue;
         node.PageRankData.OldValue = initialValue;
       }
+      Console.WriteLine("Inital Values DOne");
     }
 
     public static List<double> UpdateRound(bool seperateLayers) {
       UpdatesSent = 0;
       UpdatesConfirmed = 0;
       PendingUpdates = new Dictionary<long, double>();
+      RemoteUpdates = new Dictionary<int, Dictionary<long, double>>();
+      for (int i = 0; i < Global.ServerCount; i++) {
+        if (i != Global.MyPartitionId) {
+          RemoteUpdates[i] = new Dictionary<long, double>();
+        }
+      }
 
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.PageRankData.OldValue = node.PageRankData.Value;
@@ -34,6 +43,9 @@ namespace MultiLayerServer.Algorithms {
       }
 
       Global.CloudStorage.BarrierSync(VALUE_RESET_BARRIER);
+      Console.WriteLine("Value reset  DOne");
+
+      long nodesDoneCount = 0;
 
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
@@ -41,22 +53,44 @@ namespace MultiLayerServer.Algorithms {
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
             continue;
           }
+
+          // Don't allow self references
+          if (edge.StartId == edge.DestinationId && edge.StartLayer == edge.DestinationLayer) {
+            continue;
+          }
           long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
           if (Global.CloudStorage.IsLocalCell(targetCellId)) {
-              using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId)) {
-                targetNode.PageRankData.Value += node.PageRankData.OldValue;
+              try {
+                using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId)) {
+                 targetNode.PageRankData.Value += node.PageRankData.OldValue;
+                }
+              } catch (Exception e) {
               }
           } else {
+            // Disable remote updates for testing
+            /*
             if (PendingUpdates.ContainsKey(targetCellId)) {
               PendingUpdates[targetCellId] += node.PageRankData.OldValue;
             } else {
               PendingUpdates[targetCellId] = node.PageRankData.OldValue;
             }
+            */
+            int remoteServerId = Global.CloudStorage.GetPartitionIdByCellId(targetCellId);
+            if (RemoteUpdates[remoteServerId].ContainsKey(targetCellId)) {
+              RemoteUpdates[remoteServerId][targetCellId] += node.PageRankData.OldValue;
+            } else {
+              RemoteUpdates[remoteServerId][targetCellId] = node.PageRankData.OldValue;
+            }
           }
+        }
+        nodesDoneCount++;
+        if (nodesDoneCount % 10000 == 0) {
         }
       }
 
+
+      /*
       // For each update that needs to be done on a remote server send an update message containig the update info.
       // We also need to send our partition id so the remote server can send the ack back to us.
       foreach(KeyValuePair<long, double> pendingUpdate in PendingUpdates) {
@@ -66,6 +100,20 @@ namespace MultiLayerServer.Algorithms {
           MultiLayerServer.MessagePassingExtension.PageRankRemoteUpdate(Global.CloudStorage[targetServer], msg);
         }
       }
+      */
+
+      foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
+        UpdatesSent++;
+        List<PageRankUpdatePair> updatePairs = new List<PageRankUpdatePair>();
+        foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
+          updatePairs.Add(new PageRankUpdatePair(pendingUpdate.Value, pendingUpdate.Key));
+        }
+
+        using (var msg = new PageRankRemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
+          MultiLayerServer.MessagePassingExtension.PageRankRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
+        }
+      }
+
 
       // Wait until all remote updates are done.
       SpinWait wait = new SpinWait();
@@ -90,8 +138,24 @@ namespace MultiLayerServer.Algorithms {
 
     public static void RemoteUpdate (double value, long target) {
   	  // Updates the specified node
-      using (Node_Accessor node = Global.LocalStorage.UseNode(target)) {
-        node.PageRankData.Value += value;
+      try {
+        using (Node_Accessor node = Global.LocalStorage.UseNode(target)) {
+          node.PageRankData.Value += value;
+        }
+      } catch(Exception e) {
+        // There are edges that point to nodes that are not loaded in ge. So we need to catch potentioal errors when accessing those nodes.
+        // I might be able to circumvent this by using CellAccessOptions
+      }
+    }
+
+    public static void RemoteBulkUpdate (List<PageRankUpdatePair> updates) {
+      foreach(PageRankUpdatePair update in updates) {
+        try {
+          using (Node_Accessor node = Global.LocalStorage.UseNode(update.NodeId)) {
+            node.PageRankData.Value += update.Value;
+          }
+        } catch (Exception e) {
+        }
       }
     }
 
