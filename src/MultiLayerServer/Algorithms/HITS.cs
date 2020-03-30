@@ -36,7 +36,6 @@ namespace MultiLayerServer.Algorithms {
 
 
     public static List<double> HubUpdateRound(bool seperateLayers) {
-      long count = 0;
       AuthValueRequestsSent = 0;
       AuthValueRequestsAnswerd = 0;
 
@@ -64,35 +63,26 @@ namespace MultiLayerServer.Algorithms {
           long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
           if (Global.CloudStorage.IsLocalCell(targetCellId)) {
-            try {
-              // For some reason using the node accessor instead of loading the node is way faster
-              // I might want to look into why this is and where I can use this to speed up things
-              // It might be because we read directly from ram instead of creating an object that we read from?
-              using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId)) {
+            // For some reason using the node accessor instead of loading the node is way faster
+            // I might want to look into why this is and where I can use this to speed up things
+            // It might be because we read directly from ram instead of creating an object that we read from?
+            using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
+              if (targetNode != null) {
                 node.HITSData.HubScore += targetNode.HITSData.AuthorityScore;
               }
-            } catch (Exception e) {
-
             }
           } else {
             remoteKeys.Add(targetCellId);
           }
         }
-        count++;
-        if (count % 100000 == 0) {
-          Console.WriteLine("Count {0}", count);
-        }
       }
-
-
-      Console.WriteLine("Local Hub done");
 
       Global.CloudStorage.BarrierSync(4);
 
       foreach(var server in Global.CloudStorage) {
         AuthValueRequestsSent++;
-        using (var msg = new HITSGetBulkHubValuesMessageWriter(Global.MyPartitionId ,remoteKeys.ToList())) {
-          MultiLayerServer.MessagePassingExtension.HITSGetBulkHubValues(server, msg);
+        using (var msg = new HITSGetBulkAuthValuesMessageWriter(Global.MyPartitionId ,remoteKeys.ToList())) {
+          MultiLayerServer.MessagePassingExtension.HITSGetBulkAuthValues(server, msg);
         }
       }
 
@@ -144,17 +134,17 @@ namespace MultiLayerServer.Algorithms {
     }
 
 
-    public static List<HubValuePair> GetHubValues (List<long> ids) {
-      List<HubValuePair> values = new List<HubValuePair>();
+    public static List<IdValuePair> GetBulkAuthValues (List<long> ids) {
+      List<IdValuePair> values = new List<IdValuePair>();
       foreach(Node node in Global.LocalStorage.Node_Selector()) {
-        values.Add(new HubValuePair(node.CellId, node.HITSData.AuthorityScore));
+        values.Add(new IdValuePair(node.CellId, node.HITSData.AuthorityScore));
       }
 
       return values;
     }
 
-    public static void AddRemoteAuthScores(List<HubValuePair> values) {
-      foreach(HubValuePair valuePair in values) {
+    public static void AddRemoteAuthScores(List<IdValuePair> values) {
+      foreach(IdValuePair valuePair in values) {
         RemoteAuthScores[valuePair.Id] = valuePair.Value;
       }
 
@@ -249,16 +239,6 @@ namespace MultiLayerServer.Algorithms {
           if (node != null) {
             node.HITSData.AuthorityScore += update.Value;
           }
-        }
-      }
-    }
-
-
-
-    public static void RemoteAuthUpdate (double value, long target) {
-      using (Node_Accessor node = Global.LocalStorage.UseNode(target, CellAccessOptions.ReturnNullOnCellNotFound)) {
-        if (node != null) {
-          node.HITSData.AuthorityScore += value;
         }
       }
     }

@@ -1,4 +1,3 @@
-using System;
 using MultiLayerProxy.Algorithms;
 
 namespace MultiLayerProxy.Proxy {

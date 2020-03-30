@@ -65,46 +65,34 @@ protocol HITSHubUpdateRound {
 }
 
 
-struct HubValuePair {
+struct IdValuePair {
   long Id;
   double Value;
 }
 
-struct HubValueList {
-  List<HubValuePair> Values;
+struct IdValueList {
+  List<IdValuePair> Values;
 }
 
-struct HITSGetBulkHubValuesMessage {
+struct HITSGetBulkAuthValuesMessage {
   int From;
   List<long> Ids;
 }
 
-struct HITSGetBulkHubValuesResponse {
-  List<HubValuePair> Values;
-}
-
-protocol HITSGetBulkHubValues {
+protocol HITSGetBulkAuthValues {
   Type: Asyn;
-  Request: HITSGetBulkHubValuesMessage;
+  Request: HITSGetBulkAuthValuesMessage;
   Response: void;
 }
 
-
-protocol HITSGetBulkHubValuesAnswer {
-  Type: Asyn;
-  Request: HITSGetBulkHubValuesResponse;
-  Response: void;
+struct HITSGetBulkAuthValuesResponse {
+  List<IdValuePair> Values;
 }
 
-
-
-
-
-
-struct HITSRemoteUpdateMessage {
-  double Value;
-  long Target;
-  int From;
+protocol HITSGetBulkAuthValuesAnswer {
+  Type: Asyn;
+  Request: HITSGetBulkAuthValuesResponse;
+  Response: void;
 }
 
 struct HITSNormalizationMessage {
@@ -121,12 +109,6 @@ protocol HITSHubNormalization {
 protocol HITSAuthUpdateRound {
   Type: Asyn;
   Request: HITSUpdateMessage;
-  Response: void;
-}
-
-protocol HITSAuthRemoteUpdate {
-  Type: Asyn;
-  Request: HITSRemoteUpdateMessage;
   Response: void;
 }
 
