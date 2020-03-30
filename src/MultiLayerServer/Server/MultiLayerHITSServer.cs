@@ -29,14 +29,14 @@ namespace MultiLayerServer.Server {
       PhaseFinished(Phases.HITSAuthUpdateRound, Util.ToStringList(authUpdateResult));
     }
 
-    public override void HITSAuthRemoteUpdateHandler(HITSRemoteUpdateMessageReader request) {
-     HITS.RemoteAuthUpdate(request.Value, request.Target);
-
-     MultiLayerServer.MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
-    }
-
     public override void HITSAuthRemoteUpdateAnswerHandler() {
       HITS.RemoteAuthUpdateAnswer();
+    }
+
+    public override void HITSRemoteBulkUpdateHandler(HITSRemoteBulkUpdateMessageReader request) {
+      HITS.RemoteBulkAuthUpdate(request.Updates);
+
+      MultiLayerServer.MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
     }
 
     public override void HITSAuthNormalizationHandler(HITSNormalizationMessageReader request) {
@@ -55,6 +55,19 @@ namespace MultiLayerServer.Server {
       List<long> topHubs = HITS.TopHubs(request.NumberOfTopNodes, request.SeperateLayers);
 
       PhaseFinished(Phases.HITSTopHubs, Util.ToStringList(topHubs));
+    }
+
+
+    public override void HITSGetBulkAuthValuesHandler(HITSGetBulkAuthValuesMessageReader request) {
+      List<IdValuePair> values = HITS.GetBulkAuthValues(request.Ids);
+
+      using (var msg = new HITSGetBulkAuthValuesResponseWriter(values)) {
+        MultiLayerServer.MessagePassingExtension.HITSGetBulkAuthValuesAnswer(Global.CloudStorage[request.From], msg);
+      }
+    }
+
+    public override void HITSGetBulkAuthValuesAnswerHandler(HITSGetBulkAuthValuesResponseReader request) {
+      HITS.AddRemoteAuthScores(request.Values);
     }
 
   }

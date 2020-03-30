@@ -65,6 +65,24 @@ protocol PageRankRemoteUpdate {
   Response: void;
 }
 
+// Remote Bulk Update
+struct PageRankUpdatePair {
+  double Value;
+  long NodeId;
+}
+
+struct PageRankRemoteBulkUpdateMessage {
+  int From;
+  List<PageRankUpdatePair> Updates;
+}
+
+protocol PageRankRemoteBulkUpdate {
+  Type: Asyn;
+  Request: PageRankRemoteBulkUpdateMessage;
+  Response: void;
+}
+
+
 protocol PageRankRemoteUpdateAnswer {
   Type: Asyn;
   Request: void;

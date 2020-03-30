@@ -39,5 +39,11 @@ namespace MultiLayerServer.Server {
       PhaseFinished(Phases.PageRankTopNodes, Util.ToStringList(topNodes));
     }
 
+    public override void PageRankRemoteBulkUpdateHandler(PageRankRemoteBulkUpdateMessageReader request) {
+      PageRank.RemoteBulkUpdate(request.Updates);
+      var server = Global.CloudStorage[request.From];
+      MultiLayerServer.MessagePassingExtension.PageRankRemoteUpdateAnswer(server);
+    }
+
   }
 }

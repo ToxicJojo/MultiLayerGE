@@ -9,14 +9,25 @@ namespace MultiLayerClient {
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
 
-            LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
+            LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+
+            //Global.CloudStorage.SaveStorage();
+
+            Console.WriteLine("Loading from ge storage.");
+            Global.CloudStorage.LoadStorage();
+            Console.WriteLine("Finished Loading from ge storage.");
+
+
             //GetNodeCount();
             //GetEdgeCount();
-            HITS(1, 0.5, false);
+            //PageRank(1, 5, true);
+            //PageRankTopNodes(5, false);
+            HITS(1, 2000, true);
+            /*
             HITSTopAuthorities(1,true);
             HITSTopHubs(5,true);
             PageRank(1, 0.35, true);
-            PageRankTopNodes(5, true);
+            */
         }
 
         private static void LoadGraph (string configFilePath) {
@@ -56,7 +67,7 @@ namespace MultiLayerClient {
 
         private static void PageRankTopNodes (int numberOfTopNodes, bool seperateLayers) {
             AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
             using (var msg = new PageRankTopNodesProxyMessageWriter(algorithmOptions, outputOptions, numberOfTopNodes, seperateLayers)) {
                 MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Global.CloudStorage.ProxyList[0], msg);

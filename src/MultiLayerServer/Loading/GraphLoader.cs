@@ -20,7 +20,7 @@ namespace MultiLayerServer.Loading {
       Graph.Init();
 
       LoadLayers(graphConfig.LayersFilePath);
-      LoadEdges(graphConfig.EdgesFilePath);
+      //LoadEdges(graphConfig.EdgesFilePath);
 
 
     }
@@ -51,22 +51,16 @@ namespace MultiLayerServer.Loading {
     }
 
 
+    private bool fileDone = false;
+    private long nodesCompleted = 0;
+
     private void LoadEdges(string edgeFilePath) {
       Console.WriteLine("[GraphLoader] Loading edges.");
       FileStream file = new FileStream(edgeFilePath, FileMode.Open, FileAccess.Read);
       long fileLength = file.Length;
 
-      // Skip to the part of the file the sserver needs to load
-      long startByte = CalculateStartByte(fileLength);
-      long endByte = CalculateEndByte(fileLength);
-      file.Seek(startByte, SeekOrigin.Begin);
-
 
       using (StreamReader reader = new StreamReader(file)) {
-        // Skip the first line as we might have jumped into the middle of a  line
-        reader.ReadLine();
-        
-
         // We need to keep track of all the tasks that load the nodes.
         List<Task> loadingTasks = new List<Task>();
         List<string> lines = new List<string>();
@@ -75,6 +69,9 @@ namespace MultiLayerServer.Loading {
         int currentLayer = -1;
         bool firstNode = true;
 
+        long nodeCount = 0;
+
+
         // We loop over the lines of the edge file and collect bundels of lines that represent one node.
         // Those bundles will be send over to a 
         while(!reader.EndOfStream) {
@@ -82,6 +79,11 @@ namespace MultiLayerServer.Loading {
 
           long nodeId = edgeLoader.GetId(line);
           int layerId = edgeLoader.GetLayer(line);
+          long cellId = Util.GetCellId(nodeId, layerId);
+
+          if (!Global.CloudStorage.IsLocalCell(cellId)) {
+            continue;
+          }
 
           if (nodeId != currentNode || layerId != currentLayer) {
             // Don't save the first node we read as we might have jumped in the middle of the edge data.
@@ -95,13 +97,9 @@ namespace MultiLayerServer.Loading {
 
               Task task = Task.Run(() => LoadLines(nodeCopy, layerCopy, linesCopy));
               loadingTasks.Add(task);
+              nodeCount++;
 
               lines.Clear();
-            }
-
-            // If we read beyond our end position stop after saving the node.
-            if (reader.BaseStream.Position > endByte) {
-              break;
             }
           }
 
@@ -110,9 +108,11 @@ namespace MultiLayerServer.Loading {
           lines.Add(line);
         }
 
+        Console.WriteLine("[GraphLoader] Waiting for tasks to finish");
         // Wait until all threads are done loading nodes.
-        Task.WaitAll(loadingTasks.ToArray());
-        Console.WriteLine("[GraphLoader] Loaded edges.");
+        Task[] taskArray = loadingTasks.ToArray();
+        Task.WaitAll(taskArray);
+        Console.WriteLine("[GraphLoader] Loaded {0} nodes.", nodeCount);
       }
     }
 
