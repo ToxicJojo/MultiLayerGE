@@ -30,6 +30,8 @@ namespace MultiLayerProxy.Algorithms {
       while (hubDelta > Epsilon || authDelta > Epsilon) {
         double authSum = AuthUpdateRound();
         authDelta = AuthNormalization(authSum);
+
+        Console.WriteLine("AuthDone");
         
         double hubSum = HubUpdateRound();
         hubDelta = HubNormalization(hubSum);

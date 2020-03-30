@@ -68,14 +68,6 @@ namespace MultiLayerServer.Algorithms {
               } catch (Exception e) {
               }
           } else {
-            // Disable remote updates for testing
-            /*
-            if (PendingUpdates.ContainsKey(targetCellId)) {
-              PendingUpdates[targetCellId] += node.PageRankData.OldValue;
-            } else {
-              PendingUpdates[targetCellId] = node.PageRankData.OldValue;
-            }
-            */
             int remoteServerId = Global.CloudStorage.GetPartitionIdByCellId(targetCellId);
             if (RemoteUpdates[remoteServerId].ContainsKey(targetCellId)) {
               RemoteUpdates[remoteServerId][targetCellId] += node.PageRankData.OldValue;
@@ -88,19 +80,6 @@ namespace MultiLayerServer.Algorithms {
         if (nodesDoneCount % 10000 == 0) {
         }
       }
-
-
-      /*
-      // For each update that needs to be done on a remote server send an update message containig the update info.
-      // We also need to send our partition id so the remote server can send the ack back to us.
-      foreach(KeyValuePair<long, double> pendingUpdate in PendingUpdates) {
-        using (var msg = new PageRankRemoteUpdateMessageWriter(pendingUpdate.Value, pendingUpdate.Key, Global.MyPartitionId)) {
-          UpdatesSent++;
-          int targetServer = Global.CloudStorage.GetPartitionIdByCellId(pendingUpdate.Key);
-          MultiLayerServer.MessagePassingExtension.PageRankRemoteUpdate(Global.CloudStorage[targetServer], msg);
-        }
-      }
-      */
 
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         UpdatesSent++;

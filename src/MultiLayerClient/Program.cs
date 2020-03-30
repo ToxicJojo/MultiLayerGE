@@ -20,10 +20,10 @@ namespace MultiLayerClient {
 
             //GetNodeCount();
             //GetEdgeCount();
-            PageRank(1, 5, true);
-            PageRankTopNodes(5, false);
+            //PageRank(1, 5, true);
+            //PageRankTopNodes(5, false);
+            HITS(1, 2000, true);
             /*
-            HITS(1, 0.5, false);
             HITSTopAuthorities(1,true);
             HITSTopHubs(5,true);
             PageRank(1, 0.35, true);

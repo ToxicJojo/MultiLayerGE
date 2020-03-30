@@ -39,6 +39,12 @@ namespace MultiLayerServer.Server {
       HITS.RemoteAuthUpdateAnswer();
     }
 
+    public override void HITSRemoteBulkUpdateHandler(HITSRemoteBulkUpdateMessageReader request) {
+      HITS.RemoteBulkAuthUpdate(request.Updates);
+
+      MultiLayerServer.MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
+    }
+
     public override void HITSAuthNormalizationHandler(HITSNormalizationMessageReader request) {
       List<double> authDelta = HITS.AuthNormalization(request.Sum);
 
@@ -55,6 +61,19 @@ namespace MultiLayerServer.Server {
       List<long> topHubs = HITS.TopHubs(request.NumberOfTopNodes, request.SeperateLayers);
 
       PhaseFinished(Phases.HITSTopHubs, Util.ToStringList(topHubs));
+    }
+
+
+    public override void HITSGetBulkHubValuesHandler(HITSGetBulkHubValuesMessageReader request) {
+      List<HubValuePair> values = HITS.GetHubValues(request.Ids);
+
+      using (var msg = new HITSGetBulkHubValuesResponseWriter(values)) {
+        MultiLayerServer.MessagePassingExtension.HITSGetBulkHubValuesAnswer(Global.CloudStorage[request.From], msg);
+      }
+    }
+
+    public override void HITSGetBulkHubValuesAnswerHandler(HITSGetBulkHubValuesResponseReader request) {
+      HITS.AddRemoteAuthScores(request.Values);
     }
 
   }

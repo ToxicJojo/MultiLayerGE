@@ -15,8 +15,11 @@ server MultiLayerServer {
   // HITS Protocols
   protocol HITSSetInitialValue;
   protocol HITSHubUpdateRound;
+  protocol HITSGetBulkHubValues;
+  protocol HITSGetBulkHubValuesAnswer;
   protocol HITSHubNormalization;
   protocol HITSAuthUpdateRound;
+  protocol HITSRemoteBulkUpdate;
   protocol HITSAuthNormalization;
   protocol HITSAuthRemoteUpdate;
   protocol HITSAuthRemoteUpdateAnswer; 
