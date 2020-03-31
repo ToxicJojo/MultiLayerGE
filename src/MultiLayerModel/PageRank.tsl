@@ -53,35 +53,11 @@ protocol PageRankUpdateRound {
   Response: void;
 }
 
-struct PageRankRemoteUpdateMessage {
-  double Value;
-  long Target;
-  int From;
-}
-
-protocol PageRankRemoteUpdate {
-  Type: Asyn;
-  Request: PageRankRemoteUpdateMessage;
-  Response: void;
-}
-
-// Remote Bulk Update
-struct PageRankUpdatePair {
-  double Value;
-  long NodeId;
-}
-
-struct PageRankRemoteBulkUpdateMessage {
-  int From;
-  List<PageRankUpdatePair> Updates;
-}
-
 protocol PageRankRemoteBulkUpdate {
   Type: Asyn;
-  Request: PageRankRemoteBulkUpdateMessage;
+  Request: RemoteBulkUpdateMessage;
   Response: void;
 }
-
 
 protocol PageRankRemoteUpdateAnswer {
   Type: Asyn;

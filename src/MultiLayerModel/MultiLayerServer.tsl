@@ -8,7 +8,6 @@ server MultiLayerServer {
   protocol PageRankSetInitialValues;
   protocol PageRankUpdateRound;
   protocol PageRankRemoteBulkUpdate;
-  protocol PageRankRemoteUpdate;
   protocol PageRankRemoteUpdateAnswer;
   protocol PageRankNormalization;
   protocol PageRankTopNodesServer;

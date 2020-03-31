@@ -18,10 +18,10 @@ namespace MultiLayerClient {
             Console.WriteLine("Finished Loading from ge storage.");
 
 
-            GetNodeCount();
-            GetEdgeCount();
-            //PageRank(1, 5, true);
-            //PageRankTopNodes(5, false);
+            //GetNodeCount();
+            //GetEdgeCount();
+            PageRank(1, 50, true);
+            PageRankTopNodes(5, false);
             //HITS(1, 2000, true);
             /*
             HITSTopAuthorities(1,true);

@@ -70,10 +70,6 @@ struct IdValuePair {
   double Value;
 }
 
-struct IdValueList {
-  List<IdValuePair> Values;
-}
-
 struct HITSGetBulkAuthValuesMessage {
   int From;
   List<long> Ids;

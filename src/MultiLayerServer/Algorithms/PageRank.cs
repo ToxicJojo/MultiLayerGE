@@ -5,14 +5,18 @@ using System.Linq;
 using Trinity;
 using Trinity.Network;
 using Trinity.Core.Lib;
+using Trinity.TSL.Lib;
 
 namespace MultiLayerServer.Algorithms {
   class PageRank {
 
+    // We need to keep track of the number of updates for remote nodes we sent out
+    // and how many of them have finished.
     private static int UpdatesSent { get; set; }
     private static int UpdatesConfirmed;
-    private static Dictionary<long, double> PendingUpdates { get; set; }
-
+    // We buffer updates for remote nodes in this dictionary.
+    // The keys are the serverId while the value is a dictionary that contains the update information for the nodes that belong to the keyed server.
+    // The update information is a dictinary that consists of the node id as a the key and the amount its pagerank value needs to be increased by.
     private static Dictionary<int ,Dictionary<long, double>> RemoteUpdates { get; set; }
 
     private static int VALUE_RESET_BARRIER = 0;
@@ -23,13 +27,12 @@ namespace MultiLayerServer.Algorithms {
         node.PageRankData.Value = initialValue;
         node.PageRankData.OldValue = initialValue;
       }
-      Console.WriteLine("Inital Values DOne");
     }
 
+    
     public static List<double> UpdateRound(bool seperateLayers) {
       UpdatesSent = 0;
       UpdatesConfirmed = 0;
-      PendingUpdates = new Dictionary<long, double>();
       RemoteUpdates = new Dictionary<int, Dictionary<long, double>>();
       for (int i = 0; i < Global.ServerCount; i++) {
         if (i != Global.MyPartitionId) {
@@ -37,15 +40,14 @@ namespace MultiLayerServer.Algorithms {
         }
       }
 
+      // We need to remember the old value and set the current one to 0.
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.PageRankData.OldValue = node.PageRankData.Value;
         node.PageRankData.Value = 0;
       }
 
+      // Wait until all servers are done with resetting the current value.
       Global.CloudStorage.BarrierSync(VALUE_RESET_BARRIER);
-      Console.WriteLine("Value reset  DOne");
-
-      long nodesDoneCount = 0;
 
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
@@ -60,14 +62,15 @@ namespace MultiLayerServer.Algorithms {
           }
           long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
+          // If the target node is a local one we can do the update directly.
           if (Global.CloudStorage.IsLocalCell(targetCellId)) {
-              try {
-                using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId)) {
-                 targetNode.PageRankData.Value += node.PageRankData.OldValue;
+              using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
+                if (targetNode != null) {
+                  targetNode.PageRankData.Value += node.PageRankData.OldValue;
                 }
-              } catch (Exception e) {
               }
           } else {
+            // Save the remote update for the targetCell.
             int remoteServerId = Global.CloudStorage.GetPartitionIdByCellId(targetCellId);
             if (RemoteUpdates[remoteServerId].ContainsKey(targetCellId)) {
               RemoteUpdates[remoteServerId][targetCellId] += node.PageRankData.OldValue;
@@ -76,19 +79,18 @@ namespace MultiLayerServer.Algorithms {
             }
           }
         }
-        nodesDoneCount++;
-        if (nodesDoneCount % 10000 == 0) {
-        }
       }
 
+      // For each server build a list of pairs that contain the information to update the remote nodes.
+      // Then sent an update requests to that server.
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         UpdatesSent++;
-        List<PageRankUpdatePair> updatePairs = new List<PageRankUpdatePair>();
+        List<KeyValuePair> updatePairs = new List<KeyValuePair>();
         foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
-          updatePairs.Add(new PageRankUpdatePair(pendingUpdate.Value, pendingUpdate.Key));
+          updatePairs.Add(new KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
         }
 
-        using (var msg = new PageRankRemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
+        using (var msg = new RemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
           MultiLayerServer.MessagePassingExtension.PageRankRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
         }
       }
@@ -104,7 +106,7 @@ namespace MultiLayerServer.Algorithms {
       Global.CloudStorage.BarrierSync(AFTER_UPDATE_BARRIER);
 
       double valueSum = 0;
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         valueSum += node.PageRankData.Value;
       }
 
@@ -114,26 +116,12 @@ namespace MultiLayerServer.Algorithms {
       return result;
     }
 
-
-    public static void RemoteUpdate (double value, long target) {
-  	  // Updates the specified node
-      try {
-        using (Node_Accessor node = Global.LocalStorage.UseNode(target)) {
-          node.PageRankData.Value += value;
-        }
-      } catch(Exception e) {
-        // There are edges that point to nodes that are not loaded in ge. So we need to catch potentioal errors when accessing those nodes.
-        // I might be able to circumvent this by using CellAccessOptions
-      }
-    }
-
-    public static void RemoteBulkUpdate (List<PageRankUpdatePair> updates) {
-      foreach(PageRankUpdatePair update in updates) {
-        try {
-          using (Node_Accessor node = Global.LocalStorage.UseNode(update.NodeId)) {
+    public static void RemoteBulkUpdate (List<KeyValuePair> updates) {
+      foreach(KeyValuePair update in updates) {
+        using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
+          if (node != null) {
             node.PageRankData.Value += update.Value;
           }
-        } catch (Exception e) {
         }
       }
     }

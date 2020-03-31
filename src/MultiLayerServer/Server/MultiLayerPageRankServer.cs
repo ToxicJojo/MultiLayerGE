@@ -23,12 +23,6 @@ namespace MultiLayerServer.Server {
       PhaseFinished(Phases.PageRankNormalization, Util.ToStringList(normalizationResult));
     }
 
-    public override void PageRankRemoteUpdateHandler(PageRankRemoteUpdateMessageReader request) {
-      PageRank.RemoteUpdate(request.Value, request.Target);
-      var server = Global.CloudStorage[request.From];
-      MultiLayerServer.MessagePassingExtension.PageRankRemoteUpdateAnswer(server);
-    }
-
     public override void PageRankRemoteUpdateAnswerHandler() {
       PageRank.RemoteUpdateAnswer();
     }
@@ -39,8 +33,9 @@ namespace MultiLayerServer.Server {
       PhaseFinished(Phases.PageRankTopNodes, Util.ToStringList(topNodes));
     }
 
-    public override void PageRankRemoteBulkUpdateHandler(PageRankRemoteBulkUpdateMessageReader request) {
-      PageRank.RemoteBulkUpdate(request.Updates);
+    public override void PageRankRemoteBulkUpdateHandler(RemoteBulkUpdateMessageReader request) {
+      PageRank.RemoteBulkUpdate(request.Values);
+      // After we have done the update we need to tell the other server that we finished it.
       var server = Global.CloudStorage[request.From];
       MultiLayerServer.MessagePassingExtension.PageRankRemoteUpdateAnswer(server);
     }

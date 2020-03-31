@@ -1,0 +1,25 @@
+// This file contains a collection of shared structs that multiple algorithms use to avoid duplication.
+
+
+// Represents a general key value pair.
+struct KeyValuePair {
+  long Key;
+  double Value;
+}
+
+// Can be used to update a number of KeyValuePairs on a remote server.
+struct RemoteBulkUpdateMessage {
+  int From;
+  List<KeyValuePair> Values;
+}
+
+// Can be used to request a number of KeyValuePairs from a remote server.
+struct RemoteBulkGetMessage {
+  int From;
+  List<long>  Ids;
+}
+
+// Can be used to sent a number of KeyValuePairs to a remote server.
+struct RemoteBulkGetResponseMessage {
+  List<KeyValuePair> Values;
+}
