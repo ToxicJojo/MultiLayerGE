@@ -19,8 +19,6 @@ namespace MultiLayerServer.Algorithms {
 
     private static Dictionary<long, double> RemoteAuthScores { get; set; }
 
-    private static Dictionary<long, double> PendingAuthUpdates { get; set; }
-
     private static Dictionary<int, Dictionary<long, double>> RemoteUpdates { get; set; }
 
     private static int HUB_VALUE_RESET_BARRIER = 0;
@@ -81,7 +79,7 @@ namespace MultiLayerServer.Algorithms {
 
       foreach(var server in Global.CloudStorage) {
         AuthValueRequestsSent++;
-        using (var msg = new HITSGetBulkAuthValuesMessageWriter(Global.MyPartitionId ,remoteKeys.ToList())) {
+        using (var msg = new RemoteBulkGetMessageWriter(Global.MyPartitionId ,remoteKeys.ToList())) {
           MultiLayerServer.MessagePassingExtension.HITSGetBulkAuthValues(server, msg);
         }
       }
@@ -107,7 +105,7 @@ namespace MultiLayerServer.Algorithms {
       }
 
       double hubSum = 0;
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         hubSum += node.HITSData.HubScore;
       }
 
@@ -134,18 +132,18 @@ namespace MultiLayerServer.Algorithms {
     }
 
 
-    public static List<IdValuePair> GetBulkAuthValues (List<long> ids) {
-      List<IdValuePair> values = new List<IdValuePair>();
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
-        values.Add(new IdValuePair(node.CellId, node.HITSData.AuthorityScore));
+    public static List<KeyValuePair> GetBulkAuthValues (List<long> ids) {
+      List<KeyValuePair> values = new List<KeyValuePair>();
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
+        values.Add(new KeyValuePair(node.CellId, node.HITSData.AuthorityScore));
       }
 
       return values;
     }
 
-    public static void AddRemoteAuthScores(List<IdValuePair> values) {
-      foreach(IdValuePair valuePair in values) {
-        RemoteAuthScores[valuePair.Id] = valuePair.Value;
+    public static void AddRemoteAuthScores(List<KeyValuePair> values) {
+      foreach(KeyValuePair valuePair in values) {
+        RemoteAuthScores[valuePair.Key] = valuePair.Value;
       }
 
       Interlocked.Increment(ref AuthValueRequestsAnswerd);
@@ -155,7 +153,6 @@ namespace MultiLayerServer.Algorithms {
     public static List<double> AuthUpdateRound(bool seperateLayers) {
       AuthUpdatesSent = 0;
       AuthUpdatesConfirmed = 0;
-      PendingAuthUpdates = new Dictionary<long, double>();
       RemoteUpdates = new Dictionary<int, Dictionary<long, double>>();
       for (int i = 0; i < Global.ServerCount; i++) {
         if (i != Global.MyPartitionId) {
@@ -171,7 +168,7 @@ namespace MultiLayerServer.Algorithms {
 
       Global.CloudStorage.BarrierSync(HUB_VALUE_RESET_BARRIER);
 
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
             continue;
@@ -203,12 +200,12 @@ namespace MultiLayerServer.Algorithms {
 
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         AuthUpdatesSent++;
-        List<HITSUpdatePair> updatePairs = new List<HITSUpdatePair>();
+        List<KeyValuePair> updatePairs = new List<KeyValuePair>();
         foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
-          updatePairs.Add(new HITSUpdatePair(pendingUpdate.Value, pendingUpdate.Key));
+          updatePairs.Add(new KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
         }
 
-        using (var msg = new HITSRemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
+        using (var msg = new RemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
           MultiLayerServer.MessagePassingExtension.HITSRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
         }
       }
@@ -233,9 +230,9 @@ namespace MultiLayerServer.Algorithms {
       return result;      
     }
 
-    public static void RemoteBulkAuthUpdate (List<HITSUpdatePair> updates) {
-      foreach(HITSUpdatePair update in updates) {
-        using (Node_Accessor node = Global.LocalStorage.UseNode(update.NodeId, CellAccessOptions.ReturnNullOnCellNotFound)) {
+    public static void RemoteBulkAuthUpdate (List<KeyValuePair> updates) {
+      foreach(KeyValuePair update in updates) {
+        using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.HITSData.AuthorityScore += update.Value;
           }

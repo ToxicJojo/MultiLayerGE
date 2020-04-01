@@ -65,29 +65,17 @@ protocol HITSHubUpdateRound {
 }
 
 
-struct IdValuePair {
-  long Id;
-  double Value;
-}
-
-struct HITSGetBulkAuthValuesMessage {
-  int From;
-  List<long> Ids;
-}
 
 protocol HITSGetBulkAuthValues {
   Type: Asyn;
-  Request: HITSGetBulkAuthValuesMessage;
+  Request: RemoteBulkGetMessage;
   Response: void;
 }
 
-struct HITSGetBulkAuthValuesResponse {
-  List<IdValuePair> Values;
-}
 
 protocol HITSGetBulkAuthValuesAnswer {
   Type: Asyn;
-  Request: HITSGetBulkAuthValuesResponse;
+  Request: RemoteBulkGetResponseMessage;
   Response: void;
 }
 
@@ -115,20 +103,9 @@ protocol HITSAuthRemoteUpdateAnswer {
 }
 
 // Remote Bulk Update
-
-struct HITSUpdatePair {
-  double Value;
-  long NodeId;
-}
-
-struct HITSRemoteBulkUpdateMessage {
-  int From;
-  List<HITSUpdatePair> Updates;
-}
-
 protocol HITSRemoteBulkUpdate {
   Type: Asyn;
-  Request: HITSRemoteBulkUpdateMessage;
+  Request: RemoteBulkUpdateMessage;
   Response: void;
 }
 
