@@ -33,8 +33,8 @@ namespace MultiLayerServer.Server {
       HITS.RemoteAuthUpdateAnswer();
     }
 
-    public override void HITSRemoteBulkUpdateHandler(HITSRemoteBulkUpdateMessageReader request) {
-      HITS.RemoteBulkAuthUpdate(request.Updates);
+    public override void HITSRemoteBulkUpdateHandler(RemoteBulkUpdateMessageReader request) {
+      HITS.RemoteBulkAuthUpdate(request.Values);
 
       MultiLayerServer.MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
     }
@@ -58,15 +58,15 @@ namespace MultiLayerServer.Server {
     }
 
 
-    public override void HITSGetBulkAuthValuesHandler(HITSGetBulkAuthValuesMessageReader request) {
-      List<IdValuePair> values = HITS.GetBulkAuthValues(request.Ids);
+    public override void HITSGetBulkAuthValuesHandler(RemoteBulkGetMessageReader request) {
+      List<KeyValuePair> values = HITS.GetBulkAuthValues(request.Ids);
 
-      using (var msg = new HITSGetBulkAuthValuesResponseWriter(values)) {
+      using (var msg = new RemoteBulkGetResponseMessageWriter(values)) {
         MultiLayerServer.MessagePassingExtension.HITSGetBulkAuthValuesAnswer(Global.CloudStorage[request.From], msg);
       }
     }
 
-    public override void HITSGetBulkAuthValuesAnswerHandler(HITSGetBulkAuthValuesResponseReader request) {
+    public override void HITSGetBulkAuthValuesAnswerHandler(RemoteBulkGetResponseMessageReader request) {
       HITS.AddRemoteAuthScores(request.Values);
     }
 

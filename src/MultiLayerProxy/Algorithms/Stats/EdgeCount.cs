@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
@@ -28,14 +27,25 @@ namespace MultiLayerProxy.Algorithms {
         }
       }
 
+      WriteOutput(edgeCount);
+    }
+
+    private void WriteOutput(long[] edgeCount) {
       List<List<string>> output = new List<List<string>>();
+      long totalEdgeCount = 0;
 
       for (int i = 0; i < edgeCount.Length; i++) {
           List<string> outputRow = new List<string>();
           outputRow.Add("Layer " + (i + 1).ToString());
           outputRow.Add(edgeCount[i].ToString());
           output.Add(outputRow);
+          totalEdgeCount += edgeCount[i];
       }
+
+      List<string> totalOutputRow = new List<string>();
+      totalOutputRow.Add("Total");
+      totalOutputRow.Add(totalEdgeCount.ToString());
+      output.Add(totalOutputRow);
 
       Result = new AlgorithmResult("EdgeCount", output);
     }

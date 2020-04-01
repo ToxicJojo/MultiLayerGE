@@ -11,7 +11,7 @@ namespace MultiLayerServer.Algorithms {
     public static List<long> GetNodeCount() {
       long[] nodeCount = new long[Graph.LayerCount];
 
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         nodeCount[node.Layer - 1]++;
       }
 
@@ -26,7 +26,7 @@ namespace MultiLayerServer.Algorithms {
     public static List<long> GetEdgeCount() {
       long[] edgeCount = new long[Graph.LayerCount];
 
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
           // Only count edges which are between different nodes.
           // This will exclude the edges between the same node on different layers.
