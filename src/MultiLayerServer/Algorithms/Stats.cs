@@ -28,9 +28,8 @@ namespace MultiLayerServer.Algorithms {
 
       foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
-          // Only count edges which are between different nodes.
-          // This will exclude the edges between the same node on different layers.
-          if (edge.StartId != edge.DestinationId) {
+          // Only count edges which are on the same layer.
+          if (edge.StartLayer == edge.DestinationLayer) {
             edgeCount[edge.StartLayer - 1]++;
           }
         }

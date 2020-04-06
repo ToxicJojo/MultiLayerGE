@@ -9,18 +9,21 @@ namespace MultiLayerClient {
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
 
-            LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            //LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
 
             //Global.CloudStorage.SaveStorage();
 
+            /*
             Console.WriteLine("Loading from ge storage.");
             Global.CloudStorage.LoadStorage();
             Console.WriteLine("Finished Loading from ge storage.");
+            */
 
 
-            //GetNodeCount();
-            //GetEdgeCount();
-            GetAverageEdgeDegree();
+            GetNodeCount();
+            GetEdgeCount();
+            //GetAverageEdgeDegree();
             //PageRank(1, 2000, true);
             //PageRankTopNodes(5, false);
             //HITS(1, 2000, true);
