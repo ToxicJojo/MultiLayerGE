@@ -11,7 +11,7 @@ protocol GetEdgeCountProxy {
   Response: void;
 }
 
-protocol GetAverageEdgeDegreeProxy {
+protocol GetGraphDensityProxy {
   Type: Syn;
   Request: StandardAlgorithmMessage;
   Response: void;
@@ -26,12 +26,6 @@ protocol GetNodeCountServer {
 }
 
 protocol GetEdgeCountServer {
-  Type: Asyn;
-  Request: void;
-  Response: void;
-}
-
-protocol GetAverageEdgeDegreeServer {
   Type: Asyn;
   Request: void;
   Response: void;

@@ -6,9 +6,9 @@ using MultiLayerProxy.Output;
 
 namespace MultiLayerProxy.Algorithms {
 
-  class AverageEdgeDegree: Algorithm {
+  class GraphDensity: Algorithm {
 
-    public AverageEdgeDegree (MultiLayerProxyImpl proxy): base(proxy) {
+    public GraphDensity (MultiLayerProxyImpl proxy): base(proxy) {
     }
 
     public override void Run() {
@@ -40,12 +40,12 @@ namespace MultiLayerProxy.Algorithms {
         }
       }
       
-      double[] edgeDegree = new double[nodeCount.Length];
-      for (int i = 0; i < edgeDegree.Length; i++) {
-          edgeDegree[i] =  Convert.ToDouble(edgeCount[i]) / Convert.ToDouble(nodeCount[i]);
+      double[] density = new double[nodeCount.Length];
+      for (int i = 0; i < density.Length; i++) {
+          density[i] =  Convert.ToDouble(edgeCount[i]) / (Convert.ToDouble(nodeCount[i]) * (Convert.ToDouble(nodeCount[i]) - 1));
       }
 
-      WriteOutput(edgeDegree);
+      WriteOutput(density);
     }
 
     private void WriteOutput(double[] edgeDegree) {
@@ -58,7 +58,7 @@ namespace MultiLayerProxy.Algorithms {
           output.Add(outputRow);
       }
 
-      Result = new AlgorithmResult("EdgeDegree", output);
+      Result = new AlgorithmResult("GraphDensity", output);
     }
   }
 }

@@ -19,11 +19,11 @@ namespace MultiLayerProxy.Proxy {
       OutputAlgorithmResult(edgeCount, request.OutputOptions);
     }
 
-    public override void GetAverageEdgeDegreeProxyHandler(StandardAlgorithmMessageReader request) {
-      AverageEdgeDegree edgeDegree = new AverageEdgeDegree(this);
+    public override void GetGraphDensityProxyHandler(StandardAlgorithmMessageReader request) {
+      GraphDensity graphDensity = new GraphDensity(this);
 
-      RunAlgorithm(edgeDegree, request.AlgorithmOptions);
-      OutputAlgorithmResult(edgeDegree, request.OutputOptions);
+      RunAlgorithm(graphDensity, request.AlgorithmOptions);
+      OutputAlgorithmResult(graphDensity, request.OutputOptions);
     }
   }
 }

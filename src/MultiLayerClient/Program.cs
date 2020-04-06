@@ -21,11 +21,11 @@ namespace MultiLayerClient {
             */
 
 
-            GetNodeCount();
-            GetEdgeCount();
-            //GetAverageEdgeDegree();
-            //PageRank(1, 2000, true);
-            //PageRankTopNodes(5, false);
+            //GetNodeCount();
+            //GetEdgeCount();
+            //GetGraphDensity();
+            //PageRank(1, 1, true);
+            //PageRankTopNodes(5, true);
             //HITS(1, 2000, true);
             /*
             HITSTopAuthorities(1,true);
@@ -60,12 +60,12 @@ namespace MultiLayerClient {
             }
         }
 
-        public static void GetAverageEdgeDegree () {
+        public static void GetGraphDensity () {
             AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
             OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
             using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
-                MultiLayerProxy.MessagePassingExtension.GetAverageEdgeDegreeProxy(Global.CloudStorage.ProxyList[0], msg);
+                MultiLayerProxy.MessagePassingExtension.GetGraphDensityProxy(Global.CloudStorage.ProxyList[0], msg);
             }            
         }
 
