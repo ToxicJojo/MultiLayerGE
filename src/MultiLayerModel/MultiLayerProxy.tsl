@@ -36,6 +36,7 @@ proxy MultiLayerProxy {
   // Stats Protocols
   protocol GetNodeCountProxy; 
   protocol GetEdgeCountProxy;
+  protocol GetAverageEdgeDegreeProxy;
   // PageRank Protocols
   protocol PageRankProxy;
   protocol PageRankTopNodesProxy;

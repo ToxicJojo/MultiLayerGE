@@ -20,9 +20,10 @@ namespace MultiLayerClient {
 
             //GetNodeCount();
             //GetEdgeCount();
+            GetAverageEdgeDegree();
             //PageRank(1, 2000, true);
             //PageRankTopNodes(5, false);
-            HITS(1, 2000, true);
+            //HITS(1, 2000, true);
             /*
             HITSTopAuthorities(1,true);
             HITSTopHubs(5,true);
@@ -54,6 +55,15 @@ namespace MultiLayerClient {
             using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
                 MultiLayerProxy.MessagePassingExtension.GetEdgeCountProxy(Global.CloudStorage.ProxyList[0], msg);
             }
+        }
+
+        public static void GetAverageEdgeDegree () {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
+
+            using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
+                MultiLayerProxy.MessagePassingExtension.GetAverageEdgeDegreeProxy(Global.CloudStorage.ProxyList[0], msg);
+            }            
         }
 
         private static void PageRank (double initalValue, double epsilon, bool seperateLayers) {

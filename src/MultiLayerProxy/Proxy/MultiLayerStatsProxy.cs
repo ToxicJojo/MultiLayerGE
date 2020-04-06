@@ -18,5 +18,12 @@ namespace MultiLayerProxy.Proxy {
       RunAlgorithm(edgeCount, request.AlgorithmOptions);
       OutputAlgorithmResult(edgeCount, request.OutputOptions);
     }
+
+    public override void GetAverageEdgeDegreeProxyHandler(StandardAlgorithmMessageReader request) {
+      AverageEdgeDegree edgeDegree = new AverageEdgeDegree(this);
+
+      RunAlgorithm(edgeDegree, request.AlgorithmOptions);
+      OutputAlgorithmResult(edgeDegree, request.OutputOptions);
+    }
   }
 }
