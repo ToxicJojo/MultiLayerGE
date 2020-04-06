@@ -18,5 +18,12 @@ namespace MultiLayerProxy.Proxy {
       RunAlgorithm(edgeCount, request.AlgorithmOptions);
       OutputAlgorithmResult(edgeCount, request.OutputOptions);
     }
+
+    public override void GetGraphDensityProxyHandler(StandardAlgorithmMessageReader request) {
+      GraphDensity graphDensity = new GraphDensity(this);
+
+      RunAlgorithm(graphDensity, request.AlgorithmOptions);
+      OutputAlgorithmResult(graphDensity, request.OutputOptions);
+    }
   }
 }

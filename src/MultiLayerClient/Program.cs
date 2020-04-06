@@ -9,20 +9,24 @@ namespace MultiLayerClient {
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
 
-            LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            //LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
 
             //Global.CloudStorage.SaveStorage();
 
+            /*
             Console.WriteLine("Loading from ge storage.");
             Global.CloudStorage.LoadStorage();
             Console.WriteLine("Finished Loading from ge storage.");
+            */
 
 
             //GetNodeCount();
             //GetEdgeCount();
-            //PageRank(1, 2000, true);
-            //PageRankTopNodes(5, false);
-            HITS(1, 2000, true);
+            //GetGraphDensity();
+            //PageRank(1, 1, true);
+            //PageRankTopNodes(5, true);
+            //HITS(1, 2000, true);
             /*
             HITSTopAuthorities(1,true);
             HITSTopHubs(5,true);
@@ -54,6 +58,15 @@ namespace MultiLayerClient {
             using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
                 MultiLayerProxy.MessagePassingExtension.GetEdgeCountProxy(Global.CloudStorage.ProxyList[0], msg);
             }
+        }
+
+        public static void GetGraphDensity () {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
+
+            using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
+                MultiLayerProxy.MessagePassingExtension.GetGraphDensityProxy(Global.CloudStorage.ProxyList[0], msg);
+            }            
         }
 
         private static void PageRank (double initalValue, double epsilon, bool seperateLayers) {

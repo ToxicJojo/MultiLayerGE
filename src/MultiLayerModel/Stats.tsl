@@ -11,6 +11,12 @@ protocol GetEdgeCountProxy {
   Response: void;
 }
 
+protocol GetGraphDensityProxy {
+  Type: Syn;
+  Request: StandardAlgorithmMessage;
+  Response: void;
+}
+
 
 // Server Protocols
 protocol GetNodeCountServer {

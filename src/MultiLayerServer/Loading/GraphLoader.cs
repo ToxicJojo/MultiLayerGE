@@ -20,7 +20,7 @@ namespace MultiLayerServer.Loading {
       Graph.Init();
 
       LoadLayers(graphConfig.LayersFilePath);
-      //LoadEdges(graphConfig.EdgesFilePath);
+      LoadEdges(graphConfig.EdgesFilePath);
 
 
     }
