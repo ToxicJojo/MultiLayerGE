@@ -23,4 +23,10 @@ server MultiLayerServer {
   protocol HITSAuthRemoteUpdateAnswer; 
   protocol HITSTopAuthoritiesServer;
   protocol HITSTopHubsServer;
+  // Degree Protocols
+  protocol GetOutDegreeServer;
+  protocol GetInDegreeServer;
+  protocol DegreeBulkUpdate;
+  protocol DegreeBulkUpdateAnswer;
+  protocol DegreeGetTotal;
 }
