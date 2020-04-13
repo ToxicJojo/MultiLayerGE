@@ -1,5 +1,6 @@
 ﻿using System;
 using Trinity;
+using Trinity.Core.Lib;
 
 namespace MultiLayerClient {
     class Program {
@@ -9,8 +10,8 @@ namespace MultiLayerClient {
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
 
-            //LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
-            LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
+            LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            //LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
 
             //Global.CloudStorage.SaveStorage();
 
@@ -24,6 +25,7 @@ namespace MultiLayerClient {
             //GetNodeCount();
             //GetEdgeCount();
             //GetGraphDensity();
+            GetDegree(true);
             //PageRank(1, 1, true);
             //PageRankTopNodes(5, true);
             //HITS(1, 2000, true);
@@ -32,6 +34,7 @@ namespace MultiLayerClient {
             HITSTopHubs(5,true);
             PageRank(1, 0.35, true);
             */
+            //ShowNode(2, 1);
         }
 
         private static void LoadGraph (string configFilePath) {
@@ -114,6 +117,31 @@ namespace MultiLayerClient {
             using (var msg = new HITSTopNodesProxyMessageWriter(algorithmOptions, outputOptions, numberOfTopNodes, seperateLayers)) {
                 MultiLayerProxy.MessagePassingExtension.HITSTopHubsProxy(Global.CloudStorage.ProxyList[0], msg);
             }  
+        }
+
+        public static void GetDegree (bool seperateLayers) {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
+
+            using (var msg = new DegreeProxyMessageWriter(algorithmOptions, outputOptions, seperateLayers)) {
+                MultiLayerProxy.MessagePassingExtension.DegreeProxy(Global.CloudStorage.ProxyList[0], msg);
+            }            
+        }
+
+        public static long GetCellId (long id, int layer) {
+            string nodeName = "n" + id + "l" + layer;
+            return HashHelper.HashString2Int64(nodeName);
+        }
+
+        private static void ShowNode(int id, int layer) {
+            Node node = Global.CloudStorage.LoadNode(GetCellId(id, layer));
+
+            Console.WriteLine("------");
+            Console.WriteLine("Node {0} Layer {1}", id, layer);
+            Console.WriteLine("PageRank: {0}", node.PageRankData.Value);
+            Console.WriteLine("Authority: {0} | Hub: {1}", node.HITSData.AuthorityScore, node.HITSData.HubScore);
+            Console.WriteLine("OutDegree: {0} | InDegree: {1} | TotalDegree: {2}", node.DegreeData.InDegree, node.DegreeData.OutDegree, node.DegreeData.TotalDegree);
+            Console.WriteLine("------");
         }
     }
 }

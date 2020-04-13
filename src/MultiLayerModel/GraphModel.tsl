@@ -12,5 +12,6 @@ cell struct Node {
   int Layer;
   PageRankData PageRankData;
   HITSData HITSData;
+  DegreeData DegreeData;
   List<Edge> Edges;
 }

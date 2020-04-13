@@ -37,6 +37,8 @@ proxy MultiLayerProxy {
   protocol GetNodeCountProxy; 
   protocol GetEdgeCountProxy;
   protocol GetGraphDensityProxy;
+  // Degree Protocols
+  protocol DegreeProxy;
   // PageRank Protocols
   protocol PageRankProxy;
   protocol PageRankTopNodesProxy;

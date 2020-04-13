@@ -19,5 +19,9 @@ enum Phases {
   HITSAuthUpdateRound = 10,
   HITSAuthNormalization = 11,
   HITSTopAuthorities = 12,
-  HITSTopHubs = 13
+  HITSTopHubs = 13,
+  // Degree
+  DegreeOut = 14,
+  DegreeIn = 15,
+  DegreeTotal = 16
 }

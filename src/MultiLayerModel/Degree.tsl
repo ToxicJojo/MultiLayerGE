@@ -1,0 +1,54 @@
+struct DegreeData {
+  int TotalDegree;
+  int InDegree;
+  int OutDegree;
+}
+
+
+struct DegreeProxyMessage {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  bool SeperateLayers;
+}
+
+protocol DegreeProxy {
+  Type: Syn;
+  Request: DegreeProxyMessage;
+  Response: void; 
+}
+
+
+// Server Protocols
+struct DegreeServerMessage {
+  bool SeperateLayers;
+}
+
+protocol GetOutDegreeServer {
+  Type: Asyn;
+  Request: DegreeServerMessage;
+  Response: void;
+}
+
+protocol GetInDegreeServer {
+  Type: Asyn;
+  Request: DegreeServerMessage;
+  Response: void;
+}
+
+protocol DegreeBulkUpdate {
+  Type: Asyn;
+  Request: RemoteBulkUpdateMessage;
+  Response: void;
+}
+
+protocol DegreeBulkUpdateAnswer {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
+
+protocol DegreeGetTotal {
+  Type: Asyn;
+  Request: void;
+  Response: void;
+}
