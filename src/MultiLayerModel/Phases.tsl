@@ -23,5 +23,7 @@ enum Phases {
   // Degree
   DegreeOut = 14,
   DegreeIn = 15,
-  DegreeTotal = 16
+  DegreeTotal = 16,
+  // EgoNetwork
+  EgoNetwork = 17
 }

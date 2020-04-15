@@ -1,0 +1,28 @@
+
+
+
+struct EgoNetworkMessageProxy {
+  AlgorithmOptions AlgorithmOptions;
+  OutputOptions OutputOptions;
+  long Id;
+  int Layer;
+  bool SeperateLayers;
+}
+
+struct EgoNetworkMessageServer {
+  long Id;
+  int Layer;
+  bool SeperateLayers;
+}
+
+protocol EgoNetworkProxy {
+  Type: Asyn;
+  Request: EgoNetworkMessageProxy;
+  Response: void;
+}
+
+protocol EgoNetworkServer {
+  Type: Asyn;
+  Request: EgoNetworkMessageServer;
+  Response: void;
+}
