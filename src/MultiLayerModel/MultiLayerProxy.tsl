@@ -46,4 +46,6 @@ proxy MultiLayerProxy {
   protocol HITSProxy;
   protocol HITSTopAuthoritiesProxy;
   protocol HITSTopHubsProxy;
+  // EgoNetwork
+  protocol EgoNetworkProxy;
 }

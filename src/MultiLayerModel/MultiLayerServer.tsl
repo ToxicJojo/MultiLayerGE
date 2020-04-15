@@ -29,4 +29,6 @@ server MultiLayerServer {
   protocol DegreeBulkUpdate;
   protocol DegreeBulkUpdateAnswer;
   protocol DegreeGetTotal;
+  // EgoNetwork
+  protocol EgoNetworkServer;
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using Trinity;
 using Trinity.Core.Lib;
+using System.Collections.Generic;
 
 namespace MultiLayerClient {
     class Program {
@@ -10,22 +11,22 @@ namespace MultiLayerClient {
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
 
-            LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
-            //LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
+            //LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
 
             //Global.CloudStorage.SaveStorage();
 
-            /*
-            Console.WriteLine("Loading from ge storage.");
-            Global.CloudStorage.LoadStorage();
-            Console.WriteLine("Finished Loading from ge storage.");
-            */
+            
+            //Console.WriteLine("Loading from ge storage.");
+            //Global.CloudStorage.LoadStorage();
+            //Console.WriteLine("Finished Loading from ge storage.");
+            
 
 
             //GetNodeCount();
             //GetEdgeCount();
             //GetGraphDensity();
-            GetDegree(true);
+            //GetDegree(true);
             //PageRank(1, 1, true);
             //PageRankTopNodes(5, true);
             //HITS(1, 2000, true);
@@ -35,6 +36,8 @@ namespace MultiLayerClient {
             PageRank(1, 0.35, true);
             */
             //ShowNode(2, 1);
+            //PrintEgoNetwork(3, 2, true);
+            GetEgoNetworkServer(3, 2, true);
         }
 
         private static void LoadGraph (string configFilePath) {
@@ -128,12 +131,25 @@ namespace MultiLayerClient {
             }            
         }
 
+        private static void GetEgoNetworkServer (long id, int layer, bool seperateLayers) {
+            AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
+            OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
+
+            using (var msg = new EgoNetworkMessageProxyWriter(algorithmOptions, outputOptions, id, layer, seperateLayers)) {
+                MultiLayerProxy.MessagePassingExtension.EgoNetworkProxy(Global.CloudStorage.ProxyList[0], msg);
+            }                
+        }
+
         public static long GetCellId (long id, int layer) {
             string nodeName = "n" + id + "l" + layer;
             return HashHelper.HashString2Int64(nodeName);
         }
 
-        private static void ShowNode(int id, int layer) {
+        private static Node GetNode(long id, int layer) {
+            return Global.CloudStorage.LoadNode(GetCellId(id, layer));
+        }
+
+        private static void ShowNode(long id, int layer) {
             Node node = Global.CloudStorage.LoadNode(GetCellId(id, layer));
 
             Console.WriteLine("------");
@@ -142,6 +158,31 @@ namespace MultiLayerClient {
             Console.WriteLine("Authority: {0} | Hub: {1}", node.HITSData.AuthorityScore, node.HITSData.HubScore);
             Console.WriteLine("OutDegree: {0} | InDegree: {1} | TotalDegree: {2}", node.DegreeData.InDegree, node.DegreeData.OutDegree, node.DegreeData.TotalDegree);
             Console.WriteLine("------");
+        }
+
+
+
+        private static List<Node> GetEgoNetwork (long id, int layer, bool seperateLayers) {
+            List<Node> egoNetwork = new List<Node>();
+
+            Node node = GetNode(id, layer);
+            foreach(Edge edge in node.Edges) {
+                Console.WriteLine("Edge to :{0}/{1}", edge.DestinationLayer, edge.DestinationId);
+                if (seperateLayers && edge.DestinationLayer != edge.StartLayer) continue;
+
+                Node networkNode = GetNode(edge.DestinationId, edge.DestinationLayer);
+                egoNetwork.Add(networkNode);
+            }
+
+            return egoNetwork;
+        }
+
+        private static void PrintEgoNetwork(long id, int layer, bool seperateLayers) {
+            List<Node> egoNetwork = GetEgoNetwork(id, layer, seperateLayers);
+            Console.WriteLine("Ego Network for {0}/{1}", layer, id);
+            foreach(Node node in egoNetwork) {
+                Console.WriteLine("{0}/{1}", node.Layer, node.Id);
+            }
         }
     }
 }
