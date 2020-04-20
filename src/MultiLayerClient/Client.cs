@@ -11,8 +11,13 @@ namespace MultiLayerClient {
     public Client () {
       Commands = new Dictionary<string, ICommand>();
 
-      ShowNode showNode = new ShowNode();
-      Commands.Add(showNode.Keyword, showNode);
+      AddCommand(new ShowNode());
+      AddCommand(new NodeCount());
+      AddCommand(new EdgeCount());
+    }
+
+    private void AddCommand(ICommand command) {
+      Commands.Add(command.Keyword, command);
     }
 
     private void ExecuteCommand(ICommand command, string[] arguments) {
