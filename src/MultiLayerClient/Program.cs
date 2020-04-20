@@ -10,9 +10,19 @@ namespace MultiLayerClient {
             TrinityConfig.LoadConfig();
             TrinityConfig.CurrentRunningMode = RunningMode.Client;
 
+            Client client = new Client();
 
             //LoadGraph("/home/thiel/MultiLayerGE/data/journals/journals_config.txt");
+            Console.WriteLine("Loading Graph...");
             LoadGraph("/home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt");
+            Console.WriteLine("Graph Loaded");
+
+            if (args[0] == "interactive") {
+                client.RunInteractive();
+            } else if(args[0] == "batch") {
+                string fileName = args[1];
+                client.RunBatch(fileName);
+            }
 
             //Global.CloudStorage.SaveStorage();
 
@@ -149,16 +159,7 @@ namespace MultiLayerClient {
             return Global.CloudStorage.LoadNode(GetCellId(id, layer));
         }
 
-        private static void ShowNode(long id, int layer) {
-            Node node = Global.CloudStorage.LoadNode(GetCellId(id, layer));
 
-            Console.WriteLine("------");
-            Console.WriteLine("Node {0} Layer {1}", id, layer);
-            Console.WriteLine("PageRank: {0}", node.PageRankData.Value);
-            Console.WriteLine("Authority: {0} | Hub: {1}", node.HITSData.AuthorityScore, node.HITSData.HubScore);
-            Console.WriteLine("OutDegree: {0} | InDegree: {1} | TotalDegree: {2}", node.DegreeData.InDegree, node.DegreeData.OutDegree, node.DegreeData.TotalDegree);
-            Console.WriteLine("------");
-        }
 
 
 
