@@ -14,6 +14,8 @@ namespace MultiLayerClient {
       AddCommand(new ShowNode());
       AddCommand(new NodeCount());
       AddCommand(new EdgeCount());
+      AddCommand(new PageRank());
+      AddCommand(new PageRankTopNodes());
     }
 
     private void AddCommand(ICommand command) {

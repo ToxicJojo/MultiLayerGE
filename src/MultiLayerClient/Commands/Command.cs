@@ -26,6 +26,15 @@ namespace MultiLayerClient.Commands {
             case "int":
               int.Parse(arguments[i]);
               break;
+            case "double":
+              double.Parse(arguments[i]);
+              break;
+            case "float":
+              float.Parse(arguments[i]);
+              break;
+            case "bool":
+              bool.Parse(arguments[i]);
+              break;
           }
         } catch (Exception e) {
           Console.WriteLine("Argument {0} is not a {1}", i, Arguments[i]);
