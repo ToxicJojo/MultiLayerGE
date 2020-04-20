@@ -1,11 +1,11 @@
 using System;
-using Trinity;
+using Trinity.Storage;
 
 namespace MultiLayerClient.Commands {
 
   class NodeCount: Command {
 
-    public NodeCount () {
+    public NodeCount (RemoteStorage proxy): base (proxy) {
       Name = "Node Count";
       Keyword = "nodeCount";
       Arguments = new string[0];
@@ -19,7 +19,7 @@ namespace MultiLayerClient.Commands {
 
       Console.WriteLine("[Client] Started NodeCount");
       using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
-          MultiLayerProxy.MessagePassingExtension.GetNodeCountProxy(Global.CloudStorage.ProxyList[0], msg);
+          MultiLayerProxy.MessagePassingExtension.GetNodeCountProxy(Proxy, msg);
       }      
       Console.WriteLine("[Client] Finished NodeCount");
     }

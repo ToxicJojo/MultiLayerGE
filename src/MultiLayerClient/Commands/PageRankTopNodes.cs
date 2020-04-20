@@ -1,5 +1,5 @@
 using System;
-using Trinity;
+using Trinity.Storage;
 
 namespace MultiLayerClient.Commands {
 
@@ -8,7 +8,7 @@ namespace MultiLayerClient.Commands {
     private int NumberOfTopNodes { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public PageRankTopNodes () {
+    public PageRankTopNodes (RemoteStorage proxy): base (proxy) {
       Name = "Pagerank top nodes";
       Keyword = "pageRankTopNodes";
       Arguments = new string[] {"int", "bool"};
@@ -25,7 +25,7 @@ namespace MultiLayerClient.Commands {
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
       using (var msg = new PageRankTopNodesProxyMessageWriter(algorithmOptions, outputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Global.CloudStorage.ProxyList[0], msg);
+          MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Proxy, msg);
       }
       Console.WriteLine("[Client] Finished PageRankTopNodes");
     }

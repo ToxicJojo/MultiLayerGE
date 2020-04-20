@@ -1,11 +1,11 @@
 using System;
-using Trinity;
+using Trinity.Storage;
 
 namespace MultiLayerClient.Commands {
 
   class EdgeCount: Command {
 
-    public EdgeCount () {
+    public EdgeCount (RemoteStorage proxy): base (proxy) {
       Name = "Edge Count";
       Keyword = "edgeCount";
       Arguments = new string[0];
@@ -19,7 +19,7 @@ namespace MultiLayerClient.Commands {
 
       Console.WriteLine("[Client] Started EdgeCount");
       using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
-          MultiLayerProxy.MessagePassingExtension.GetEdgeCountProxy(Global.CloudStorage.ProxyList[0], msg);
+          MultiLayerProxy.MessagePassingExtension.GetEdgeCountProxy(Proxy, msg);
       }      
       Console.WriteLine("[Client] Finished EdgeCount");
     }

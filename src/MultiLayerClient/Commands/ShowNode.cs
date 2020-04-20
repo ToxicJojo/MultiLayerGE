@@ -1,5 +1,6 @@
 using System;
 using Trinity;
+using Trinity.Storage;
 using Trinity.Core.Lib;
 
 namespace MultiLayerClient.Commands {
@@ -11,7 +12,7 @@ namespace MultiLayerClient.Commands {
 
       private int Layer { get; set; }
 
-      public ShowNode () {
+      public ShowNode (RemoteStorage proxy): base (proxy) {
         Name = "Show Node";
         Keyword = "showNode";
         Arguments = new string[] {"long", "int"};

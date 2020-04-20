@@ -1,5 +1,5 @@
 using System;
-using Trinity;
+using Trinity.Storage;
 
 namespace MultiLayerClient.Commands {
 
@@ -9,7 +9,7 @@ namespace MultiLayerClient.Commands {
     private double Epsilon { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public PageRank () {
+    public PageRank (RemoteStorage proxy): base (proxy) {
       Name = "Page Rank";
       Keyword = "pageRank";
       Arguments = new string[] {"double", "double", "bool"};
@@ -27,7 +27,7 @@ namespace MultiLayerClient.Commands {
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
 
       using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, InitalValue, Epsilon, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.PageRankProxy(Global.CloudStorage.ProxyList[0], msg);
+          MultiLayerProxy.MessagePassingExtension.PageRankProxy(Proxy, msg);
       }  
       Console.WriteLine("[Client] Finished PageRank");
     }

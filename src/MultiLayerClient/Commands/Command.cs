@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Trinity.Storage;
 
 namespace MultiLayerClient.Commands {
 
@@ -10,6 +10,12 @@ namespace MultiLayerClient.Commands {
     public String Keyword { get; set; }
 
     public String[] Arguments { get; set; }
+
+    protected RemoteStorage Proxy { get; set; }
+
+    public Command(RemoteStorage proxy) {
+      Proxy = proxy;
+    }
 
     public bool VerifyArguments(string[] arguments) {
       if (Arguments.Length != arguments.Length) {

@@ -1,11 +1,11 @@
 using System;
-using Trinity;
+using Trinity.Storage;
 
 namespace MultiLayerClient.Commands {
 
   class GraphDensity: Command {
 
-    public GraphDensity () {
+    public GraphDensity (RemoteStorage proxy): base (proxy) {
       Name = "Graph Density";
       Keyword = "graphDensity";
       Arguments = new string[0];
@@ -19,7 +19,7 @@ namespace MultiLayerClient.Commands {
 
       Console.WriteLine("[Client] Started GraphDensity");
       using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
-          MultiLayerProxy.MessagePassingExtension.GetGraphDensityProxy(Global.CloudStorage.ProxyList[0], msg);
+          MultiLayerProxy.MessagePassingExtension.GetGraphDensityProxy(Proxy, msg);
       }      
       Console.WriteLine("[Client] Finished GraphDensity");
     }

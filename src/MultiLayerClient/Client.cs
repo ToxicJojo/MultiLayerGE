@@ -2,20 +2,26 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MultiLayerClient.Commands;
+using Trinity;
+using Trinity.Storage;
 
 namespace MultiLayerClient {
   class Client {
 
     private Dictionary<String, ICommand> Commands { get; set; }
 
+    private RemoteStorage Proxy { get; set; }
+
     public Client () {
       Commands = new Dictionary<string, ICommand>();
 
-      AddCommand(new ShowNode());
-      AddCommand(new NodeCount());
-      AddCommand(new EdgeCount());
-      AddCommand(new PageRank());
-      AddCommand(new PageRankTopNodes());
+      Proxy = Global.CloudStorage.ProxyList[0];
+
+      AddCommand(new ShowNode(Proxy));
+      AddCommand(new NodeCount(Proxy));
+      AddCommand(new EdgeCount(Proxy));
+      AddCommand(new PageRank(Proxy));
+      AddCommand(new PageRankTopNodes(Proxy));
     }
 
     private void AddCommand(ICommand command) {
