@@ -22,6 +22,9 @@ namespace MultiLayerClient {
       AddCommand(new EdgeCount(Proxy));
       AddCommand(new PageRank(Proxy));
       AddCommand(new PageRankTopNodes(Proxy));
+      AddCommand(new HITS(Proxy));
+      AddCommand(new HITSTopAuthorities(Proxy));
+      AddCommand(new HITSTopHubs(Proxy));
     }
 
     private void AddCommand(ICommand command) {
