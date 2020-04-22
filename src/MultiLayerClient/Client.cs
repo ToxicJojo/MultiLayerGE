@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 using MultiLayerClient.Commands;
 using Trinity;
@@ -17,6 +18,9 @@ namespace MultiLayerClient {
 
       Proxy = Global.CloudStorage.ProxyList[0];
 
+      AddCommand(new Interactive(this));
+      AddCommand(new Batch(this));
+
       AddCommand(new ShowNode(Proxy));
       AddCommand(new NodeCount(Proxy));
       AddCommand(new EdgeCount(Proxy));
@@ -33,6 +37,18 @@ namespace MultiLayerClient {
       Commands.Add(command.Keyword, command);
     }
 
+    private void ProcessInput (string input) {
+      string commandKeyword = input.Split()[0];
+      string[] arguments = input.Split().Skip(1).ToArray();
+
+      if (!Commands.ContainsKey(commandKeyword)) {
+        Console.WriteLine("[Client] Unknown command: {0}", commandKeyword);
+      } else {
+        ICommand command = Commands[commandKeyword];
+        ExecuteCommand(command, arguments);
+      }
+    }
+
     private void ExecuteCommand(ICommand command, string[] arguments) {
       if (command.VerifyArguments(arguments)) {
         command.ApplyArguments(arguments);
@@ -41,26 +57,30 @@ namespace MultiLayerClient {
     }
 
     public void RunInteractive() {
-      Console.WriteLine("[Client] Started  in interactive mode.");
+      Console.WriteLine("[Client] Started interactive mode.");
 
       string input = "";
       Console.Write("> ");
       while((input = Console.ReadLine()) != "exit") {
-        string commandKeyword = input.Split()[0];
-        string[] arguments = input.Split().Skip(1).ToArray();
         
-        if (!Commands.ContainsKey(commandKeyword)) {
-          Console.WriteLine("[Client] Unknown command: {0}", commandKeyword);
-        } else {
-          ICommand command = Commands[commandKeyword];
-          ExecuteCommand(command, arguments);
-        }
+        ProcessInput(input);
+
         Console.Write("> ");
       }
+      Console.WriteLine("[Client] Ending interactiv mode.");
     }
 
     public void RunBatch (string batchFile) {
+      Console.WriteLine("[Client] Started batch mode.");
+      StreamReader reader = new StreamReader(batchFile);
 
+      while(!reader.EndOfStream) {
+        string line = reader.ReadLine();
+
+        ProcessInput(line);
+      }
+
+      Console.WriteLine("[Client] Ending batch mode.");
     }
 
   }

@@ -26,6 +26,8 @@ namespace MultiLayerClient.Commands {
       for(int i = 0; i < Arguments.Length; i++) {
         try {
           switch (Arguments[i]) {
+            case "string":
+              break;
             case "long":
               long.Parse(arguments[i]);
               break;
