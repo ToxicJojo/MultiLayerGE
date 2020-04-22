@@ -20,6 +20,8 @@ namespace MultiLayerClient {
       AddCommand(new ShowNode(Proxy));
       AddCommand(new NodeCount(Proxy));
       AddCommand(new EdgeCount(Proxy));
+      AddCommand(new Degree(Proxy));
+      AddCommand(new EgoNetwork(Proxy));
       AddCommand(new PageRank(Proxy));
       AddCommand(new PageRankTopNodes(Proxy));
       AddCommand(new HITS(Proxy));
@@ -42,6 +44,7 @@ namespace MultiLayerClient {
       Console.WriteLine("[Client] Started  in interactive mode.");
 
       string input = "";
+      Console.Write("> ");
       while((input = Console.ReadLine()) != "exit") {
         string commandKeyword = input.Split()[0];
         string[] arguments = input.Split().Skip(1).ToArray();
@@ -52,6 +55,7 @@ namespace MultiLayerClient {
           ICommand command = Commands[commandKeyword];
           ExecuteCommand(command, arguments);
         }
+        Console.Write("> ");
       }
     }
 
