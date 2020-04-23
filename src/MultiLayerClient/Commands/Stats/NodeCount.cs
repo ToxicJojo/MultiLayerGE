@@ -8,7 +8,9 @@ namespace MultiLayerClient.Commands {
     public NodeCount (RemoteStorage proxy): base (proxy) {
       Name = "Node Count";
       Keyword = "nodeCount";
+      Description = "Executes a Node count";
       Arguments = new string[0];
+      ArgumentsDescription = new string[0];
     }
 
     public override void ApplyArguments(string[] arguments) {}
@@ -17,11 +19,9 @@ namespace MultiLayerClient.Commands {
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
-      Console.WriteLine("[Client] Started NodeCount");
       using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
           MultiLayerProxy.MessagePassingExtension.GetNodeCountProxy(Proxy, msg);
       }      
-      Console.WriteLine("[Client] Finished NodeCount");
     }
   }
 }

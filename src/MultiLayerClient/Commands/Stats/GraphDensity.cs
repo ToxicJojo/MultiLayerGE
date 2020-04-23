@@ -9,6 +9,7 @@ namespace MultiLayerClient.Commands {
       Name = "Graph Density";
       Keyword = "graphDensity";
       Arguments = new string[0];
+      ArgumentsDescription = new string[0];
     }
 
     public override void ApplyArguments(string[] arguments) {}
@@ -17,11 +18,9 @@ namespace MultiLayerClient.Commands {
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
-      Console.WriteLine("[Client] Started GraphDensity");
       using (var msg = new StandardAlgorithmMessageWriter(algorithmOptions, outputOptions)) {
           MultiLayerProxy.MessagePassingExtension.GetGraphDensityProxy(Proxy, msg);
       }      
-      Console.WriteLine("[Client] Finished GraphDensity");
     }
   }
 }

@@ -12,7 +12,9 @@ namespace MultiLayerClient.Commands {
     public PageRank (RemoteStorage proxy): base (proxy) {
       Name = "Page Rank";
       Keyword = "pageRank";
+      Description = "Runs Pagerank on all nodes.";
       Arguments = new string[] {"double", "double", "bool"};
+      ArgumentsDescription = new string[] {"InitialValues", "Epsilon", "SeperateLayers"};
     }
 
     public override void ApplyArguments(string[] arguments) {
@@ -22,14 +24,12 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      Console.WriteLine("[Client] Started PageRank");
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
 
       using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, InitalValue, Epsilon, SeperateLayers)) {
           MultiLayerProxy.MessagePassingExtension.PageRankProxy(Proxy, msg);
       }  
-      Console.WriteLine("[Client] Finished PageRank");
     }
   }
 }

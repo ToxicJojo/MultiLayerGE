@@ -9,6 +9,12 @@ namespace MultiLayerClient.Commands {
 
     String Keyword { get; set; }
 
+    String Description { get; set; }
+
+    String[] Arguments { get; set; }
+
+    String[] ArgumentsDescription { get; set; }
+
     bool VerifyArguments(string[] arguments);
 
     void ApplyArguments(string[] arguments);

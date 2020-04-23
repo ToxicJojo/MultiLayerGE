@@ -11,7 +11,9 @@ namespace MultiLayerClient.Commands {
     public PageRankTopNodes (RemoteStorage proxy): base (proxy) {
       Name = "Pagerank top nodes";
       Keyword = "pageRankTopNodes";
+      Description = "Finds the nodes with the highest pagerank values.";
       Arguments = new string[] {"int", "bool"};
+      Arguments = new string[] {"NumerOfTopNodes", "SeperateLayers"};
     }
 
     public override void ApplyArguments(string[] arguments) {
@@ -20,14 +22,12 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      Console.WriteLine("[Client] Started PageRankTopNodes");
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
       using (var msg = new PageRankTopNodesProxyMessageWriter(algorithmOptions, outputOptions, NumberOfTopNodes, SeperateLayers)) {
           MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Proxy, msg);
       }
-      Console.WriteLine("[Client] Finished PageRankTopNodes");
     }
   }
 }

@@ -11,7 +11,9 @@ namespace MultiLayerClient.Commands {
     public EgoNetwork (RemoteStorage proxy): base (proxy) {
       Name = "EgoNetwork";
       Keyword = "egoNetwork";
+      Description = "Finds the ego network for a node.";
       Arguments = new string[] { "long", "int", "bool" };
+      ArgumentsDescription = new string[] { "Id", "Layer", "SeperateLayers" };
     }
 
     public override void ApplyArguments(string[] arguments) {
@@ -21,14 +23,12 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      Console.WriteLine("[Client] Started EgoNetwork");
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
       using (var msg = new EgoNetworkMessageProxyWriter(algorithmOptions, outputOptions, Id, Layer, SeperateLayers)) {
           MultiLayerProxy.MessagePassingExtension.EgoNetworkProxy(Proxy, msg);
       }          
-      Console.WriteLine("[Client] Finished EgoNetwork");
     }
   }
 }

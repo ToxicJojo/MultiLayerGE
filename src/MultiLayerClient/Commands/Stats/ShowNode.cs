@@ -4,8 +4,6 @@ using Trinity.Storage;
 using Trinity.Core.Lib;
 
 namespace MultiLayerClient.Commands {
-
-
   class ShowNode: Command {
 
       private long Id { get; set; }
@@ -15,7 +13,9 @@ namespace MultiLayerClient.Commands {
       public ShowNode (RemoteStorage proxy): base (proxy) {
         Name = "Show Node";
         Keyword = "showNode";
+        Description = "Shows information about a single node";
         Arguments = new string[] {"long", "int"};
+        ArgumentsDescription = new string[] {"Id", "Layer"};
       }
 
     public override void ApplyArguments(string[] arguments) {

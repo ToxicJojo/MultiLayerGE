@@ -11,7 +11,9 @@ namespace MultiLayerClient.Commands {
     public HITSTopAuthorities (RemoteStorage proxy): base (proxy) {
       Name = "Hits top authorities";
       Keyword = "hitsTopAuthorities";
+      Description = "Finds the node with the highest authority score.";
       Arguments = new string[] {"int", "bool"};
+      Arguments = new string[] {"NumberOfTopNodes", "SeperateLayers"};
     }
 
     public override void ApplyArguments(string[] arguments) {
@@ -20,14 +22,12 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      Console.WriteLine("[Client] Started Hits top authorities");
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
       using (var msg = new HITSTopNodesProxyMessageWriter(algorithmOptions, outputOptions, NumberOfTopNodes, SeperateLayers)) {
           MultiLayerProxy.MessagePassingExtension.HITSTopAuthoritiesProxy(Proxy, msg);
       }
-      Console.WriteLine("[Client] Finished Hits top authorities");
     }
   }
 }

@@ -9,7 +9,7 @@ using Trinity.Storage;
 namespace MultiLayerClient {
   class Client {
 
-    private Dictionary<String, ICommand> Commands { get; set; }
+    public Dictionary<String, ICommand> Commands { get; set; }
 
     private RemoteStorage Proxy { get; set; }
 
@@ -20,6 +20,7 @@ namespace MultiLayerClient {
 
       AddCommand(new Interactive(this));
       AddCommand(new Batch(this));
+      AddCommand(new Help(this));
 
       AddCommand(new ShowNode(Proxy));
       AddCommand(new NodeCount(Proxy));
@@ -43,6 +44,7 @@ namespace MultiLayerClient {
 
       if (!Commands.ContainsKey(commandKeyword)) {
         Console.WriteLine("[Client] Unknown command: {0}", commandKeyword);
+        Console.WriteLine("[Client] Type 'help commands' for a list of all avaiable commands.");
       } else {
         ICommand command = Commands[commandKeyword];
         ExecuteCommand(command, arguments);
@@ -52,7 +54,13 @@ namespace MultiLayerClient {
     private void ExecuteCommand(ICommand command, string[] arguments) {
       if (command.VerifyArguments(arguments)) {
         command.ApplyArguments(arguments);
-        command.Run();
+        if (command.Keyword != "help" && command.Keyword != "interactive" && command.Keyword != "batch") {
+          Console.WriteLine("[Client] Started {0}.", command.Name);
+          command.Run();
+          Console.WriteLine("[Client] Finished {0}.", command.Name);
+        } else {
+          command.Run();
+        }
       }
     }
 

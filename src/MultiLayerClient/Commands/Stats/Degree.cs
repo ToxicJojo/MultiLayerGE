@@ -10,7 +10,9 @@ namespace MultiLayerClient.Commands {
     public Degree (RemoteStorage proxy): base (proxy) {
       Name = "Degree";
       Keyword = "degree";
+      Description = "Calculates the in/out/total degree for all nodes.";
       Arguments = new string[] { "bool" };
+      ArgumentsDescription = new string[] { "SeperateLayers" };
     }
 
     public override void ApplyArguments(string[] arguments) {
@@ -18,14 +20,12 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      Console.WriteLine("[Client] Started Degree");
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
 
       using (var msg = new DegreeProxyMessageWriter(algorithmOptions, outputOptions, SeperateLayers)) {
           MultiLayerProxy.MessagePassingExtension.DegreeProxy(Proxy, msg);
       }        
-      Console.WriteLine("[Client] Finished Degree");
     }
   }
 }
