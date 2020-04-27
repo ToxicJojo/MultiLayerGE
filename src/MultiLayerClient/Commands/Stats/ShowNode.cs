@@ -10,7 +10,7 @@ namespace MultiLayerClient.Commands {
 
       private int Layer { get; set; }
 
-      public ShowNode (RemoteStorage proxy): base (proxy) {
+      public ShowNode (): base (null) {
         Name = "Show Node";
         Keyword = "showNode";
         Description = "Shows information about a single node";

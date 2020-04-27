@@ -22,7 +22,10 @@ namespace MultiLayerClient {
       AddCommand(new Batch(this));
       AddCommand(new Help(this));
 
-      AddCommand(new ShowNode(Proxy));
+      AddCommand(new LoadStorage());
+      AddCommand(new SaveStorage());
+
+      AddCommand(new ShowNode());
       AddCommand(new NodeCount(Proxy));
       AddCommand(new EdgeCount(Proxy));
       AddCommand(new Degree(Proxy));

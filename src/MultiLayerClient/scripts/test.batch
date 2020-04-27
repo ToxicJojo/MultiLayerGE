@@ -1,1 +1,5 @@
+saveStorage
 pageRank 1 200 true
+showNode 2 1
+loadStorage
+showNode 2 1
