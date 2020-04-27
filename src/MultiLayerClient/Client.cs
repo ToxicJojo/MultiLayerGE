@@ -24,6 +24,7 @@ namespace MultiLayerClient {
 
       AddCommand(new LoadStorage());
       AddCommand(new SaveStorage());
+      AddCommand(new LoadGraph(Proxy));
 
       AddCommand(new ShowNode());
       AddCommand(new NodeCount(Proxy));
