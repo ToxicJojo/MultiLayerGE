@@ -84,14 +84,17 @@ namespace MultiLayerClient {
 
     public void RunBatch (string batchFile) {
       Console.WriteLine("[Client] Started batch mode.");
-      StreamReader reader = new StreamReader(batchFile);
+      try {
+        StreamReader reader = new StreamReader(batchFile);
 
-      while(!reader.EndOfStream) {
-        string line = reader.ReadLine();
+        while(!reader.EndOfStream) {
+          string line = reader.ReadLine();
 
-        ProcessInput(line);
+          ProcessInput(line);
+        }
+      } catch (FileNotFoundException e) {
+        Console.WriteLine("[Client] {0}", e.Message);
       }
-
       Console.WriteLine("[Client] Ending batch mode.");
     }
 
