@@ -23,13 +23,6 @@ namespace MultiLayerClient {
                 string fileName = args[1];
                 client.RunBatch(fileName);
             }
-
-            //Global.CloudStorage.SaveStorage();
-
-            
-            //Console.WriteLine("Loading from ge storage.");
-            //Global.CloudStorage.LoadStorage();
-            //Console.WriteLine("Finished Loading from ge storage.");
         }
 
         private static void LoadGraph (string configFilePath) {

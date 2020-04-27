@@ -12,7 +12,7 @@ namespace MultiLayerClient.Commands {
     public Help(Client client): base(null) {
       Name = "Help";
       Keyword = "help";
-      Description = "";
+      Description = "Shows information about avaiable commands and their required arguments.";
       Arguments = new string[] { "string" };
       ArgumentsDescription = new string[] { "HelpArgument" };
       Client = client;
@@ -34,8 +34,9 @@ namespace MultiLayerClient.Commands {
         for (int i = 0; i < command.Arguments.Length; i++) {
            Console.WriteLine("  {0}. {1} [{2}]", i, command.ArgumentsDescription[i], command.Arguments[i]);
         }
-
-
+      } else {
+        Console.WriteLine("[Client] Unknown command: {0}", HelpArgument);
+        Console.WriteLine("[Client] Type 'help commands' for a list of all avaiable commands.");
       }
     }
 

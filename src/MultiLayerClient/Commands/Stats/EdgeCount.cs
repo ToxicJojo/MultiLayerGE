@@ -8,6 +8,7 @@ namespace MultiLayerClient.Commands {
     public EdgeCount (RemoteStorage proxy): base (proxy) {
       Name = "Edge Count";
       Keyword = "edgeCount";
+      Description = "Counts the number of edges for each layer.";
       Arguments = new string[0];
       ArgumentsDescription = new string[0];
     }
