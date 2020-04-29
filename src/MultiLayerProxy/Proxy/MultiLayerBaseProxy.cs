@@ -55,7 +55,7 @@ namespace MultiLayerProxy.Proxy {
             ts.Hours, ts.Minutes, ts.Seconds,
             ts.Milliseconds / 10);
 
-        Console.WriteLine("Finished {0} in {1}", "Data Load", elapsedTime);
+        Console.WriteLine("Finished {0} in {1}", "Algorithm", elapsedTime);
       } else {
         algorithm.Run();
       }
@@ -73,14 +73,12 @@ namespace MultiLayerProxy.Proxy {
       // Create a new IOutputWriter that matches the type given in the options.
       if (options.OutputType == OutputType.Console) {
         outputWriter = new ConsoleOutputWriter(algorithm.Result);
+        outputWriter.WriteOutput();
       } else if (options.OutputType == OutputType.CSV) {
         outputWriter = new CSVOutputWriter(algorithm.Result);
-      } else {
-        // Default to console output. Maybe implement a outputwriter that just does nothing instead?
-        outputWriter = new ConsoleOutputWriter(algorithm.Result);
+        outputWriter.WriteOutput();
       }
 
-      outputWriter.WriteOutput();
     }
 
     /// <summary>

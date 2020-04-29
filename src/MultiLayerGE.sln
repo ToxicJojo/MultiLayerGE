@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiLayerServer", "MultiLa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiLayerProxy", "MultiLayerProxy\MultiLayerProxy.csproj", "{3F925C8F-C667-4005-9DA8-E6284662B0AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiLayerLib", "MultiLayerLib\MultiLayerLib.csproj", "{507989E3-D1C9-4D3B-B7AF-34589075F9F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{3F925C8F-C667-4005-9DA8-E6284662B0AB}.Release|x64.Build.0 = Release|Any CPU
 		{3F925C8F-C667-4005-9DA8-E6284662B0AB}.Release|x86.ActiveCfg = Release|Any CPU
 		{3F925C8F-C667-4005-9DA8-E6284662B0AB}.Release|x86.Build.0 = Release|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Debug|x86.Build.0 = Debug|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Release|x64.Build.0 = Release|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{507989E3-D1C9-4D3B-B7AF-34589075F9F9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

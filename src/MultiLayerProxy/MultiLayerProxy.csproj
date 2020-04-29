@@ -13,7 +13,7 @@
 
   <!-- Define which files to copy  -->
   <ItemGroup>
-      <TSLFiles Include="../MultiLayerModel/**/*.tsl"/>
+      <TSLFiles Include="../MultiLayerModel/**/*.tsl" />
   </ItemGroup>
 
   <Target Name="CopyTSLFiles">
@@ -28,6 +28,10 @@
     <TslCodegen Include="**/*.tsl" />
     <!-- Copy the configuration file to the output dir so GraphEngine can read it -->
     <Content Include="../trinity.xml" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MultiLayerLib\MultiLayerLib.csproj" />
   </ItemGroup>
 
 </Project>
