@@ -1,6 +1,3 @@
-using System;
-using Trinity.Storage;
-
 namespace MultiLayerClient.Commands {
 
   class EgoNetwork: Command {
@@ -8,7 +5,7 @@ namespace MultiLayerClient.Commands {
     private int Layer { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public EgoNetwork (RemoteStorage proxy): base (proxy) {
+    public EgoNetwork (Client client): base (client) {
       Name = "EgoNetwork";
       Keyword = "egoNetwork";
       Description = "Finds the ego network for a node.";
@@ -23,11 +20,8 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-      OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
-
-      using (var msg = new EgoNetworkMessageProxyWriter(algorithmOptions, outputOptions, Id, Layer, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.EgoNetworkProxy(Proxy, msg);
+      using (var msg = new EgoNetworkMessageProxyWriter(Client.AlgorithmOptions, Client.OutputOptions, Id, Layer, SeperateLayers)) {
+          MultiLayerProxy.MessagePassingExtension.EgoNetworkProxy(Client.Proxy, msg);
       }          
     }
   }

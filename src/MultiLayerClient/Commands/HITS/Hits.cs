@@ -1,6 +1,3 @@
-using System;
-using Trinity.Storage;
-
 namespace MultiLayerClient.Commands {
 
   class HITS: Command {
@@ -9,7 +6,7 @@ namespace MultiLayerClient.Commands {
     private double Epsilon { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public HITS (RemoteStorage proxy): base (proxy) {
+    public HITS (Client client): base (client) {
       Name = "HITS";
       Keyword = "hits";
       Description = "Runs HITS on all nodes.";
@@ -24,11 +21,8 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-      OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
-
-      using (var msg = new HITSProxyMessageWriter(algorithmOptions, outputOptions, InitalValue, Epsilon, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.HITSProxy(Proxy, msg);
+      using (var msg = new HITSProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, InitalValue, Epsilon, SeperateLayers)) {
+          MultiLayerProxy.MessagePassingExtension.HITSProxy(Client.Proxy, msg);
       }  
     }
   }

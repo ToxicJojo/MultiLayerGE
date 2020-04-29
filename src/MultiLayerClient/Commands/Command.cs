@@ -13,10 +13,10 @@ namespace MultiLayerClient.Commands {
     public String[] Arguments { get; set; }
     public String[] ArgumentsDescription { get; set; }
 
-    protected RemoteStorage Proxy { get; set; }
+    protected Client Client { get; set; }
 
-    public Command(RemoteStorage proxy) {
-      Proxy = proxy;
+    public Command(Client client) {
+      Client = client;
     }
 
     public bool VerifyArguments(string[] arguments) {

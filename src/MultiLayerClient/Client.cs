@@ -11,9 +11,16 @@ namespace MultiLayerClient {
 
     public Dictionary<String, ICommand> Commands { get; set; }
 
-    private RemoteStorage Proxy { get; set; }
+    public RemoteStorage Proxy { get; set; }
+
+    public AlgorithmOptions AlgorithmOptions { get; set; }
+
+    public OutputOptions OutputOptions { get; set; }
 
     public Client () {
+      AlgorithmOptions = new AlgorithmOptions(false);
+      OutputOptions = new OutputOptions(OutputType.Console);
+
       Commands = new Dictionary<string, ICommand>();
 
       Proxy = Global.CloudStorage.ProxyList[0];
@@ -22,20 +29,23 @@ namespace MultiLayerClient {
       AddCommand(new Batch(this));
       AddCommand(new Help(this));
 
+      AddCommand(new SetOutputOptions(this));
+      AddCommand(new SetAlgorithmOptions(this));
+
       AddCommand(new LoadStorage());
       AddCommand(new SaveStorage());
-      AddCommand(new LoadGraph(Proxy));
+      AddCommand(new LoadGraph(this));
 
       AddCommand(new ShowNode());
-      AddCommand(new NodeCount(Proxy));
-      AddCommand(new EdgeCount(Proxy));
-      AddCommand(new Degree(Proxy));
-      AddCommand(new EgoNetwork(Proxy));
-      AddCommand(new PageRank(Proxy));
-      AddCommand(new PageRankTopNodes(Proxy));
-      AddCommand(new HITS(Proxy));
-      AddCommand(new HITSTopAuthorities(Proxy));
-      AddCommand(new HITSTopHubs(Proxy));
+      AddCommand(new NodeCount(this));
+      AddCommand(new EdgeCount(this));
+      AddCommand(new Degree(this));
+      AddCommand(new EgoNetwork(this));
+      AddCommand(new PageRank(this));
+      AddCommand(new PageRankTopNodes(this));
+      AddCommand(new HITS(this));
+      AddCommand(new HITSTopAuthorities(this));
+      AddCommand(new HITSTopHubs(this));
     }
 
     private void AddCommand(ICommand command) {

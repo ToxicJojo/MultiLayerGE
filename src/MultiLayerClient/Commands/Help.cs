@@ -2,20 +2,16 @@ using System;
 
 namespace MultiLayerClient.Commands {
 
-
   class Help: Command {
 
     public string HelpArgument { get; set; }
 
-    public Client Client { get; set; }
-
-    public Help(Client client): base(null) {
+    public Help(Client client): base(client) {
       Name = "Help";
       Keyword = "help";
       Description = "Shows information about avaiable commands and their required arguments.";
       Arguments = new string[] { "string" };
       ArgumentsDescription = new string[] { "HelpArgument" };
-      Client = client;
     }
 
 

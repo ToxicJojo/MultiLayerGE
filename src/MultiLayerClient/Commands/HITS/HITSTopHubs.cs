@@ -1,6 +1,3 @@
-using System;
-using Trinity.Storage;
-
 namespace MultiLayerClient.Commands {
 
   class HITSTopHubs: Command {
@@ -8,7 +5,7 @@ namespace MultiLayerClient.Commands {
     private int NumberOfTopNodes { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public HITSTopHubs (RemoteStorage proxy): base (proxy) {
+    public HITSTopHubs (Client client): base (client) {
       Name = "Hits top hubs";
       Keyword = "hitsTopHubs";
       Description = "Finds the nodes with the highest hub score.";
@@ -22,11 +19,8 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-      OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
-
-      using (var msg = new HITSTopNodesProxyMessageWriter(algorithmOptions, outputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.HITSTopHubsProxy(Proxy, msg);
+      using (var msg = new HITSTopNodesProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, NumberOfTopNodes, SeperateLayers)) {
+          MultiLayerProxy.MessagePassingExtension.HITSTopHubsProxy(Client.Proxy, msg);
       }
     }
   }

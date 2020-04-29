@@ -7,7 +7,7 @@ namespace MultiLayerClient.Commands {
 
     private string ConfigFilePath { get; set; }
 
-    public LoadGraph (RemoteStorage proxy): base (proxy) {
+    public LoadGraph (Client client): base (client) {
       Name = "Load graph";
       Keyword = "loadGraph";
       Description = "Loads a graph from the given config file.";
@@ -23,7 +23,7 @@ namespace MultiLayerClient.Commands {
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed:true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
       using (var msg = new LoadGraphProxyMessageWriter(algorithmOptions, outputOptions, ConfigFilePath)) {
-          MultiLayerProxy.MessagePassingExtension.LoadGraphProxy(Proxy, msg);
+          MultiLayerProxy.MessagePassingExtension.LoadGraphProxy(Client.Proxy, msg);
       }   
     }
   }

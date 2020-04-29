@@ -1,6 +1,3 @@
-using System;
-using Trinity.Storage;
-
 namespace MultiLayerClient.Commands {
 
   class PageRankTopNodes: Command {
@@ -8,7 +5,7 @@ namespace MultiLayerClient.Commands {
     private int NumberOfTopNodes { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public PageRankTopNodes (RemoteStorage proxy): base (proxy) {
+    public PageRankTopNodes (Client client): base (client) {
       Name = "Pagerank top nodes";
       Keyword = "pageRankTopNodes";
       Description = "Finds the nodes with the highest pagerank values.";
@@ -22,11 +19,8 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-      OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
-
-      using (var msg = new PageRankTopNodesProxyMessageWriter(algorithmOptions, outputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Proxy, msg);
+      using (var msg = new PageRankTopNodesProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, NumberOfTopNodes, SeperateLayers)) {
+          MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Client.Proxy, msg);
       }
     }
   }

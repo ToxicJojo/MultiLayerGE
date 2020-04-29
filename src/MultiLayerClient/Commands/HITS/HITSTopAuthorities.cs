@@ -1,6 +1,3 @@
-using System;
-using Trinity.Storage;
-
 namespace MultiLayerClient.Commands {
 
   class HITSTopAuthorities: Command {
@@ -8,7 +5,7 @@ namespace MultiLayerClient.Commands {
     private int NumberOfTopNodes { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public HITSTopAuthorities (RemoteStorage proxy): base (proxy) {
+    public HITSTopAuthorities (Client client): base (client) {
       Name = "Hits top authorities";
       Keyword = "hitsTopAuthorities";
       Description = "Finds the node with the highest authority score.";
@@ -22,11 +19,8 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-      OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
-
-      using (var msg = new HITSTopNodesProxyMessageWriter(algorithmOptions, outputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.HITSTopAuthoritiesProxy(Proxy, msg);
+      using (var msg = new HITSTopNodesProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, NumberOfTopNodes, SeperateLayers)) {
+          MultiLayerProxy.MessagePassingExtension.HITSTopAuthoritiesProxy(Client.Proxy, msg);
       }
     }
   }

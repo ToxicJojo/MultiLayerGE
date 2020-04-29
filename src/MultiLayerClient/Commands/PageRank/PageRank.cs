@@ -1,6 +1,3 @@
-using System;
-using Trinity.Storage;
-
 namespace MultiLayerClient.Commands {
 
   class PageRank: Command {
@@ -9,7 +6,7 @@ namespace MultiLayerClient.Commands {
     private double Epsilon { get; set; }
     private bool SeperateLayers { get; set; }
 
-    public PageRank (RemoteStorage proxy): base (proxy) {
+    public PageRank (Client client): base (client) {
       Name = "Page Rank";
       Keyword = "pageRank";
       Description = "Runs Pagerank on all nodes.";
@@ -24,11 +21,8 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed: true);
-      OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.Console);
-
-      using (var msg = new PageRankProxyMessageWriter(algorithmOptions, outputOptions, InitalValue, Epsilon, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.PageRankProxy(Proxy, msg);
+      using (var msg = new PageRankProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, InitalValue, Epsilon, SeperateLayers)) {
+          MultiLayerProxy.MessagePassingExtension.PageRankProxy(Client.Proxy, msg);
       }  
     }
   }
