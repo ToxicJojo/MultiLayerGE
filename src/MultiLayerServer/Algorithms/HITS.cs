@@ -90,7 +90,7 @@ namespace MultiLayerServer.Algorithms {
         wait.SpinOnce();
       }
 
-      Global.CloudStorage.BarrierSync(5);
+      Global.CloudStorage.BarrierSync(0);
       foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
