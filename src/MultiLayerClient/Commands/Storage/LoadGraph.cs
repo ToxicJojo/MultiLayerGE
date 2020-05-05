@@ -1,5 +1,5 @@
-using System;
-using Trinity.Storage;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerClient.Commands {
 
@@ -23,7 +23,7 @@ namespace MultiLayerClient.Commands {
       AlgorithmOptions algorithmOptions = new AlgorithmOptions(Timed:true);
       OutputOptions outputOptions = new OutputOptions(OutputType: OutputType.CSV);
       using (var msg = new LoadGraphProxyMessageWriter(algorithmOptions, outputOptions, ConfigFilePath)) {
-          MultiLayerProxy.MessagePassingExtension.LoadGraphProxy(Client.Proxy, msg);
+          MessagePassingExtension.LoadGraphProxy(Client.Proxy, msg);
       }   
     }
   }

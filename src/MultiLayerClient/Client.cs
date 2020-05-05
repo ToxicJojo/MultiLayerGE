@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using MultiLayerClient.Commands;
 using Trinity;
 using Trinity.Storage;
+using MultiLayerLib;
 
 namespace MultiLayerClient {
   class Client {

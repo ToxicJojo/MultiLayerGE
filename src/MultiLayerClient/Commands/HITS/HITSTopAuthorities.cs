@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class HITSTopAuthorities: Command {
@@ -20,7 +23,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new HITSTopNodesProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.HITSTopAuthoritiesProxy(Client.Proxy, msg);
+          MessagePassingExtension.HITSTopAuthoritiesProxy(Client.Proxy, msg);
       }
     }
   }

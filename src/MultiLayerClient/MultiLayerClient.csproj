@@ -20,7 +20,8 @@
     <!-- Delete potentially old .tsl files before our build -->
     <RemoveDir Directories="tsl/" />
     <!-- Copy all .tsl files from the model project into a /tsl folder -->
-    <Copy SourceFiles="@(TSLFiles)" DestinationFolder="tsl/" />
+    <!--<Copy SourceFiles="@(TSLFiles)" DestinationFolder="tsl/" /> -->
+
   </Target>
 
   <ItemGroup>

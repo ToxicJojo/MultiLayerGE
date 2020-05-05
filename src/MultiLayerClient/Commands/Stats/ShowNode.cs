@@ -1,7 +1,5 @@
 using System;
-using Trinity;
-using Trinity.Storage;
-using Trinity.Core.Lib;
+using MultiLayerLib;
 
 namespace MultiLayerClient.Commands {
   class ShowNode: Command {
@@ -24,7 +22,7 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
-      Node node = Global.CloudStorage.LoadNode(GetCellId(Id, Layer));
+      Node node = Graph.LoadNode(Id, Layer);
 
       Console.WriteLine("------");
       Console.WriteLine("Node {0} Layer {1}", Id, Layer);
@@ -33,11 +31,6 @@ namespace MultiLayerClient.Commands {
       Console.WriteLine("OutDegree: {0} | InDegree: {1} | TotalDegree: {2}", node.DegreeData.InDegree, node.DegreeData.OutDegree, node.DegreeData.TotalDegree);
       Console.WriteLine("------");
     }
-    private long GetCellId (long id, int layer) {
-        string nodeName = "n" + id + "l" + layer;
-        return HashHelper.HashString2Int64(nodeName);
-    }
-
   }
 
 }

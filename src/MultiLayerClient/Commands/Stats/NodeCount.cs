@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class NodeCount: Command {
@@ -14,7 +17,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new StandardAlgorithmMessageWriter(Client.AlgorithmOptions, Client.OutputOptions)) {
-          MultiLayerProxy.MessagePassingExtension.GetNodeCountProxy(Client.Proxy, msg);
+          MessagePassingExtension.GetNodeCountProxy(Client.Proxy, msg);
       }      
     }
   }

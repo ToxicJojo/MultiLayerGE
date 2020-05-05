@@ -141,31 +141,5 @@ namespace MultiLayerServer.Loading {
             Graph.AddEdges(id, layer, edges);
         }
     }
-
-    /// <summary>
-    /// Calculates the position from where a server is responsible for loading an input file.
-    /// The lenght of the input file is distributed evenly among all the servers in the cluster.
-    /// </summary>
-    /// <param name="fileLength">The lenght of the input file in bytes.</param>
-    /// <returns></returns>
-    private long CalculateStartByte(long fileLength) {
-        int myServerPosition = Global.MyPartitionId;
-        int serverCount = TrinityConfig.Servers.Count;
-        long startByte = (fileLength / serverCount) * myServerPosition;
-        return startByte;
-    }
-
-    /// <summary>
-    /// Calculates the position where a server stops being responsible for loading an input file.
-    /// The lenght of the input file is distributed evenly among all the servers in the cluster.
-    /// </summary>
-    /// <param name="fileLength">The lenght of the input file in bytes.</param>
-    /// <returns></returns>
-    private long CalculateEndByte(long fileLength) {
-        int myServerPosition = Global.MyPartitionId;
-        int serverCount = TrinityConfig.Servers.Count;
-        long endByte = (fileLength / serverCount) * (myServerPosition + 1);
-        return endByte;
-    }
   }
 }

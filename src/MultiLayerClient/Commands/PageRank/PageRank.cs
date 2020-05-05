@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class PageRank: Command {
@@ -22,8 +25,8 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new PageRankProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, InitalValue, Epsilon, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.PageRankProxy(Client.Proxy, msg);
-      }  
+          MessagePassingExtension.PageRankProxy(Client.Proxy, msg);
+      }
     }
   }
 }

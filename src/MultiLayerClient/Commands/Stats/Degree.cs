@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class Degree: Command {
@@ -18,7 +21,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new DegreeProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.DegreeProxy(Client.Proxy, msg);
+          MessagePassingExtension.DegreeProxy(Client.Proxy, msg);
       }        
     }
   }

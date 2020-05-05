@@ -1,10 +1,8 @@
-using Trinity;
+using MultiLayerLib;
 
 namespace MultiLayerClient.Commands {
 
   class LoadStorage: Command {
-
-    private Client Client { get; set; }
 
     public LoadStorage (): base(null)  {
       Name = "Load Storage";
@@ -17,7 +15,7 @@ namespace MultiLayerClient.Commands {
     public override void ApplyArguments(string[] arguments) {}
 
     public override void Run () {
-      Global.CloudStorage.LoadStorage();
+      Graph.LoadFromGEStorage();
     }
   }
 }
