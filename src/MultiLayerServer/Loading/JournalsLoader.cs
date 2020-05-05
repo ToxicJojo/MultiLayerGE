@@ -1,3 +1,5 @@
+using MultiLayerLib;
+
 namespace MultiLayerServer.Loading {
 
   class JournalsLoader: IEdgeLoader {

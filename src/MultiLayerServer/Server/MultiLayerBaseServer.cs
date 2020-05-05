@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Trinity;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerServer.Server {
 
@@ -22,7 +24,7 @@ namespace MultiLayerServer.Server {
     /// <param name="result">A list of results for the phase. </param>
     private void PhaseFinished(Phases phase, List<string> result) {
       using (var msg = new PhaseFinishedMessageWriter(result, phase)) {
-        MultiLayerProxy.MessagePassingExtension.PhaseFinished(Global.CloudStorage.ProxyList[0], msg);
+        MessagePassingExtension.PhaseFinished(Global.CloudStorage.ProxyList[0], msg);
       }
     }
   }

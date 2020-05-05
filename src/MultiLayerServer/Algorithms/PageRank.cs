@@ -6,6 +6,8 @@ using Trinity;
 using Trinity.Network;
 using Trinity.Core.Lib;
 using Trinity.TSL.Lib;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Algorithms {
   class PageRank {
@@ -60,7 +62,7 @@ namespace MultiLayerServer.Algorithms {
           if (edge.StartId == edge.DestinationId && edge.StartLayer == edge.DestinationLayer) {
             continue;
           }
-          long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
+          long targetCellId = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
           // If the target node is a local one we can do the update directly.
           if (Global.CloudStorage.IsLocalCell(targetCellId)) {
@@ -85,13 +87,13 @@ namespace MultiLayerServer.Algorithms {
       // Then sent an update requests to that server.
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         UpdatesSent++;
-        List<KeyValuePair> updatePairs = new List<KeyValuePair>();
+        List<MultiLayerLib.KeyValuePair> updatePairs = new List<MultiLayerLib.KeyValuePair>();
         foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
-          updatePairs.Add(new KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
+          updatePairs.Add(new MultiLayerLib.KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
         }
 
         using (var msg = new RemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
-          MultiLayerServer.MessagePassingExtension.PageRankRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
+          MessagePassingExtension.PageRankRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
         }
       }
 
@@ -116,8 +118,8 @@ namespace MultiLayerServer.Algorithms {
       return result;
     }
 
-    public static void RemoteBulkUpdate (List<KeyValuePair> updates) {
-      foreach(KeyValuePair update in updates) {
+    public static void RemoteBulkUpdate (List<MultiLayerLib.KeyValuePair> updates) {
+      foreach(MultiLayerLib.KeyValuePair update in updates) {
         using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.PageRankData.Value += update.Value;

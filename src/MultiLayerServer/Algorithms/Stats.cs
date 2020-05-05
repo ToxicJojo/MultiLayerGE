@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Trinity;
+using MultiLayerLib;
 
 namespace MultiLayerServer.Algorithms {
   class Stats {

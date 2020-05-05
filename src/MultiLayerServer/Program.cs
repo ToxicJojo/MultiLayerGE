@@ -17,13 +17,5 @@ namespace MultiLayerServer {
             Console.ReadLine();
             server.Stop();
         }
-
-        private static void LogNodeInfo(long cellId) {
-          Node node = Graph.LoadNode(cellId);
-          Console.WriteLine("---NodeInfo---");
-          Console.WriteLine("NodeId: {0}", cellId);
-          Console.WriteLine("Layer: {0}", node.Layer);
-          Console.WriteLine("EdgeCount: {0}", node.Edges.Count);
-        }
     }
 }

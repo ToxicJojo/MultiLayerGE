@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Trinity;
 using Trinity.TSL.Lib;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Algorithms {
   class Degree {
@@ -51,7 +53,7 @@ namespace MultiLayerServer.Algorithms {
             continue;
           }
 
-          long targetCell = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
+          long targetCell = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
           if (Global.CloudStorage.IsLocalCell(targetCell)) {
             using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCell, CellAccessOptions.ReturnNullOnCellNotFound)) {
@@ -74,13 +76,13 @@ namespace MultiLayerServer.Algorithms {
       // Then sent an update requests to that server.
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         UpdatesSent++;
-        List<KeyValuePair> updatePairs = new List<KeyValuePair>();
+        List<MultiLayerLib.KeyValuePair> updatePairs = new List<MultiLayerLib.KeyValuePair>();
         foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
-          updatePairs.Add(new KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
+          updatePairs.Add(new MultiLayerLib.KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
         }
 
         using (var msg = new RemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
-          MultiLayerServer.MessagePassingExtension.DegreeBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
+          MessagePassingExtension.DegreeBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
         }
       }
 
@@ -91,8 +93,8 @@ namespace MultiLayerServer.Algorithms {
       }
     }
 
-    public static void RemoteBulkUpdate (List<KeyValuePair> updates) {
-      foreach(KeyValuePair update in updates) {
+    public static void RemoteBulkUpdate (List<MultiLayerLib.KeyValuePair> updates) {
+      foreach(MultiLayerLib.KeyValuePair update in updates) {
         using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.DegreeData.InDegree += Convert.ToInt32(update.Value);

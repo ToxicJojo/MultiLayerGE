@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using Trinity;
+using MultiLayerLib;
 
 
 namespace MultiLayerServer.Loading {
@@ -17,12 +18,10 @@ namespace MultiLayerServer.Loading {
 
     public void LoadGraph(string configFilePath) {
       GraphConfig graphConfig = GraphConfig.LoadConfig(configFilePath);
-      Graph.Init();
+      //Graph.Init();
 
       LoadLayers(graphConfig.LayersFilePath);
       LoadEdges(graphConfig.EdgesFilePath);
-
-
     }
 
     /// <summary>
@@ -79,7 +78,7 @@ namespace MultiLayerServer.Loading {
 
           long nodeId = edgeLoader.GetId(line);
           int layerId = edgeLoader.GetLayer(line);
-          long cellId = Util.GetCellId(nodeId, layerId);
+          long cellId = Graph.GetCellId(nodeId, layerId);
 
           if (!Global.CloudStorage.IsLocalCell(cellId)) {
             continue;
@@ -134,7 +133,7 @@ namespace MultiLayerServer.Loading {
             PageRankData pageRankData = new PageRankData(0, 0);
             HITSData hitsData = new HITSData(0, 0, 0, 0);
             DegreeData degreeData = new DegreeData(0, 0, 0);
-            Node newNode = new Node(Util.GetCellId(id, layer), id, layer, pageRankData, hitsData, degreeData, edges);
+            Node newNode = new Node(Graph.GetCellId(id, layer), id, layer, pageRankData, hitsData, degreeData, edges);
             Graph.SaveNode(newNode);
         } else {
             // Otherwise add the edges to the existing node.
