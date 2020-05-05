@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Util;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 
 namespace MultiLayerProxy.Algorithms {
@@ -42,7 +44,7 @@ namespace MultiLayerProxy.Algorithms {
     private void SetInitialValues() {
       foreach(var server in Global.CloudStorage) {
         using(var msg = new HITSSEtInitialValueMessageWriter(this.InitialValue)) {
-          MultiLayerServer.MessagePassingExtension.HITSSetInitialValue(server, msg);
+          MessagePassingExtension.HITSSetInitialValue(server, msg);
         }
       }
 
@@ -52,7 +54,7 @@ namespace MultiLayerProxy.Algorithms {
     private double HubUpdateRound () {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new HITSUpdateMessageWriter(this.SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.HITSHubUpdateRound(server, msg);
+          MessagePassingExtension.HITSHubUpdateRound(server, msg);
         }
       }
 
@@ -66,7 +68,7 @@ namespace MultiLayerProxy.Algorithms {
     private double HubNormalization (double hubSum) {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new HITSNormalizationMessageWriter(hubSum)) {
-          MultiLayerServer.MessagePassingExtension.HITSHubNormalization(server, msg);
+          MessagePassingExtension.HITSHubNormalization(server, msg);
         }
       }
 
@@ -81,7 +83,7 @@ namespace MultiLayerProxy.Algorithms {
     private double AuthUpdateRound () {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new HITSUpdateMessageWriter(this.SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.HITSAuthUpdateRound(server, msg);
+          MessagePassingExtension.HITSAuthUpdateRound(server, msg);
         }
       }
 
@@ -95,7 +97,7 @@ namespace MultiLayerProxy.Algorithms {
     private double AuthNormalization (double hubSum) {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new HITSNormalizationMessageWriter(hubSum)) {
-          MultiLayerServer.MessagePassingExtension.HITSAuthNormalization(server, msg);
+          MessagePassingExtension.HITSAuthNormalization(server, msg);
         }
       }
 

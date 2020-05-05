@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Output;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -13,7 +15,7 @@ namespace MultiLayerProxy.Algorithms {
 
     public override void Run() {
       foreach(var server in Global.CloudStorage) {
-        MultiLayerServer.MessagePassingExtension.GetNodeCountServer(server);
+        MessagePassingExtension.GetNodeCountServer(server);
       }
 
       List<List<long>> nodePhaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.NodeCount);
@@ -27,7 +29,7 @@ namespace MultiLayerProxy.Algorithms {
       }
 
       foreach(var server in Global.CloudStorage) {
-        MultiLayerServer.MessagePassingExtension.GetEdgeCountServer(server);
+        MessagePassingExtension.GetEdgeCountServer(server);
       }
 
       List<List<long>> edgePhaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.EdgeCount);

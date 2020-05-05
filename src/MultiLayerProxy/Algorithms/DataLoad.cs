@@ -1,5 +1,7 @@
 using Trinity;
 using MultiLayerProxy.Proxy;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -20,7 +22,7 @@ namespace MultiLayerProxy.Algorithms {
     public override void Run() {
       foreach (var server in Global.CloudStorage) {
         using (var msg = new LoadGraphServerMessageWriter(this.ConfigFilePath)) {
-          MultiLayerServer.MessagePassingExtension.LoadGraphServer(server, msg);
+          MessagePassingExtension.LoadGraphServer(server, msg);
         }
       }
 

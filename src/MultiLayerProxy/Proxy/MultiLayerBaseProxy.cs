@@ -5,6 +5,8 @@ using Trinity;
 using MultiLayerProxy.Algorithms;
 using MultiLayerProxy.Output;
 using MultiLayerProxy.Util;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerProxy.Proxy {
   partial class MultiLayerProxyImpl: MultiLayerProxyBase {

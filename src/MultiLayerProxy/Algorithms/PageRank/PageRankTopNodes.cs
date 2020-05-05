@@ -4,6 +4,8 @@ using System.Linq;
 using Trinity;
 using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Output;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -23,7 +25,7 @@ namespace MultiLayerProxy.Algorithms {
     public override void Run() {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new PageRankTopNodesServerMessageWriter(NumerOfTopNodes, SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.PageRankTopNodesServer(server, msg);
+          MessagePassingExtension.PageRankTopNodesServer(server, msg);
         }
       }
 

@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Output;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -12,7 +14,7 @@ namespace MultiLayerProxy.Algorithms {
 
     public override void Run() {
       foreach(var server in Global.CloudStorage) {
-        MultiLayerServer.MessagePassingExtension.GetNodeCountServer(server);
+        MessagePassingExtension.GetNodeCountServer(server);
       }
 
       List<List<long>> phaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.NodeCount);

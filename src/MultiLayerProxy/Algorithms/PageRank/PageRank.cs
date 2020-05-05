@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Util;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
 
@@ -39,7 +41,7 @@ namespace MultiLayerProxy.Algorithms {
     private void SetInitialValues() {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new PageRankSetInitialValuesMessageWriter(this.InitialValue)) {
-          MultiLayerServer.MessagePassingExtension.PageRankSetInitialValues(server, msg);
+          MessagePassingExtension.PageRankSetInitialValues(server, msg);
         }
       }
       Proxy.WaitForPhase(Phases.PageRankInitialValues);
@@ -52,7 +54,7 @@ namespace MultiLayerProxy.Algorithms {
     private double UpdateRound () {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new PageRankUpdateMessageWriter(this.SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.PageRankUpdateRound(server, msg);
+          MessagePassingExtension.PageRankUpdateRound(server, msg);
         }
       }
 
@@ -71,7 +73,7 @@ namespace MultiLayerProxy.Algorithms {
     private double Normalization (double pageRankValueSum) {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new PageRankNormalizationMessageWriter(pageRankValueSum)) {
-          MultiLayerServer.MessagePassingExtension.PageRankNormalization(server, msg);
+          MessagePassingExtension.PageRankNormalization(server, msg);
         }
       }
 
