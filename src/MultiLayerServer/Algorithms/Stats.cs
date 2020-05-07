@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Trinity;
 using MultiLayerLib;
 
 namespace MultiLayerServer.Algorithms {
@@ -12,7 +11,7 @@ namespace MultiLayerServer.Algorithms {
     public static List<long> GetNodeCount() {
       long[] nodeCount = new long[Graph.LayerCount];
 
-      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         nodeCount[node.Layer - 1]++;
       }
 
@@ -27,7 +26,7 @@ namespace MultiLayerServer.Algorithms {
     public static List<long> GetEdgeCount() {
       long[] edgeCount = new long[Graph.LayerCount];
 
-      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node node in Graph.NodeAccessor()) {
         foreach(Edge edge in node.Edges) {
           // Only count edges which are on the same layer.
           if (edge.StartLayer == edge.DestinationLayer) {

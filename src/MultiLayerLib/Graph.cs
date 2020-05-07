@@ -1,4 +1,5 @@
 using Trinity;
+using Trinity.TSL.Lib;
 using Trinity.Core.Lib;
 using System.Collections.Generic;
 
@@ -16,6 +17,10 @@ namespace MultiLayerLib {
     public static List<Layer> Layers {
         get;
         set;
+    }
+
+    public static void Init() {
+      Layers = new List<Layer>();
     }
 
     public static void SaveNode(Node node) {
@@ -64,6 +69,21 @@ namespace MultiLayerLib {
       Global.CloudStorage.LoadStorage();
     }
 
+    public static Node_Accessor_local_selector NodeAccessor() {
+      return Global.LocalStorage.Node_Accessor_Selector();
+    }
+
+    public static Node_Accessor UseNode(long cellId, CellAccessOptions accessOptions) {
+      return Global.LocalStorage.UseNode(cellId, accessOptions);
+    }
+
+    public static bool IsLocalNode(long cellId) {
+      return Global.CloudStorage.IsLocalCell(cellId);
+    }
+
+    public static int GetNodePartition(long cellId) {
+      return Global.CloudStorage.GetPartitionIdByCellId(cellId);
+    }
 
   }
 

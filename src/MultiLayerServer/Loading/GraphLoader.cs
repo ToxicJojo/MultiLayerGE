@@ -18,7 +18,7 @@ namespace MultiLayerServer.Loading {
 
     public void LoadGraph(string configFilePath) {
       GraphConfig graphConfig = GraphConfig.LoadConfig(configFilePath);
-      //Graph.Init();
+      Graph.Init();
 
       LoadLayers(graphConfig.LayersFilePath);
       LoadEdges(graphConfig.EdgesFilePath);
@@ -49,10 +49,6 @@ namespace MultiLayerServer.Loading {
       Console.WriteLine("[GraphLoader] Loaded {0} Layers", Graph.LayerCount);
     }
 
-
-    private bool fileDone = false;
-    private long nodesCompleted = 0;
-
     private void LoadEdges(string edgeFilePath) {
       Console.WriteLine("[GraphLoader] Loading edges.");
       FileStream file = new FileStream(edgeFilePath, FileMode.Open, FileAccess.Read);
@@ -80,7 +76,7 @@ namespace MultiLayerServer.Loading {
           int layerId = edgeLoader.GetLayer(line);
           long cellId = Graph.GetCellId(nodeId, layerId);
 
-          if (!Global.CloudStorage.IsLocalCell(cellId)) {
+          if (!Graph.IsLocalNode(cellId)) {
             continue;
           }
 

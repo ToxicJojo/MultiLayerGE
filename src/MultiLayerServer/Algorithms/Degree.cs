@@ -16,7 +16,7 @@ namespace MultiLayerServer.Algorithms {
     private static Dictionary<int, Dictionary<long, double>> RemoteUpdates { get; set; }
 
     public static void GetOutDegree(bool seperateLayers) {
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         if (seperateLayers) {
           foreach(Edge edge in node.Edges) {
             if (edge.StartLayer == edge.DestinationLayer) {
@@ -40,7 +40,7 @@ namespace MultiLayerServer.Algorithms {
       }
 
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         foreach(Edge edge in node.Edges) {
 
           // Don't allow self references
@@ -55,14 +55,14 @@ namespace MultiLayerServer.Algorithms {
 
           long targetCell = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
-          if (Global.CloudStorage.IsLocalCell(targetCell)) {
-            using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCell, CellAccessOptions.ReturnNullOnCellNotFound)) {
+          if (Graph.IsLocalNode(targetCell)) {
+            using (Node_Accessor targetNode = Graph.UseNode(targetCell, CellAccessOptions.ReturnNullOnCellNotFound)) {
               if (targetNode != null) {
                 targetNode.DegreeData.InDegree++;
               }
             }
           } else {
-            int remoteServerId = Global.CloudStorage.GetPartitionIdByCellId(targetCell);
+            int remoteServerId = Graph.GetNodePartition(targetCell);
             if (RemoteUpdates[remoteServerId].ContainsKey(targetCell)) {
               RemoteUpdates[remoteServerId][targetCell]++;
             } else {
@@ -95,7 +95,7 @@ namespace MultiLayerServer.Algorithms {
 
     public static void RemoteBulkUpdate (List<MultiLayerLib.KeyValuePair> updates) {
       foreach(MultiLayerLib.KeyValuePair update in updates) {
-        using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
+        using (Node_Accessor node = Graph.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.DegreeData.InDegree += Convert.ToInt32(update.Value);
           }
@@ -108,7 +108,7 @@ namespace MultiLayerServer.Algorithms {
     }
 
     public static void GetTotalDegree () {
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         node.DegreeData.TotalDegree = node.DegreeData.InDegree + node.DegreeData.OutDegree;
       }
     }
