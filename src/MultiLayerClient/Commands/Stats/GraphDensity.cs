@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class GraphDensity: Command {
@@ -13,7 +16,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new StandardAlgorithmMessageWriter(Client.AlgorithmOptions, Client.OutputOptions)) {
-          MultiLayerProxy.MessagePassingExtension.GetGraphDensityProxy(Client.Proxy, msg);
+          MessagePassingExtension.GetGraphDensityProxy(Client.Proxy, msg);
       }      
     }
   }

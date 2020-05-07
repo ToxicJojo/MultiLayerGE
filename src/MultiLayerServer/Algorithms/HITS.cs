@@ -6,6 +6,8 @@ using Trinity;
 using Trinity.Network;
 using Trinity.Core.Lib;
 using Trinity.TSL.Lib;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Algorithms {
   class HITS {
@@ -24,7 +26,7 @@ namespace MultiLayerServer.Algorithms {
     private static int HUB_VALUE_RESET_BARRIER = 0;
 
     public static void SetInitialValues(double initialValue) {
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
           node.HITSData.HubScore = initialValue;
           node.HITSData.OldHubScore = initialValue;
           node.HITSData.AuthorityScore = initialValue;
@@ -37,7 +39,7 @@ namespace MultiLayerServer.Algorithms {
       AuthValueRequestsSent = 0;
       AuthValueRequestsAnswerd = 0;
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         node.HITSData.OldHubScore = node.HITSData.HubScore;
         node.HITSData.HubScore = 0;
       }
@@ -48,7 +50,7 @@ namespace MultiLayerServer.Algorithms {
       RemoteAuthScores = new Dictionary<long, double>();
       HashSet<long> remoteKeys = new HashSet<long>();
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         foreach(Edge edge in node.Edges) {
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
             continue;
@@ -58,13 +60,13 @@ namespace MultiLayerServer.Algorithms {
             continue;
           }
 
-          long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
+          long targetCellId = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
-          if (Global.CloudStorage.IsLocalCell(targetCellId)) {
+          if (Graph.IsLocalNode(targetCellId)) {
             // For some reason using the node accessor instead of loading the node is way faster
             // I might want to look into why this is and where I can use this to speed up things
             // It might be because we read directly from ram instead of creating an object that we read from?
-            using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
+            using (Node_Accessor targetNode = Graph.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
               if (targetNode != null) {
                 node.HITSData.HubScore += targetNode.HITSData.AuthorityScore;
               }
@@ -80,7 +82,7 @@ namespace MultiLayerServer.Algorithms {
       foreach(var server in Global.CloudStorage) {
         AuthValueRequestsSent++;
         using (var msg = new RemoteBulkGetMessageWriter(Global.MyPartitionId ,remoteKeys.ToList())) {
-          MultiLayerServer.MessagePassingExtension.HITSGetBulkAuthValues(server, msg);
+          MessagePassingExtension.HITSGetBulkAuthValues(server, msg);
         }
       }
 
@@ -91,21 +93,21 @@ namespace MultiLayerServer.Algorithms {
       }
 
       Global.CloudStorage.BarrierSync(0);
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         foreach(Edge edge in node.Edges) {
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
             continue;
           }
 
-          long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
-          if (!Global.CloudStorage.IsLocalCell(targetCellId) && RemoteAuthScores.ContainsKey(targetCellId)) {
+          long targetCellId = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
+          if (!Graph.IsLocalNode(targetCellId) && RemoteAuthScores.ContainsKey(targetCellId)) {
             node.HITSData.HubScore += RemoteAuthScores[targetCellId];
           }
         }
       }
 
       double hubSum = 0;
-      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node node in Graph.NodeAccessor()) {
         hubSum += node.HITSData.HubScore;
       }
 
@@ -120,7 +122,7 @@ namespace MultiLayerServer.Algorithms {
       double normFactor = 1 / Math.Sqrt(hubSum);
       double delta = 0;
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         node.HITSData.HubScore *= normFactor;
         delta += Math.Abs(node.HITSData.HubScore - node.HITSData.OldHubScore);
       }
@@ -132,17 +134,17 @@ namespace MultiLayerServer.Algorithms {
     }
 
 
-    public static List<KeyValuePair> GetBulkAuthValues (List<long> ids) {
-      List<KeyValuePair> values = new List<KeyValuePair>();
-      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
-        values.Add(new KeyValuePair(node.CellId, node.HITSData.AuthorityScore));
+    public static List<MultiLayerLib.KeyValuePair> GetBulkAuthValues (List<long> ids) {
+      List<MultiLayerLib.KeyValuePair> values = new List<MultiLayerLib.KeyValuePair>();
+      foreach(Node node in Graph.NodeAccessor()) {
+        values.Add(new MultiLayerLib.KeyValuePair(node.CellId, node.HITSData.AuthorityScore));
       }
 
       return values;
     }
 
-    public static void AddRemoteAuthScores(List<KeyValuePair> values) {
-      foreach(KeyValuePair valuePair in values) {
+    public static void AddRemoteAuthScores(List<MultiLayerLib.KeyValuePair> values) {
+      foreach(MultiLayerLib.KeyValuePair valuePair in values) {
         RemoteAuthScores[valuePair.Key] = valuePair.Value;
       }
 
@@ -160,7 +162,7 @@ namespace MultiLayerServer.Algorithms {
         }
       }
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         node.HITSData.OldAuthorityScore = node.HITSData.AuthorityScore;
         node.HITSData.AuthorityScore = 0;
       }
@@ -168,7 +170,7 @@ namespace MultiLayerServer.Algorithms {
 
       Global.CloudStorage.BarrierSync(HUB_VALUE_RESET_BARRIER);
 
-      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node node in Graph.NodeAccessor()) {
         foreach(Edge edge in node.Edges) {
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
             continue;
@@ -179,16 +181,16 @@ namespace MultiLayerServer.Algorithms {
             continue;
           }
 
-          long targetCellId = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
+          long targetCellId = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
-          if (Global.CloudStorage.IsLocalCell(targetCellId)) {
-            using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
+          if (Graph.IsLocalNode(targetCellId)) {
+            using (Node_Accessor targetNode = Graph.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
               if (targetNode != null) {
                 targetNode.HITSData.AuthorityScore += node.HITSData.HubScore;
               }
             }
           } else {
-            int remoteServerId = Global.CloudStorage.GetPartitionIdByCellId(targetCellId);
+            int remoteServerId = Graph.GetNodePartition(targetCellId);
             if (RemoteUpdates[remoteServerId].ContainsKey(targetCellId)) {
               RemoteUpdates[remoteServerId][targetCellId] += node.HITSData.HubScore;
             } else {
@@ -200,13 +202,13 @@ namespace MultiLayerServer.Algorithms {
 
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         AuthUpdatesSent++;
-        List<KeyValuePair> updatePairs = new List<KeyValuePair>();
+        List<MultiLayerLib.KeyValuePair> updatePairs = new List<MultiLayerLib.KeyValuePair>();
         foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
-          updatePairs.Add(new KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
+          updatePairs.Add(new MultiLayerLib.KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
         }
 
         using (var msg = new RemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
-          MultiLayerServer.MessagePassingExtension.HITSRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
+          MessagePassingExtension.HITSRemoteBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
         }
       }
 
@@ -220,7 +222,7 @@ namespace MultiLayerServer.Algorithms {
       Global.CloudStorage.BarrierSync(1);
 
       double AuthSum = 0;
-      foreach(Node node in Global.LocalStorage.Node_Selector()) {
+      foreach(Node node in Graph.NodeAccessor()) {
         AuthSum += node.HITSData.AuthorityScore;
       }
 
@@ -230,9 +232,9 @@ namespace MultiLayerServer.Algorithms {
       return result;      
     }
 
-    public static void RemoteBulkAuthUpdate (List<KeyValuePair> updates) {
-      foreach(KeyValuePair update in updates) {
-        using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
+    public static void RemoteBulkAuthUpdate (List<MultiLayerLib.KeyValuePair> updates) {
+      foreach(MultiLayerLib.KeyValuePair update in updates) {
+        using (Node_Accessor node = Graph.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.HITSData.AuthorityScore += update.Value;
           }
@@ -249,7 +251,7 @@ namespace MultiLayerServer.Algorithms {
       double normFactor = 1 / Math.Sqrt(authSum);
       double delta = 0;
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         node.HITSData.AuthorityScore *= normFactor;
         delta += Math.Abs(node.HITSData.AuthorityScore - node.HITSData.OldAuthorityScore);
       }

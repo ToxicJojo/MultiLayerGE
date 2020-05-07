@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
   /// <summary>
@@ -18,7 +19,7 @@ namespace MultiLayerProxy.Algorithms {
     public override void Run() {
       foreach(var server in Global.CloudStorage) {
         using (var msg = new DegreeServerMessageWriter(SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.GetOutDegreeServer(server, msg);
+          MessagePassingExtension.GetOutDegreeServer(server, msg);
         }
       }
 
@@ -26,14 +27,14 @@ namespace MultiLayerProxy.Algorithms {
 
       foreach(var server in Global.CloudStorage) {
         using (var msg = new DegreeServerMessageWriter(SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.GetInDegreeServer(server,  msg);
+          MessagePassingExtension.GetInDegreeServer(server,  msg);
         }
       }
 
       Proxy.WaitForPhase(Phases.DegreeIn);
 
       foreach(var server in Global.CloudStorage) {
-        MultiLayerServer.MessagePassingExtension.DegreeGetTotal(server);
+        MessagePassingExtension.DegreeGetTotal(server);
       }
 
       Proxy.WaitForPhase(Phases.DegreeTotal);

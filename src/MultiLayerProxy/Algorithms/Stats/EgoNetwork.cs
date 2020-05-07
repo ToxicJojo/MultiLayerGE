@@ -6,6 +6,8 @@ using MultiLayerProxy.Output;
 using Trinity.TSL.Lib;
 using Trinity.Core.Lib;
 using MultiLayerProxy.Util;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerProxy.Algorithms {
   /// <summary>
@@ -32,7 +34,7 @@ namespace MultiLayerProxy.Algorithms {
 
       foreach(var server in Global.CloudStorage) {
         using (var msg = new EgoNetworkMessageServerWriter(Id, Layer, SeperateLayers)) {
-          MultiLayerServer.MessagePassingExtension.EgoNetworkServer(server, msg);
+          MessagePassingExtension.EgoNetworkServer(server, msg);
         }
       }
 

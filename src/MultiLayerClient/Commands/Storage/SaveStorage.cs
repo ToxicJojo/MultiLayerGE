@@ -1,10 +1,8 @@
-using Trinity;
+using MultiLayerLib;
 
 namespace MultiLayerClient.Commands {
 
   class SaveStorage: Command {
-
-    private Client Client { get; set; }
 
     public SaveStorage (): base(null)  {
       Name = "Save Storage";
@@ -17,7 +15,7 @@ namespace MultiLayerClient.Commands {
     public override void ApplyArguments(string[] arguments) {}
 
     public override void Run () {
-      Global.CloudStorage.SaveStorage();
+      Graph.SaveToGEStorage();
     }
   }
 }

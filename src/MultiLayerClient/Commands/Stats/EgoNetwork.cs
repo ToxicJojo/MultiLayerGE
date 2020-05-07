@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class EgoNetwork: Command {
@@ -21,7 +24,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new EgoNetworkMessageProxyWriter(Client.AlgorithmOptions, Client.OutputOptions, Id, Layer, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.EgoNetworkProxy(Client.Proxy, msg);
+          MessagePassingExtension.EgoNetworkProxy(Client.Proxy, msg);
       }          
     }
   }

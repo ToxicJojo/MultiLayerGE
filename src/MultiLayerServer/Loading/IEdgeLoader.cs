@@ -1,4 +1,4 @@
-using System;
+using MultiLayerLib;
 
 namespace MultiLayerServer.Loading {
   interface IEdgeLoader {

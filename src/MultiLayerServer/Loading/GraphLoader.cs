@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
 using Trinity;
+using MultiLayerLib;
 
 
 namespace MultiLayerServer.Loading {
@@ -21,8 +22,6 @@ namespace MultiLayerServer.Loading {
 
       LoadLayers(graphConfig.LayersFilePath);
       LoadEdges(graphConfig.EdgesFilePath);
-
-
     }
 
     /// <summary>
@@ -50,10 +49,6 @@ namespace MultiLayerServer.Loading {
       Console.WriteLine("[GraphLoader] Loaded {0} Layers", Graph.LayerCount);
     }
 
-
-    private bool fileDone = false;
-    private long nodesCompleted = 0;
-
     private void LoadEdges(string edgeFilePath) {
       Console.WriteLine("[GraphLoader] Loading edges.");
       FileStream file = new FileStream(edgeFilePath, FileMode.Open, FileAccess.Read);
@@ -79,9 +74,9 @@ namespace MultiLayerServer.Loading {
 
           long nodeId = edgeLoader.GetId(line);
           int layerId = edgeLoader.GetLayer(line);
-          long cellId = Util.GetCellId(nodeId, layerId);
+          long cellId = Graph.GetCellId(nodeId, layerId);
 
-          if (!Global.CloudStorage.IsLocalCell(cellId)) {
+          if (!Graph.IsLocalNode(cellId)) {
             continue;
           }
 
@@ -134,38 +129,12 @@ namespace MultiLayerServer.Loading {
             PageRankData pageRankData = new PageRankData(0, 0);
             HITSData hitsData = new HITSData(0, 0, 0, 0);
             DegreeData degreeData = new DegreeData(0, 0, 0);
-            Node newNode = new Node(Util.GetCellId(id, layer), id, layer, pageRankData, hitsData, degreeData, edges);
+            Node newNode = new Node(Graph.GetCellId(id, layer), id, layer, pageRankData, hitsData, degreeData, edges);
             Graph.SaveNode(newNode);
         } else {
             // Otherwise add the edges to the existing node.
             Graph.AddEdges(id, layer, edges);
         }
-    }
-
-    /// <summary>
-    /// Calculates the position from where a server is responsible for loading an input file.
-    /// The lenght of the input file is distributed evenly among all the servers in the cluster.
-    /// </summary>
-    /// <param name="fileLength">The lenght of the input file in bytes.</param>
-    /// <returns></returns>
-    private long CalculateStartByte(long fileLength) {
-        int myServerPosition = Global.MyPartitionId;
-        int serverCount = TrinityConfig.Servers.Count;
-        long startByte = (fileLength / serverCount) * myServerPosition;
-        return startByte;
-    }
-
-    /// <summary>
-    /// Calculates the position where a server stops being responsible for loading an input file.
-    /// The lenght of the input file is distributed evenly among all the servers in the cluster.
-    /// </summary>
-    /// <param name="fileLength">The lenght of the input file in bytes.</param>
-    /// <returns></returns>
-    private long CalculateEndByte(long fileLength) {
-        int myServerPosition = Global.MyPartitionId;
-        int serverCount = TrinityConfig.Servers.Count;
-        long endByte = (fileLength / serverCount) * (myServerPosition + 1);
-        return endByte;
     }
   }
 }

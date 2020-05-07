@@ -1,6 +1,8 @@
 using Trinity;
 using MultiLayerServer.Algorithms;
 using System.Collections.Generic;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Server {
   public partial class MultiLayerServerImpl: MultiLayerServerBase {
@@ -37,7 +39,7 @@ namespace MultiLayerServer.Server {
       PageRank.RemoteBulkUpdate(request.Values);
       // After we have done the update we need to tell the other server that we finished it.
       var server = Global.CloudStorage[request.From];
-      MultiLayerServer.MessagePassingExtension.PageRankRemoteUpdateAnswer(server);
+      MessagePassingExtension.PageRankRemoteUpdateAnswer(server);
     }
 
   }

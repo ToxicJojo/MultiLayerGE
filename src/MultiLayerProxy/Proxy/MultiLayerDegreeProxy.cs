@@ -1,5 +1,5 @@
 using MultiLayerProxy.Algorithms;
-using MultiLayerProxy.Output;
+using MultiLayerLib;
 
 namespace MultiLayerProxy.Proxy {
 

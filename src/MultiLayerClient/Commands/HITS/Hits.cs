@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class HITS: Command {
@@ -22,7 +25,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new HITSProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, InitalValue, Epsilon, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.HITSProxy(Client.Proxy, msg);
+          MessagePassingExtension.HITSProxy(Client.Proxy, msg);
       }  
     }
   }

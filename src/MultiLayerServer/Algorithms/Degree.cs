@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Trinity;
 using Trinity.TSL.Lib;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Algorithms {
   class Degree {
@@ -14,7 +16,7 @@ namespace MultiLayerServer.Algorithms {
     private static Dictionary<int, Dictionary<long, double>> RemoteUpdates { get; set; }
 
     public static void GetOutDegree(bool seperateLayers) {
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         if (seperateLayers) {
           foreach(Edge edge in node.Edges) {
             if (edge.StartLayer == edge.DestinationLayer) {
@@ -38,7 +40,7 @@ namespace MultiLayerServer.Algorithms {
       }
 
 
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         foreach(Edge edge in node.Edges) {
 
           // Don't allow self references
@@ -51,16 +53,16 @@ namespace MultiLayerServer.Algorithms {
             continue;
           }
 
-          long targetCell = Util.GetCellId(edge.DestinationId, edge.DestinationLayer);
+          long targetCell = Graph.GetCellId(edge.DestinationId, edge.DestinationLayer);
 
-          if (Global.CloudStorage.IsLocalCell(targetCell)) {
-            using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCell, CellAccessOptions.ReturnNullOnCellNotFound)) {
+          if (Graph.IsLocalNode(targetCell)) {
+            using (Node_Accessor targetNode = Graph.UseNode(targetCell, CellAccessOptions.ReturnNullOnCellNotFound)) {
               if (targetNode != null) {
                 targetNode.DegreeData.InDegree++;
               }
             }
           } else {
-            int remoteServerId = Global.CloudStorage.GetPartitionIdByCellId(targetCell);
+            int remoteServerId = Graph.GetNodePartition(targetCell);
             if (RemoteUpdates[remoteServerId].ContainsKey(targetCell)) {
               RemoteUpdates[remoteServerId][targetCell]++;
             } else {
@@ -74,13 +76,13 @@ namespace MultiLayerServer.Algorithms {
       // Then sent an update requests to that server.
       foreach(KeyValuePair<int, Dictionary<long, double>> updateCollections in RemoteUpdates) {
         UpdatesSent++;
-        List<KeyValuePair> updatePairs = new List<KeyValuePair>();
+        List<MultiLayerLib.KeyValuePair> updatePairs = new List<MultiLayerLib.KeyValuePair>();
         foreach(KeyValuePair<long, double> pendingUpdate in updateCollections.Value) {
-          updatePairs.Add(new KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
+          updatePairs.Add(new MultiLayerLib.KeyValuePair(pendingUpdate.Key, pendingUpdate.Value));
         }
 
         using (var msg = new RemoteBulkUpdateMessageWriter(Global.MyPartitionId, updatePairs)) {
-          MultiLayerServer.MessagePassingExtension.DegreeBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
+          MessagePassingExtension.DegreeBulkUpdate(Global.CloudStorage[updateCollections.Key], msg);
         }
       }
 
@@ -91,9 +93,9 @@ namespace MultiLayerServer.Algorithms {
       }
     }
 
-    public static void RemoteBulkUpdate (List<KeyValuePair> updates) {
-      foreach(KeyValuePair update in updates) {
-        using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
+    public static void RemoteBulkUpdate (List<MultiLayerLib.KeyValuePair> updates) {
+      foreach(MultiLayerLib.KeyValuePair update in updates) {
+        using (Node_Accessor node = Graph.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.DegreeData.InDegree += Convert.ToInt32(update.Value);
           }
@@ -106,7 +108,7 @@ namespace MultiLayerServer.Algorithms {
     }
 
     public static void GetTotalDegree () {
-      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
+      foreach(Node_Accessor node in Graph.NodeAccessor()) {
         node.DegreeData.TotalDegree = node.DegreeData.InDegree + node.DegreeData.OutDegree;
       }
     }

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using MultiLayerServer.Algorithms;
 using Trinity;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Server {
   public partial class MultiLayerServerImpl: MultiLayerServerBase {
@@ -22,7 +24,7 @@ namespace MultiLayerServer.Server {
       Degree.RemoteBulkUpdate(request.Values);
 
       var server = Global.CloudStorage[request.From];
-      MultiLayerServer.MessagePassingExtension.DegreeBulkUpdateAnswer(server);
+      MessagePassingExtension.DegreeBulkUpdateAnswer(server);
     }
 
     public override void DegreeBulkUpdateAnswerHandler() {

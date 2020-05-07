@@ -1,9 +1,5 @@
-
-namespace MultiLayerServer {
-
-
-  class Layer {
-
+namespace MultiLayerLib {
+  public class Layer {
 
     public Layer (int layerId, string layerLabel) {
       this.Id = layerId;

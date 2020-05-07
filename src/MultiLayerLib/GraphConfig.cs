@@ -3,7 +3,7 @@ using System.IO;
 
 namespace MultiLayerServer {
 
-  class GraphConfig {
+  public class GraphConfig {
     
     /// <summary>
     /// The path to the file containig the edges.

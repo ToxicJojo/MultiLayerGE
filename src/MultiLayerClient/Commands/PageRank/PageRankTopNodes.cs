@@ -1,3 +1,6 @@
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerProxy;
+
 namespace MultiLayerClient.Commands {
 
   class PageRankTopNodes: Command {
@@ -20,7 +23,7 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new PageRankTopNodesProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MultiLayerProxy.MessagePassingExtension.PageRankTopNodesProxy(Client.Proxy, msg);
+          MessagePassingExtension.PageRankTopNodesProxy(Client.Proxy, msg);
       }
     }
   }

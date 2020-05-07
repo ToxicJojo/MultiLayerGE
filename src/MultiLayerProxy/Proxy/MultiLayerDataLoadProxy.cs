@@ -1,4 +1,5 @@
 using MultiLayerProxy.Algorithms;
+using MultiLayerLib;
 
 namespace MultiLayerProxy.Proxy {
    partial class MultiLayerProxyImpl: MultiLayerProxyBase {

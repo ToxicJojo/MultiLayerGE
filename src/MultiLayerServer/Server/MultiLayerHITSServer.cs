@@ -1,6 +1,8 @@
 using Trinity;
 using MultiLayerServer.Algorithms;
 using System.Collections.Generic;
+using MultiLayerLib;
+using MultiLayerLib.MultiLayerServer;
 
 namespace MultiLayerServer.Server {
   public partial class MultiLayerServerImpl: MultiLayerServerBase {
@@ -36,7 +38,7 @@ namespace MultiLayerServer.Server {
     public override void HITSRemoteBulkUpdateHandler(RemoteBulkUpdateMessageReader request) {
       HITS.RemoteBulkAuthUpdate(request.Values);
 
-      MultiLayerServer.MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
+      MessagePassingExtension.HITSAuthRemoteUpdateAnswer(Global.CloudStorage[request.From]);
     }
 
     public override void HITSAuthNormalizationHandler(HITSNormalizationMessageReader request) {
@@ -59,10 +61,10 @@ namespace MultiLayerServer.Server {
 
 
     public override void HITSGetBulkAuthValuesHandler(RemoteBulkGetMessageReader request) {
-      List<KeyValuePair> values = HITS.GetBulkAuthValues(request.Ids);
+      List<MultiLayerLib.KeyValuePair> values = HITS.GetBulkAuthValues(request.Ids);
 
       using (var msg = new RemoteBulkGetResponseMessageWriter(values)) {
-        MultiLayerServer.MessagePassingExtension.HITSGetBulkAuthValuesAnswer(Global.CloudStorage[request.From], msg);
+        MessagePassingExtension.HITSGetBulkAuthValuesAnswer(Global.CloudStorage[request.From], msg);
       }
     }
 

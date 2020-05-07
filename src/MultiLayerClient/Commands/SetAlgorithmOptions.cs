@@ -1,3 +1,5 @@
+using MultiLayerLib;
+
 namespace MultiLayerClient.Commands {
 
   class SetAlgorithmOptions: Command {
