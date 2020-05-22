@@ -13,5 +13,6 @@ cell struct Node {
   PageRankData PageRankData;
   HITSData HITSData;
   DegreeData DegreeData;
+  // For performance reasons fields with dynamic lenght need to be listed last
   List<Edge> Edges;
 }

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace MultiLayerServer {
+namespace MultiLayerLib {
 
   public class GraphConfig {
     
