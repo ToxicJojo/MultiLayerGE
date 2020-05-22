@@ -1,2 +1,2 @@
-loadGraph /home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt
+loadGraph /home/thiel/MultiLayerGE/data/multiplex6/multiplex6_config.txt MultiLayerDirectedWeightedEdge
 interactive

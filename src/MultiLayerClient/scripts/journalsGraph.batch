@@ -1,2 +1,2 @@
-loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt
+loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals 
 interactive

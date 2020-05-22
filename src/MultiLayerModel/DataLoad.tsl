@@ -1,8 +1,15 @@
+enum  EdgeType {
+  MultilayerDirectedEdge = 0,
+  MultiLayerDirectedWeightedEdge = 1,
+  Journals = 2
+}
+
 // Proxy Protocols
 struct LoadGraphProxyMessage {
   AlgorithmOptions AlgorithmOptions;
   OutputOptions OutputOptions;
   string ConfigFilePath;
+  EdgeType EdgeType;
 }
 
 protocol LoadGraphProxy {
@@ -14,6 +21,7 @@ protocol LoadGraphProxy {
 // Server Protocols
 struct LoadGraphServerMessage {
   string ConfigFilePath;
+  EdgeType EdgeType;
 }
 
 protocol LoadGraphServer {

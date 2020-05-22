@@ -15,13 +15,21 @@ namespace MultiLayerProxy.Algorithms {
     /// </summary>
     private string ConfigFilePath { get; set; }
 
-    public DataLoad (MultiLayerProxyImpl proxy, string configFilePath): base(proxy) {
+    private EdgeType EdgeType { get; set; }
+
+    public DataLoad (MultiLayerProxyImpl proxy, string configFilePath, EdgeType edgeType): base(proxy) {
       this.ConfigFilePath = configFilePath;
+      this.EdgeType = EdgeType;
     }
 
     public override void Run() {
+      GraphConfig graphConfig = GraphConfig.LoadConfig(ConfigFilePath);
+
+      Graph.Init();
+      Graph.LoadLayers(graphConfig.LayersFilePath);
+
       foreach (var server in Global.CloudStorage) {
-        using (var msg = new LoadGraphServerMessageWriter(this.ConfigFilePath)) {
+        using (var msg = new LoadGraphServerMessageWriter(this.ConfigFilePath, this.EdgeType)) {
           MessagePassingExtension.LoadGraphServer(server, msg);
         }
       }

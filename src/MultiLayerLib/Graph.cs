@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using Trinity;
 using Trinity.TSL.Lib;
 using Trinity.Core.Lib;
@@ -21,6 +23,27 @@ namespace MultiLayerLib {
 
     public static void Init() {
       Layers = new List<Layer>();
+    }
+
+    public static void LoadLayers(string layersFilePath) {
+      Console.WriteLine("[GraphLoader] Loading Layers");
+      StreamReader reader = new StreamReader(layersFilePath);
+      // Skip the description line
+      reader.ReadLine();
+
+      while (!reader.EndOfStream) {
+        string line = reader.ReadLine();
+        string[] fields = line.Split();
+
+        // Each layer has an id and a label we need to load.
+        int layerId = int.Parse(fields[0]);
+        string layerLabel = fields[1];
+
+        Layer layer = new Layer(layerId, layerLabel);
+        Graph.Layers.Add(layer);
+      }
+
+      Console.WriteLine("[GraphLoader] Loaded {0} Layers", Graph.LayerCount);      
     }
 
     public static void SaveNode(Node node) {
