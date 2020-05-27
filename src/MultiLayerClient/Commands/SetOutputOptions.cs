@@ -11,8 +11,8 @@ namespace MultiLayerClient.Commands {
       Name = "Set output options";
       Keyword = "outputOptions";
       Description = "Sets the options for the output of executed algorithms.";
-      Arguments = new string[] { "string" };
-      ArgumentsDescription = new string[] { "Outputtype" };
+      Arguments = new string[] { "string", "bool"};
+      ArgumentsDescription = new string[] { "Outputtype", "TranslateLayerIds" };
     }
 
     public override void ApplyArguments(string[] arguments) {
