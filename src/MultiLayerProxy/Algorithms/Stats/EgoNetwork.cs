@@ -21,16 +21,21 @@ namespace MultiLayerProxy.Algorithms {
 
     private int Layer { get; set; }
 
+    private List<Node> incomingNetwork;
+
+    private List<Node> outgoingNetwork;
+
 
     public EgoNetwork (MultiLayerProxyImpl proxy, long id, int layer, bool seperateLayers): base(proxy) {
       SeperateLayers = seperateLayers;
       Id = id;
       Layer = layer;
+      this.Name = "EgoNetwork";
     }
 
     public override void Run() {
       
-      List<Node> outgoingNetwork = GetEgoNetwork(Id, Layer, SeperateLayers);
+      outgoingNetwork = GetEgoNetwork(Id, Layer, SeperateLayers);
 
       foreach(var server in Global.CloudStorage) {
         using (var msg = new EgoNetworkMessageServerWriter(Id, Layer, SeperateLayers)) {
@@ -44,15 +49,14 @@ namespace MultiLayerProxy.Algorithms {
         incomingIds.AddRange(result);
       }
 
-      List<Node> incomingNetwork = new List<Node>();
+      incomingNetwork = new List<Node>();
       foreach(long id in incomingIds) {
         incomingNetwork.Add(Global.CloudStorage.LoadNode(id));
       }
 
-      WriteOutput(outgoingNetwork, incomingNetwork);
    }
 
-    private void WriteOutput(List<Node> outgoingNetwork, List<Node> incomingNetwork) {
+    public override List<List<string>>  GetResult(OutputOptions options) {
       List<List<String>> output = new List<List<string>>();
 
       output.Add(new List<string> {"Outgoing: "});
@@ -60,7 +64,7 @@ namespace MultiLayerProxy.Algorithms {
       output.Add(new List<string> {"Incoming: "});
       PrintEgoNetwork(incomingNetwork, output);
 
-      Result = new AlgorithmResult("EgoNetwork" + Layer + "." + Id, output);
+      return output;
     }
     
 

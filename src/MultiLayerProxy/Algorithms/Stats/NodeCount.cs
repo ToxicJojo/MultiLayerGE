@@ -1,15 +1,18 @@
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
+using MultiLayerProxy.Util;
 
 namespace MultiLayerProxy.Algorithms {
 
   class NodeCount: Algorithm {
 
+    private long[] nodeCount;
+
     public NodeCount (MultiLayerProxyImpl proxy): base(proxy) {
+      this.Name = "NodeCount";
     }
 
     public override void Run() {
@@ -18,7 +21,7 @@ namespace MultiLayerProxy.Algorithms {
       }
 
       List<List<long>> phaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.NodeCount);
-      long[] nodeCount = new long[phaseResults[0].Count];
+      nodeCount = new long[phaseResults[0].Count];
 
       // Sum up the results from all the servers.
       foreach(List<long> result in phaseResults) {
@@ -26,29 +29,23 @@ namespace MultiLayerProxy.Algorithms {
             nodeCount[i] += result[i];
         }
       }
-
-      WriteOutput(nodeCount);
     }
 
-    private void WriteOutput(long[] nodeCount) {
+    public override List<List<string>>  GetResult(OutputOptions options) {
       List<List<string>> output = new List<List<string>>();
       long totalNodeCount = 0;
 
       for (int i = 0; i < nodeCount.Length; i++) {
-          List<string> outputRow = new List<string>();
-          outputRow.Add("Layer " + (i + 1).ToString());
-          outputRow.Add(nodeCount[i].ToString());
+          List<string> outputRow = ResultHelper.Row("Layer" + (i + 1), nodeCount[i].ToString()); 
           output.Add(outputRow);
 
           totalNodeCount += nodeCount[i];
       }
 
-      List<string> totalOutputRow = new List<string>();
-      totalOutputRow.Add("Total");
-      totalOutputRow.Add(totalNodeCount.ToString());
-      output.Add(totalOutputRow);
 
-      Result = new AlgorithmResult("NodeCount", output);
+      output.Add(ResultHelper.Row("Toal", totalNodeCount.ToString()));
+
+      return output;
     }
   }
 }

@@ -4,6 +4,7 @@ using MultiLayerProxy.Proxy;
 using MultiLayerProxy.Output;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
+using MultiLayerProxy.Util;
 
 namespace MultiLayerProxy.Algorithms {
   /// <summary>
@@ -11,7 +12,10 @@ namespace MultiLayerProxy.Algorithms {
   /// </summary>
   class EdgeCount: Algorithm {
 
+    private long[] edgeCount;
+
     public EdgeCount (MultiLayerProxyImpl proxy): base(proxy) {
+      this.Name = "EdgeCount";
     }
 
     public override void Run() {
@@ -28,11 +32,9 @@ namespace MultiLayerProxy.Algorithms {
             edgeCount[i] += result[i];
         }
       }
-
-      WriteOutput(edgeCount);
     }
 
-    private void WriteOutput(long[] edgeCount) {
+    public override List<List<string>> GetResult(OutputOptions options) {
       List<List<string>> output = new List<List<string>>();
       long totalEdgeCount = 0;
 
@@ -44,12 +46,10 @@ namespace MultiLayerProxy.Algorithms {
           totalEdgeCount += edgeCount[i];
       }
 
-      List<string> totalOutputRow = new List<string>();
-      totalOutputRow.Add("Total");
-      totalOutputRow.Add(totalEdgeCount.ToString());
+      List<string> totalOutputRow = ResultHelper.Row("Total", totalEdgeCount.ToString());
       output.Add(totalOutputRow);
 
-      Result = new AlgorithmResult("EdgeCount", output);
+      return output;
     }
   }
 }

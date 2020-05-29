@@ -1,29 +1,34 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
+using MultiLayerLib;
 
 namespace MultiLayerProxy.Algorithms {
   abstract class Algorithm: IAlgorithm {
 
     protected MultiLayerProxyImpl Proxy;
 
-    public AlgorithmResult Result { get; protected set; }
+    public String Name { get; protected set; }
+
+    public Runtime Runtime { get; private set; }
 
     public Algorithm (MultiLayerProxyImpl proxy) {
       this.Proxy = proxy;
     }
 
+    public virtual List<List<string>> GetResult(OutputOptions options) {
+      return null;
+    }
+
     public abstract void Run();
 
-    public TimeSpan TimedRun() {
-      Stopwatch stopwatch = new Stopwatch();
-      stopwatch.Start();
+    public void TimedRun() {
+      DateTime startTime = DateTime.Now;
 
       Run();
 
-      stopwatch.Stop();
-      return stopwatch.Elapsed;
+      DateTime endTime = DateTime.Now;
+      this.Runtime = new Runtime(startTime, endTime);
     }
   }
 }

@@ -5,10 +5,10 @@ namespace MultiLayerProxy.Output {
   
   class AlgorithmResult {
 
+    public Runtime Runtime { get; set; }
 
     public string Name { get; set; }
 
-    public TimeSpan Runtime { get; set; }
 
     public List<List<string>> Results { get; set; }
 
@@ -19,7 +19,6 @@ namespace MultiLayerProxy.Output {
 
     public AlgorithmResult(string name, TimeSpan runtime, List<List<string>> results) {
       this.Name = name;
-      this.Runtime = runtime;
       this.Results = results;
     }
 

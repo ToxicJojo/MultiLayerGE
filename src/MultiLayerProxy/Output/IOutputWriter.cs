@@ -1,6 +1,8 @@
+using MultiLayerLib;
+
 namespace MultiLayerProxy.Output {
   interface IOutputWriter {
 
-    void WriteOutput();
+    void WriteOutput(OutputOptions options);
   }
 }

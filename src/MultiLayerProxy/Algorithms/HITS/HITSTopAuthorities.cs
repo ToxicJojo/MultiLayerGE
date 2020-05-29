@@ -16,9 +16,14 @@ namespace MultiLayerProxy.Algorithms {
 
     private bool SeperateLayers { get; set; }
 
+    private List<Node> topNodes;
+
+    private List<long> topNodeIds;
+
     public HITSTopAuthorities (MultiLayerProxyImpl proxy, int numberOfTopNodes, bool seperateLayers): base(proxy) {
       NumerOfTopNodes = numberOfTopNodes;
       SeperateLayers = seperateLayers;
+      this.Name = "HITSTopAuthorities";
     }
 
 
@@ -31,18 +36,20 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<long>> phaseResults = Proxy.WaitForPhaseResultsAsLong(Phases.HITSTopAuthorities);
 
-      List<long> topNodeIds = new List<long>();
+      topNodeIds = new List<long>();
       foreach(List<long> localTopNodes in phaseResults) {
         topNodeIds.AddRange(localTopNodes);
       }
       
-      List<Node> topNodes = new List<Node>();
+      topNodes = new List<Node>();
 
       topNodes = topNodeIds.Select(nodeId => {
         Node node = Global.CloudStorage.LoadNode(nodeId);
         return node;
       }).ToList();//.OrderByDescending(node => node.PageRankData.Value).Take(this.NumerOfTopNodes).ToList();
+    }
 
+    public override List<List<string>> GetResult(OutputOptions options) {
       List<List<string>> resultTable = new List<List<string>>();
 
       if (SeperateLayers) {
@@ -72,8 +79,7 @@ namespace MultiLayerProxy.Algorithms {
         }
       }
 
-      AlgorithmResult result = new AlgorithmResult("HITSTopAuthorities", resultTable);
-      this.Result = result;
+      return resultTable;
     }
   }
 
