@@ -1,6 +1,3 @@
-
-
-
 struct EgoNetworkMessageProxy {
   AlgorithmOptions AlgorithmOptions;
   OutputOptions OutputOptions;
@@ -16,9 +13,9 @@ struct EgoNetworkMessageServer {
 }
 
 protocol EgoNetworkProxy {
-  Type: Asyn;
+  Type: Syn;
   Request: EgoNetworkMessageProxy;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 protocol EgoNetworkServer {

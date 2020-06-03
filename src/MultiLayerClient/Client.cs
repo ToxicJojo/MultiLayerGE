@@ -20,7 +20,7 @@ namespace MultiLayerClient {
 
     public Client () {
       AlgorithmOptions = new AlgorithmOptions(false);
-      OutputOptions = new OutputOptions(OutputType.Console, true);
+      OutputOptions = new OutputOptions(OutputType.Console, true, false);
 
       Commands = new Dictionary<string, ICommand>();
 
@@ -42,6 +42,7 @@ namespace MultiLayerClient {
       AddCommand(new EdgeCount(this));
       AddCommand(new Degree(this));
       AddCommand(new EgoNetwork(this));
+      AddCommand(new GraphDensity(this));
       AddCommand(new PageRank(this));
       AddCommand(new PageRankTopNodes(this));
       AddCommand(new HITS(this));

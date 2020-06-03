@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
 using MultiLayerProxy.Util;
@@ -24,7 +23,7 @@ namespace MultiLayerProxy.Algorithms {
       }
 
       List<List<long>> phaseResults =  Proxy.WaitForPhaseResultsAsLong(Phases.EdgeCount);
-      long[] edgeCount = new long[phaseResults[0].Count];
+      edgeCount = new long[phaseResults[0].Count];
 
       // Sum up the results from all servers.
       foreach(List<long> result in phaseResults) {
@@ -34,7 +33,7 @@ namespace MultiLayerProxy.Algorithms {
       }
     }
 
-    public override List<List<string>> GetResult(OutputOptions options) {
+    public override List<List<string>> GetResultTable(OutputOptions options) {
       List<List<string>> output = new List<List<string>>();
       long totalEdgeCount = 0;
 

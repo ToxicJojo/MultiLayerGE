@@ -1,4 +1,5 @@
 using MultiLayerLib;
+using MultiLayerLib.Output;
 using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerClient.Commands {
@@ -23,7 +24,9 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new HITSTopNodesProxyMessageWriter(Client.AlgorithmOptions, Client.OutputOptions, NumberOfTopNodes, SeperateLayers)) {
-          MessagePassingExtension.HITSTopAuthoritiesProxy(Client.Proxy, msg);
+          using (AlgorithmResultReader response =  MessagePassingExtension.HITSTopAuthoritiesProxy(Client.Proxy, msg)) {
+            OutputWriter.WriteOutput(response, Client.OutputOptions);
+          }
       }
     }
   }

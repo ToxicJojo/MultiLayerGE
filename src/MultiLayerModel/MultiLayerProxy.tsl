@@ -11,6 +11,7 @@ enum OutputType {
 struct OutputOptions {
   OutputType OutputType;
   bool TranslateLayerIds;
+  bool RemoteOutput;
 }
 
 struct StandardAlgorithmMessage {
@@ -27,6 +28,13 @@ protocol PhaseFinished {
   Type: Asyn;
   Request: PhaseFinishedMessage;
   Response: void;
+}
+
+struct AlgorithmResult {
+  string Name;
+  DateTime StartTime;
+  DateTime EndTime;
+  List<List<string>> ResultTable;
 }
 
 proxy MultiLayerProxy {

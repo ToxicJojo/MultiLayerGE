@@ -33,13 +33,13 @@ struct HITSTopNodesProxyMessage {
 protocol HITSTopAuthoritiesProxy {
   Type: Syn;
   Request: HITSTopNodesProxyMessage;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 protocol HITSTopHubsProxy {
   Type: Syn;
   Request: HITSTopNodesProxyMessage;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 // Server Protocols

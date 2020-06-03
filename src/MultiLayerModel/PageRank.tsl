@@ -29,7 +29,7 @@ struct PageRankTopNodesProxyMessage {
 protocol PageRankTopNodesProxy {
   Type: Syn;
   Request: PageRankTopNodesProxyMessage;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 // Server Protocols

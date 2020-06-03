@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using Trinity;
+using Trinity.TSL.Lib;
 using System;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
-using Trinity.TSL.Lib;
 using Trinity.Core.Lib;
-using MultiLayerProxy.Util;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
 
@@ -56,7 +54,7 @@ namespace MultiLayerProxy.Algorithms {
 
    }
 
-    public override List<List<string>>  GetResult(OutputOptions options) {
+    public override List<List<string>>  GetResultTable(OutputOptions options) {
       List<List<String>> output = new List<List<string>>();
 
       output.Add(new List<string> {"Outgoing: "});
@@ -71,11 +69,11 @@ namespace MultiLayerProxy.Algorithms {
     private List<Node> GetEgoNetwork (long id, int layer, bool seperateLayers) {
       List<Node> egoNetwork = new List<Node>();
 
-      Node node = GetNode(id, layer);
+      Node node = Graph.LoadNode(id, layer);
       foreach(Edge edge in node.Edges) {
           if (seperateLayers && edge.DestinationLayer != edge.StartLayer) continue;
 
-          Node networkNode = GetNode(edge.DestinationId, edge.DestinationLayer);
+          Node networkNode = Graph.LoadNode(edge.DestinationId, edge.DestinationLayer);
           egoNetwork.Add(networkNode);
       }
 
@@ -86,15 +84,6 @@ namespace MultiLayerProxy.Algorithms {
         foreach(Node node in egoNetwork) {
             output.Add(new List<String>{node.Layer + "/" + node.Id});
         }
-    }
-
-    private long GetCellId (long id, int layer) {
-        string nodeName = "n" + id + "l" + layer;
-        return HashHelper.HashString2Int64(nodeName);
-    }
-
-    private Node GetNode(long id, int layer) {
-        return Global.CloudStorage.LoadNode(GetCellId(id, layer));
     }
   }
 }

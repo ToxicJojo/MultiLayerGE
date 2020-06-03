@@ -1,6 +1,6 @@
 using System;
 
-namespace MultiLayerProxy {
+namespace MultiLayerProxy.Algorithms {
 
   class Runtime {
 
@@ -16,5 +16,4 @@ namespace MultiLayerProxy {
 
     public DateTime EndTime { get ; set; }
   }
-
 }

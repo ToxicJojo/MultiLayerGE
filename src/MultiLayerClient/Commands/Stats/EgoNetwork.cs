@@ -1,4 +1,6 @@
+using System;
 using MultiLayerLib;
+using MultiLayerLib.Output;
 using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerClient.Commands {
@@ -23,9 +25,16 @@ namespace MultiLayerClient.Commands {
     }
 
     public override void Run() {
+      if (!Graph.HasNode(Id, Layer)) {
+        Console.WriteLine("No node found with Id: {0} in Layer: {1}", Id, Layer);
+        return;
+      }
+
       using (var msg = new EgoNetworkMessageProxyWriter(Client.AlgorithmOptions, Client.OutputOptions, Id, Layer, SeperateLayers)) {
-          MessagePassingExtension.EgoNetworkProxy(Client.Proxy, msg);
-      }          
+        using (AlgorithmResultReader response = MessagePassingExtension.EgoNetworkProxy(Client.Proxy, msg)) {
+          OutputWriter.WriteOutput(response, Client.OutputOptions);
+        }
+      }  
     }
   }
 }

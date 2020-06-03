@@ -16,8 +16,12 @@ namespace MultiLayerProxy.Algorithms {
       this.Proxy = proxy;
     }
 
-    public virtual List<List<string>> GetResult(OutputOptions options) {
+    public virtual List<List<string>> GetResultTable(OutputOptions outputOptions) {
       return null;
+    }
+
+    public virtual AlgorithmResult GetResult(OutputOptions outputOptions) {
+      return new AlgorithmResult(Name, Runtime.StartTime, Runtime.EndTime, GetResultTable(outputOptions));
     }
 
     public abstract void Run();

@@ -100,6 +100,11 @@ namespace MultiLayerLib {
       return Global.LocalStorage.UseNode(cellId, accessOptions);
     }
 
+    public static Node_Accessor UseNode(long nodeId, int nodeLayer, CellAccessOptions accessOptions) {
+      long cellId = Graph.GetCellId(nodeId, nodeLayer);
+      return Graph.UseNode(cellId, accessOptions);
+    }
+
     public static bool IsLocalNode(long cellId) {
       return Global.CloudStorage.IsLocalCell(cellId);
     }

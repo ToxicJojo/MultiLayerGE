@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Trinity;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
 
@@ -49,7 +48,7 @@ namespace MultiLayerProxy.Algorithms {
       }).ToList();//.OrderByDescending(node => node.PageRankData.Value).Take(this.NumerOfTopNodes).ToList();
     }
 
-    public override List<List<string>> GetResult(OutputOptions options) {
+    public override List<List<string>> GetResultTable(OutputOptions options) {
       List<List<string>> resultTable = new List<List<string>>();
 
       if (SeperateLayers) {
@@ -69,7 +68,7 @@ namespace MultiLayerProxy.Algorithms {
           }
         }
       } else {
-        foreach(Node node in topNodes) {
+        foreach(Node node in topNodes.OrderByDescending(node => node.HITSData.AuthorityScore).Take(NumerOfTopNodes).ToList()) {
           List<string> resultRow = new List<string>();
           resultRow.Add(node.Id.ToString());
           resultRow.Add(node.Layer.ToString());

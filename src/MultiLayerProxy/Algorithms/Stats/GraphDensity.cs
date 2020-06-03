@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Trinity;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
 
@@ -51,7 +50,7 @@ namespace MultiLayerProxy.Algorithms {
       }
     }
 
-    public override List<List<string>> GetResult(OutputOptions options) {
+    public override List<List<string>> GetResultTable(OutputOptions options) {
       List<List<string>> output = new List<List<string>>();
 
       for (int i = 0; i < density.Length; i++) {

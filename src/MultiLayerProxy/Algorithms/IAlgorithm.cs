@@ -2,18 +2,18 @@ using System.Collections.Generic;
 using MultiLayerLib;
 
 namespace MultiLayerProxy.Algorithms {
-
   interface IAlgorithm {
 
     string Name { get; }
+
+    Runtime Runtime { get; }
       
     void Run();
 
     void TimedRun();
 
-    List<List<string>> GetResult(OutputOptions options);
+    List<List<string>> GetResultTable(OutputOptions outputOptions);
 
-    Runtime Runtime { get; }
-
+    AlgorithmResult GetResult(OutputOptions outputOptions);
   }
 }

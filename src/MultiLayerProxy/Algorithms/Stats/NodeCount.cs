@@ -31,7 +31,7 @@ namespace MultiLayerProxy.Algorithms {
       }
     }
 
-    public override List<List<string>>  GetResult(OutputOptions options) {
+    public override List<List<string>>  GetResultTable(OutputOptions options) {
       List<List<string>> output = new List<List<string>>();
       long totalNodeCount = 0;
 
