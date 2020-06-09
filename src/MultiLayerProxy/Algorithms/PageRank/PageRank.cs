@@ -20,6 +20,7 @@ namespace MultiLayerProxy.Algorithms {
       this.InitialValue = initialValue;
       this.Epsilon = epsilon; 
       this.SeperateLayers = seperateLayers;
+      this.Name = "PageRank";
     }
 
     public override void Run() {

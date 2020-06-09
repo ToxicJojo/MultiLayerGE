@@ -14,6 +14,7 @@ namespace MultiLayerProxy.Algorithms {
 
     public Degree (MultiLayerProxyImpl proxy, bool seperateLayers): base(proxy) {
       SeperateLayers = seperateLayers;
+      this.Name = "Degree";
     }
 
     public override void Run() {

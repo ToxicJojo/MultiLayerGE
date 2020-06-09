@@ -1,4 +1,5 @@
 using MultiLayerLib;
+using MultiLayerLib.Output;
 using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerClient.Commands {
@@ -17,7 +18,9 @@ namespace MultiLayerClient.Commands {
 
     public override void Run() {
       using (var msg = new StandardAlgorithmMessageWriter(Client.AlgorithmOptions, Client.OutputOptions)) {
-          MessagePassingExtension.GetEdgeCountProxy(Client.Proxy, msg);
+        using (var response = MessagePassingExtension.GetEdgeCountProxy(Client.Proxy, msg)) {
+          OutputWriter.WriteOutput(response, Client.OutputOptions);
+        }
       }      
     }
   }

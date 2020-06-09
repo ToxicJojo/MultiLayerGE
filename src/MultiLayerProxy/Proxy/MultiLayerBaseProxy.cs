@@ -1,11 +1,12 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using Trinity;
 using MultiLayerProxy.Algorithms;
-using MultiLayerProxy.Output;
 using MultiLayerProxy.Util;
 using MultiLayerLib;
+using MultiLayerLib.Output;
 using MultiLayerLib.MultiLayerProxy;
 
 namespace MultiLayerProxy.Proxy {
@@ -48,19 +49,19 @@ namespace MultiLayerProxy.Proxy {
     /// <param name="algorithm">The algorithm to run.</param>
     /// <param name="options">The options that should be applied to the algorithm.</param>
     private void RunAlgorithm (IAlgorithm algorithm, AlgorithmOptions options) {
-      // If the algorithm is to be timed do a timed run.
-      if (options.Timed) {
-        TimeSpan ts = algorithm.TimedRun();
+      algorithm.TimedRun();
+ /*     if (options.Timed) {
+        
+        StreamWriter writer = new StreamWriter("results/" + algorithm.Name + "_runTime.txt");
+        writer.WriteLine("Start: " + algorithm.Runtime.StartTime.ToString());
+        writer.WriteLine("End: " + algorithm.Runtime.StartTime.ToString());
+        writer.WriteLine("Runtime: " + ResultHelper.FormatTimeSpan(algorithm.Runtime.TimeSpan));
 
-        // Format and display the TimeSpan value.
-        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
-
-        Console.WriteLine("Finished {0} in {1}", "Algorithm", elapsedTime);
+        writer.Flush();
+        writer.Close();
       } else {
         algorithm.Run();
-      }
+      }*/
     }
 
     /// <summary>
@@ -70,17 +71,31 @@ namespace MultiLayerProxy.Proxy {
     /// <param name="algorithm">The algorithm that has run and produced results.</param>
     /// <param name="options">The options that should be applied to the output.</param>
     private void OutputAlgorithmResult (IAlgorithm algorithm, OutputOptions options) {
-      IOutputWriter outputWriter;
+
+
+      
+      /*IOutputWriter outputWriter;
 
       // Create a new IOutputWriter that matches the type given in the options.
       if (options.OutputType == OutputType.Console) {
-        outputWriter = new ConsoleOutputWriter(algorithm.Result);
-        outputWriter.WriteOutput();
+        outputWriter = new ConsoleOutputWriter(algorithm);
+        outputWriter.WriteOutput(options);
       } else if (options.OutputType == OutputType.CSV) {
-        outputWriter = new CSVOutputWriter(algorithm.Result);
-        outputWriter.WriteOutput();
+        outputWriter = new CSVOutputWriter(algorithm);
+        outputWriter.WriteOutput(options);
       }
+      */
+    }
 
+    private void OutputAlgorithmResult(IAlgorithm algorithm, OutputOptions outputOptions, AlgorithmResultWriter response) {
+      if (outputOptions.RemoteOutput) {
+        OutputWriter.WriteOutput(algorithm.GetResult(outputOptions), outputOptions);
+      } else {
+        response.Name = algorithm.Name;
+        response.StartTime = algorithm.Runtime.StartTime;
+        response.EndTime = algorithm.Runtime.EndTime;
+        response.ResultTable = algorithm.GetResultTable(outputOptions);
+      }
     }
 
     /// <summary>

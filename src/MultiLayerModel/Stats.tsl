@@ -2,19 +2,19 @@
 protocol GetNodeCountProxy {
   Type: Syn;
   Request: StandardAlgorithmMessage;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 protocol GetEdgeCountProxy {
   Type: Syn;
   Request: StandardAlgorithmMessage;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 protocol GetGraphDensityProxy {
   Type: Syn;
   Request: StandardAlgorithmMessage;
-  Response: void;
+  Response: AlgorithmResult;
 }
 
 

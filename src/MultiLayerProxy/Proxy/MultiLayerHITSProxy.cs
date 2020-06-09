@@ -11,18 +11,18 @@ namespace MultiLayerProxy.Proxy {
       RunAlgorithm(hits, request.AlgorithmOptions);
     }
 
-    public override void HITSTopAuthoritiesProxyHandler(HITSTopNodesProxyMessageReader request) {
+    public override void HITSTopAuthoritiesProxyHandler(HITSTopNodesProxyMessageReader request, AlgorithmResultWriter response) {
       HITSTopAuthorities topAuth = new HITSTopAuthorities(this, request.NumberOfTopNodes, request.SeperateLayers);
 
       RunAlgorithm(topAuth, request.AlgorithmOptions);
-      OutputAlgorithmResult(topAuth, request.OutputOptions);
+      OutputAlgorithmResult(topAuth, request.OutputOptions, response);
     }
 
-    public override void HITSTopHubsProxyHandler(HITSTopNodesProxyMessageReader request) {
+    public override void HITSTopHubsProxyHandler(HITSTopNodesProxyMessageReader request, AlgorithmResultWriter response) {
       HITSTopHubs topHubs = new HITSTopHubs(this, request.NumberOfTopNodes, request.SeperateLayers);
 
       RunAlgorithm(topHubs, request.AlgorithmOptions);
-      OutputAlgorithmResult(topHubs, request.OutputOptions);
+      OutputAlgorithmResult(topHubs, request.OutputOptions, response);
     }
     
   }

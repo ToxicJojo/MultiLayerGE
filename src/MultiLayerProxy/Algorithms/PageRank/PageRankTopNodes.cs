@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Trinity;
 using MultiLayerProxy.Proxy;
-using MultiLayerProxy.Output;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
 
@@ -16,9 +15,14 @@ namespace MultiLayerProxy.Algorithms {
 
     private bool SeperateLayers { get; set; }
 
+    private List<Node> topNodes;
+
+    List<long> topNodeIds;
+
     public PageRankTopNodes (MultiLayerProxyImpl proxy, int numberOfTopNodes, bool seperateLayers): base(proxy) {
       NumerOfTopNodes = numberOfTopNodes;
       SeperateLayers = seperateLayers;
+      this.Name = "PageRankTopNodes";
     }
 
 
@@ -31,18 +35,22 @@ namespace MultiLayerProxy.Algorithms {
 
       List<List<long>> phaseResults = Proxy.WaitForPhaseResultsAsLong(Phases.PageRankTopNodes);
 
-      List<long> topNodeIds = new List<long>();
+      topNodeIds = new List<long>();
       foreach(List<long> localTopNodes in phaseResults) {
         topNodeIds.AddRange(localTopNodes);
       }
       
-      List<Node> topNodes = new List<Node>();
+      topNodes = new List<Node>();
 
       topNodes = topNodeIds.Select(nodeId => {
         Node node = Global.CloudStorage.LoadNode(nodeId);
         return node;
       }).ToList();//.OrderByDescending(node => node.PageRankData.Value).Take(this.NumerOfTopNodes).ToList();
 
+      
+    }
+
+    public override List<List<string>> GetResultTable(OutputOptions options) {
       List<List<string>> resultTable = new List<List<string>>();
 
       if (SeperateLayers) {
@@ -62,7 +70,7 @@ namespace MultiLayerProxy.Algorithms {
           }
         }
       } else {
-        foreach(Node node in topNodes) {
+        foreach(Node node in topNodes.OrderByDescending(node => node.PageRankData.Value).Take(NumerOfTopNodes).ToList()) {
           List<string> resultRow = new List<string>();
           resultRow.Add(node.Id.ToString());
           resultRow.Add(node.Layer.ToString());
@@ -72,8 +80,7 @@ namespace MultiLayerProxy.Algorithms {
         }
       }
 
-      AlgorithmResult result = new AlgorithmResult("PageRankTopNodes", resultTable);
-      this.Result = result;
+      return resultTable;
     }
   }
 

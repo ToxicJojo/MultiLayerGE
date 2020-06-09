@@ -20,6 +20,7 @@ namespace MultiLayerProxy.Algorithms {
     public DataLoad (MultiLayerProxyImpl proxy, string configFilePath, EdgeType edgeType): base(proxy) {
       this.ConfigFilePath = configFilePath;
       this.EdgeType = EdgeType;
+      this.Name = "DataLoad";
     }
 
     public override void Run() {
