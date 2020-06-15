@@ -4,7 +4,6 @@ using System.Threading;
 using System.Linq;
 using Trinity;
 using Trinity.Network;
-using Trinity.Core.Lib;
 using Trinity.TSL.Lib;
 using MultiLayerLib;
 using MultiLayerLib.MultiLayerServer;
@@ -25,12 +24,11 @@ namespace MultiLayerServer.Algorithms {
     private static int AFTER_UPDATE_BARRIER = 1;
 
     public static void SetInitialValues(double initialValue) {
-      foreach(Node_Accessor node in Graph.NodeAccessor()) {
+      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.PageRankData.Value = initialValue;
         node.PageRankData.OldValue = initialValue;
       }
     }
-
     
     public static List<double> UpdateRound(bool seperateLayers) {
       UpdatesSent = 0;
@@ -43,7 +41,7 @@ namespace MultiLayerServer.Algorithms {
       }
 
       // We need to remember the old value and set the current one to 0.
-      foreach(Node_Accessor node in Graph.NodeAccessor()) {
+      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.PageRankData.OldValue = node.PageRankData.Value;
         node.PageRankData.Value = 0;
       }
@@ -51,7 +49,7 @@ namespace MultiLayerServer.Algorithms {
       // Wait until all servers are done with resetting the current value.
       Global.CloudStorage.BarrierSync(VALUE_RESET_BARRIER);
 
-      foreach(Node_Accessor node in Graph.NodeAccessor()) {
+      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         foreach(Edge edge in node.Edges) {
           // If we want to seperate the layers skip edges that go from one layer to another.
           if (seperateLayers && edge.StartLayer != edge.DestinationLayer) {
@@ -66,7 +64,7 @@ namespace MultiLayerServer.Algorithms {
 
           // If the target node is a local one we can do the update directly.
           if (Global.CloudStorage.IsLocalCell(targetCellId)) {
-              using (Node_Accessor targetNode = Graph.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
+              using (Node_Accessor targetNode = Global.LocalStorage.UseNode(targetCellId, CellAccessOptions.ReturnNullOnCellNotFound)) {
                 if (targetNode != null) {
                   targetNode.PageRankData.Value += node.PageRankData.OldValue;
                 }
@@ -108,19 +106,20 @@ namespace MultiLayerServer.Algorithms {
       Global.CloudStorage.BarrierSync(AFTER_UPDATE_BARRIER);
 
       double valueSum = 0;
-      foreach(Node node in Graph.NodeAccessor()) {
+      foreach(Node node in Global.LocalStorage.Node_Accessor_Selector()) {
         valueSum += node.PageRankData.Value;
       }
 
       List<double> result = new List<double>();
       result.Add(valueSum);
+      Console.WriteLine("ValueSum: {0}", valueSum);
 
       return result;
     }
 
     public static void RemoteBulkUpdate (List<MultiLayerLib.KeyValuePair> updates) {
       foreach(MultiLayerLib.KeyValuePair update in updates) {
-        using (Node_Accessor node = Graph.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
+        using (Node_Accessor node = Global.LocalStorage.UseNode(update.Key, CellAccessOptions.ReturnNullOnCellNotFound)) {
           if (node != null) {
             node.PageRankData.Value += update.Value;
           }
@@ -140,7 +139,7 @@ namespace MultiLayerServer.Algorithms {
       double normFactor = 1 / Math.Sqrt(sum);
       double delta = 0;
 
-      foreach(Node_Accessor node in Graph.NodeAccessor()) {
+      foreach(Node_Accessor node in Global.LocalStorage.Node_Accessor_Selector()) {
         node.PageRankData.Value *= normFactor;
         delta += Math.Abs(node.PageRankData.Value - node.PageRankData.OldValue);
       }

@@ -19,7 +19,7 @@ namespace MultiLayerClient {
     public OutputOptions OutputOptions { get; set; }
 
     public Client () {
-      AlgorithmOptions = new AlgorithmOptions(false);
+      AlgorithmOptions = new AlgorithmOptions(true);
       OutputOptions = new OutputOptions(OutputType.Console, true, false);
 
       Commands = new Dictionary<string, ICommand>();

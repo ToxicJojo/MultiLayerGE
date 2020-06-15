@@ -50,7 +50,7 @@ namespace MultiLayerProxy.Proxy {
     /// <param name="options">The options that should be applied to the algorithm.</param>
     private void RunAlgorithm (IAlgorithm algorithm, AlgorithmOptions options) {
       algorithm.TimedRun();
- /*     if (options.Timed) {
+      if (options.Timed) {
         
         StreamWriter writer = new StreamWriter("results/" + algorithm.Name + "_runTime.txt");
         writer.WriteLine("Start: " + algorithm.Runtime.StartTime.ToString());
@@ -59,9 +59,7 @@ namespace MultiLayerProxy.Proxy {
 
         writer.Flush();
         writer.Close();
-      } else {
-        algorithm.Run();
-      }*/
+      } 
     }
 
     /// <summary>
