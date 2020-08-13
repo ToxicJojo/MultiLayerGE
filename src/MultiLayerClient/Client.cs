@@ -29,6 +29,7 @@ namespace MultiLayerClient {
       AddCommand(new Interactive(this));
       AddCommand(new Batch(this));
       AddCommand(new Help(this));
+      AddCommand(new Status());
 
       AddCommand(new SetOutputOptions(this));
       AddCommand(new SetAlgorithmOptions(this));
