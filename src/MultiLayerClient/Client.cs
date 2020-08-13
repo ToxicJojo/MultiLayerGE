@@ -36,6 +36,7 @@ namespace MultiLayerClient {
 
       AddCommand(new LoadStorage());
       AddCommand(new SaveStorage());
+      AddCommand(new ResetStorage());
       AddCommand(new LoadGraph(this));
 
       AddCommand(new ShowNode());

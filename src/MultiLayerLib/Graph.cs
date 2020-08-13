@@ -92,6 +92,10 @@ namespace MultiLayerLib {
       Global.CloudStorage.LoadStorage();
     }
 
+    public static void ResetGEStorage () {
+      Global.CloudStorage.ResetStorage();
+    }
+
     public static Node_Accessor_local_selector NodeAccessor() {
       return Global.LocalStorage.Node_Accessor_Selector();
     }
