@@ -29,7 +29,7 @@ namespace MultiLayerServer.Loading {
     /// </summary>
     /// <param name="layersFilePath">The full path to the layer info file.</param>
     private void LoadLayers(string layersFilePath) {
-      Console.WriteLine("[GraphLoader] Loading Layers");
+    Console.WriteLine("[GraphLoader] Loading Layers");
       StreamReader reader = new StreamReader(layersFilePath);
       // Skip the description line
       reader.ReadLine();
@@ -53,6 +53,9 @@ namespace MultiLayerServer.Loading {
       Console.WriteLine("[GraphLoader] Loading edges.");
       FileStream file = new FileStream(edgeFilePath, FileMode.Open, FileAccess.Read);
       long fileLength = file.Length;
+
+      // HACK
+      edgeLoader = new JournalsLoader();
 
 
       using (StreamReader reader = new StreamReader(file)) {

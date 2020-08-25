@@ -21,6 +21,8 @@ namespace MultiLayerServer.Algorithms {
 
     private static Dictionary<long, double> RemoteAuthScores { get; set; }
 
+    private static readonly object remoteAuthScoresLock = new object();
+
     private static Dictionary<int, Dictionary<long, double>> RemoteUpdates { get; set; }
 
     private static int HUB_VALUE_RESET_BARRIER = 0;
@@ -144,8 +146,10 @@ namespace MultiLayerServer.Algorithms {
     }
 
     public static void AddRemoteAuthScores(List<MultiLayerLib.KeyValuePair> values) {
-      foreach(MultiLayerLib.KeyValuePair valuePair in values) {
-        RemoteAuthScores[valuePair.Key] = valuePair.Value;
+      lock (remoteAuthScoresLock) {
+        foreach(MultiLayerLib.KeyValuePair valuePair in values) {
+          RemoteAuthScores[valuePair.Key] = valuePair.Value;
+        }
       }
 
       Interlocked.Increment(ref AuthValueRequestsAnswerd);

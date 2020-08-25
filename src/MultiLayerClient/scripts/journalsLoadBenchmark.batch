@@ -7,14 +7,3 @@ resetStorage
 loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
 resetStorage
 loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
-resetStorage
-loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
-resetStorage
-loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
-resetStorage
-loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
-resetStorage
-loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
-resetStorage
-loadGraph /home/thiel/MultiLayerGE/data/journals/journals_config.txt Journals
-resetStorage
