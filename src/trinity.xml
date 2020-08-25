@@ -2,12 +2,12 @@
   <Cluster>
     <Proxy Endpoint="node52:8133" />  
     <Server Endpoint="node55:8133" />
-   <!-- <Server Endpoint="node54:8133" />  -->
-   <!-- <Server Endpoint="node54:8133" />  -->
-   <!-- <Server Endpoint="node54:8133" />  -->
-   <!-- <Server Endpoint="node54:8133" />  -->
-   <!-- <Server Endpoint="node54:8133" />  -->
-   <!-- <Server Endpoint="node54:8133" />  -->
-   <!-- <Server Endpoint="node54:8133" />  -->
+    <!--<Server Endpoint="node63:8133" />-->
+    <!-- <Server Endpoint="node64:8133" /> -->
+    <!-- <Server Endpoint="node65:8133" /> -->
+    <!-- <Server Endpoint="node66:8133" /> -->
+    <!-- <Server Endpoint="node67:8133" /> -->
+    <!--<Server Endpoint="node75:8133" /> -->
+    <!-- <Server Endpoint="node76:8133" /> -->
   </Cluster>
 </Trinity>

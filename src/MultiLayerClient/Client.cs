@@ -20,7 +20,7 @@ namespace MultiLayerClient {
 
     public Client () {
       AlgorithmOptions = new AlgorithmOptions(true);
-      OutputOptions = new OutputOptions(OutputType.Console, true, false);
+      OutputOptions = new OutputOptions(OutputType.None, true, true);
 
       Commands = new Dictionary<string, ICommand>();
 
@@ -36,6 +36,7 @@ namespace MultiLayerClient {
 
       AddCommand(new LoadStorage());
       AddCommand(new SaveStorage());
+      AddCommand(new ResetStorage());
       AddCommand(new LoadGraph(this));
 
       AddCommand(new ShowNode());

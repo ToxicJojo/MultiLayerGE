@@ -30,7 +30,8 @@ namespace MultiLayerProxy.Algorithms {
       double authDelta = Double.MaxValue;
 
       // Keep doing updates until the change in hub and auth values is below epsilon.
-      while (hubDelta > Epsilon || authDelta > Epsilon) {
+      // HACK to only run 1 Rounds
+      //while (hubDelta > Epsilon || authDelta > Epsilon) {
         double authSum = AuthUpdateRound();
         authDelta = AuthNormalization(authSum);
         
@@ -38,7 +39,7 @@ namespace MultiLayerProxy.Algorithms {
         hubDelta = HubNormalization(hubSum);
 
         Console.WriteLine("[HITS] AuthDelta: {0}  HubDelta: {1}", authDelta, hubDelta);
-      }
+      //}
     }
 
 

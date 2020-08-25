@@ -52,9 +52,9 @@ namespace MultiLayerProxy.Proxy {
       algorithm.TimedRun();
       if (options.Timed) {
         
-        StreamWriter writer = new StreamWriter("results/" + algorithm.Name + "_runTime.txt");
+        StreamWriter writer = new StreamWriter("results/" + algorithm.Name + algorithm.Runtime.StartTime.Hour + algorithm.Runtime.StartTime.Minute + algorithm.Runtime.StartTime.Second + "_runTime.txt");
         writer.WriteLine("Start: " + algorithm.Runtime.StartTime.ToString());
-        writer.WriteLine("End: " + algorithm.Runtime.StartTime.ToString());
+        writer.WriteLine("End: " + algorithm.Runtime.EndTime.ToString());
         writer.WriteLine("Runtime: " + ResultHelper.FormatTimeSpan(algorithm.Runtime.TimeSpan));
 
         writer.Flush();

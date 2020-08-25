@@ -1,3 +1,4 @@
+using System;
 using MultiLayerLib;
 
 namespace MultiLayerServer.Loading {
@@ -7,12 +8,11 @@ namespace MultiLayerServer.Loading {
       string[] fields = line.Split();
 
       long startId = long.Parse(fields[0]);
-      int startLayer = int.Parse(fields[2]);
+      int layer = int.Parse(fields[2]);
       long endId = long.Parse(fields[1]);
-      int endLayer = int.Parse(fields[2]);
-      float weight = int.Parse(fields[4]);
+      float weight = 0;
 
-      return new Edge(startId, startLayer, endId, endLayer, weight);
+      return new Edge(startId, layer, endId, layer, weight);
     }
 
     public long GetId (string line) {
